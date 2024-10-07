@@ -21,6 +21,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".AboutActicity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".PolicyActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".PrivatePolicyActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".TermOfServiceActivity"
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>

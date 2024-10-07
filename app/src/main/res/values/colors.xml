@@ -11,5 +11,10 @@
     <color name="black_overlay">#66000000</color>
     <color name="blue">#0000FF</color>
     <color name="dark_blue">#003366</color>
+    <color name="red">#F44336</color>
+    <color name="dark_blue_gray">#222F3F </color>
+    <color name="mint_green">#D8F5E3</color>
+    <color name="f1">#F1F1F1 </color>
+    <color name="f5">#F5F5F5 </color>
 
 </resources>

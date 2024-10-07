@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".SignUpActivity">
+
+    <!-- Header layout với hình ảnh và các icon -->
+    <LinearLayout
+        android:id="@+id/linearLayoutHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="200dp"
+            android:layout_height="150dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/topcv_icon" />
+
+        <TextView
+            android:id="@+id/textViewWelcome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Welcome to TopCV"
+            android:textAlignment="center"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/textViewSignup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="Sign up here"
+            android:textAlignment="center"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iconNumber1"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:scaleType="fitCenter"
+                android:layout_margin="10dp"
+                android:src="@drawable/number_1_ic" />
+
+            <ImageView
+                android:id="@+id/iconNumber2"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:scaleType="fitCenter"
+                android:layout_margin="10dp"
+                android:src="@drawable/number_2_ic" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- ScrollView để chứa nội dung dài -->
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur euismod tincidunt lacus, a vulputate massa dictum ac. Nulla facilisi. Suspendisse nec tincidunt nunc. Sed vitae sagittis nisl. Donec ac leo libero. Sed vestibulum lectus a ligula finibus, ac finibus arcu gravida. Quisque aliquet, justo ac elementum hendrerit, nisi libero aliquet est, nec tincidunt justo erat sit amet justo. Nunc ut nibh nisi. Sed varius elit vitae felis fermentum, vitae maximus lectus fermentum. Ut vel egestas elit. Morbi tristique ultricies arcu, ut tincidunt eros interdum non. Phasellus nec eros vitae risus vestibulum suscipit. Vivamus nec odio non urna cursus interdum. Mauris id ante vel massa fermentum fringilla. Donec varius orci at orci volutpat laoreet. Suspendisse nec arcu augue. Vestibulum vehicula neque ac eros hendrerit gravida. Praesent sed lorem quam. Duis sit amet nisi nec purus cursus egestas. Aenean in feugiat ligula. Etiam ac libero magna. Nullam vehicula dui ac ante tincidunt, vel condimentum dui malesuada. Nam tempor, sem non ultricies elementum, nisi nisi gravida ligula, in sollicitudin massa magna at purus. Quisque vitae velit vitae dolor tincidunt lacinia. Nulla vulputate, odio nec blandit aliquet, orci ex dapibus felis, id varius lectus sapien in magna. Donec et arcu non felis porttitor interdum a ut dolor. Phasellus vitae orci ac risus sodales suscipit. Aenean venenatis orci at tristique fermentum. Sed condimentum vitae risus ac elementum. Praesent euismod, justo vel tincidunt iaculis, metus turpis congue felis, in consequat ligula risus non dolor. Nulla posuere tellus non turpis faucibus suscipit. Sed eget tincidunt erat. Vestibulum vitae purus id ex vehicula vehicula ut sit amet sapien. Donec volutpat eros a lacinia luctus. Etiam nec tortor at sapien tincidunt finibus. Sed ut lectus vitae odio facilisis scelerisque. Duis nec magna vestibulum, vehicula magna in, aliquam justo. Sed quis lectus vel justo euismod viverra nec sit amet libero. Vivamus sit amet quam at erat feugiat consequat. Mauris viverra, eros ac egestas interdum, orci orci egestas massa, ut aliquam leo risus vel magna. Sed malesuada aliquam nunc, ac vehicula erat consequat eu."
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:ignore="TextSizeCheck" />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Layout chứa checkbox và nút đăng ký, ban đầu bị ẩn -->
+    <LinearLayout
+        android:id="@+id/linearLayoutAgreement"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">  <!-- Ẩn phần này ban đầu -->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/agreeCheckBox"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:text="I agree with this policy"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:ignore="TextSizeCheck" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal">
+
+            <Button
+                android:id="@+id/Register_Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20sp"
+                android:background="@drawable/button_rounded_corner"
+                app:backgroundTint="@null"
+                android:text="Register now"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
