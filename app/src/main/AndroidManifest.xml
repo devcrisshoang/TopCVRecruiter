@@ -11,15 +11,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TopCVRecruiter"
-        tools:targetApi="31">
-        <activity
-            android:name=".MainActivity"
+        tools:targetApi="35">
+        <activity android:name=".Recruiter.RecruiterDashboardActivity"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity">
+
         </activity>
     </application>
 
