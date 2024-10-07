@@ -6,8 +6,6 @@
     android:orientation="vertical">
 
     <!-- Header Layout -->
-
-    <!-- Body Layout -->
     <LinearLayout
         android:id="@+id/layout_header"
         android:layout_width="match_parent"
@@ -34,6 +32,7 @@
                 android:src="@drawable/search_ic"></ImageView>
 
             <EditText
+                android:id="@+id/search_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="40sp"
                 android:layout_marginTop="10sp"
@@ -45,22 +44,176 @@
         </LinearLayout>
     </LinearLayout>
 
+    <!-- Body Layout -->
+
     <FrameLayout
         android:id="@+id/news"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical"></FrameLayout>
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/navigation_view_main"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:itemHorizontalTranslationEnabled="false"
-        app:itemIconSize="24dp"
-        app:labelVisibilityMode="labeled"
-        app:menu="@menu/bottom_nav_menu">
+        android:background="@color/white"
+        android:orientation="horizontal">
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"></Space>
+        <LinearLayout
 
-    </com.google.android.material.bottomnavigation.BottomNavigationView>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
 
+            <ImageButton
+                android:id="@+id/Dashboard"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:background="@color/white"
+                android:scaleType="fitCenter"
+                android:src="@drawable/dashboard_ic">
+
+            </ImageButton>
+            <TextView
+                android:id="@+id/Dashboard_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:text="Dashboard">
+
+            </TextView>
+        </LinearLayout>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"></Space>
+        <LinearLayout
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+            <ImageButton
+                android:id="@+id/Posting"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/posting_ic"
+                android:layout_gravity="center"
+                android:background="@color/white"
+                android:scaleType="fitCenter">
+
+            </ImageButton>
+            <TextView
+                android:id="@+id/Posting_Textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:text="Posting">
+
+            </TextView>
+        </LinearLayout>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"></Space>
+        <LinearLayout
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/Messenger"
+                android:layout_width="40dp"
+                android:layout_height="41dp"
+                android:scaleType="fitCenter"
+                android:layout_gravity="center"
+                android:background="@color/white"
+                android:src="@drawable/messengera_ic">
+
+            </ImageButton>
+            <TextView
+                android:id="@+id/Messenger_Textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:text="Messenger">
+
+            </TextView>
+        </LinearLayout>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"></Space>
+        <LinearLayout
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+            <ImageButton
+                android:id="@+id/Notification"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/notification_ic"
+                android:layout_gravity="center"
+                android:background="@color/white"
+                android:scaleType="fitCenter">
+
+            </ImageButton>
+            <TextView
+                android:id="@+id/Notification_Textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:text="Notification">
+
+            </TextView>
+        </LinearLayout>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"></Space>
+        <LinearLayout
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+
+            android:orientation="vertical">
+            <ImageButton
+                android:id="@+id/Account"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:src="@drawable/account_ic"
+                android:background="@color/white"
+                android:scaleType="fitCenter">
+
+            </ImageButton>
+            <TextView
+                android:id="@+id/Account_Textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:text="Account">
+
+            </TextView>
+        </LinearLayout>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"></Space>
+    </LinearLayout>
 </LinearLayout>

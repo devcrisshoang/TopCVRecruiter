@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/main"
+    android:background="@color/white">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <ImageButton
+            android:id="@+id/policy_back_button"
+            android:layout_width="40sp"
+            android:layout_height="40sp"
+            android:layout_margin="10px"
+            android:layout_gravity="center"
+            android:src="@drawable/back_ic"
+            android:scaleType="fitCenter"
+            android:background="@color/white"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Privacy Policy"
+            android:textSize="15dp"
+            android:paddingRight="45dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:textAlignment="center"/>
+
+    </LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/f1">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@color/white"
+                    android:layout_margin="20dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_margin="10dp">
+                        <TextView
+                            android:id="@+id/textView2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="USER INFORMATION PRIVACY POLICY"
+                            android:textSize="25dp"
+                            android:layout_marginBottom="10dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Last updated: July 1, 2023"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10px"
+                            android:text="Effective date: July 1, 2023"/>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/f5"
+                            android:layout_marginTop="10dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="Your privacy is important to TopCV.vn (hereinafter referred to as TopCV). Please read this User Information Privacy Policy carefully (hereinafter referred to as &quot; Privacy Policy &quot;) as it is part of the Terms of Use governing the use of services on the TopCV website. This Privacy Policy notice explains:"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginLeft="15dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="10px" android:text="- The type of personal information processed by TopCV when you use TopCV's services."/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="10px" android:text="- How TopCV processes your personal information when you use TopCV's services."/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="10px" android:text="- The purpose for which TopCV collects and processes your personal information."/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="10px" android:text="- Your right to access and modify your personal information."/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="10px" android:text="- Third parties to whom TopCV may disclose your personal information."/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="10px" android:text="- Whether providing personal information is mandatory or voluntary, and the consequences of refusing to provide personal information in mandatory cases."/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="1. COLLECTION OF PERSONAL INFORMATION"
+                                android:textSize="18dp"
+                                android:textStyle="bold"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="By accessing or using the website TopCV.vn, the services, or any applications provided by TopCV., JSC (TopCV) (collectively referred to as Services), regardless of the method of access, you agree to be bound by these Terms of Service for Users (Terms of Service). The Services are owned or controlled by TopCV. These Terms of Service affect your legal rights and obligations. If you do not agree to be bound by all these Terms of Service, you should not access or use the Services. If you have any questions related to these Terms, please contact us at email: legal@topcv.vn."/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="We may update these Terms of Service from time to time for legal reasons or regulatory purposes, or to enable the proper functioning of the TopCV.vn website. Any changes will be communicated to you with a suitable notice on our website. These changes will apply to your use of the TopCV.vn website. After we have notified you, if you do not wish to accept the updated Terms of Service, you should not continue using the TopCV.vn website. If you continue to use the TopCV.vn website from the date the Terms of Service are updated, you must accept TopCV’s Terms of Service by choosing to agree through the notice displayed on our website when the changes take effect."/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="2. DEFINITIONS AND EXPLANATIONS"
+                                android:textSize="18dp"
+                                android:textStyle="bold"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="1. “TopCV.vn Database” or “TopCV.vn Databases” includes all job advertisements posted on the TopCV.vn websites and/or all information of Users and/or employers registered with TopCV.vn."/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="2. “TopCV.vn Profile Database” or “Profile Databases” refers to the User profiles created and/or posted in the TopCV.vn databases."/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="3. “TopCV.vn Services” means any services provided by TopCV."/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="4. “Personal Profile” refers to the information and personal CV created by the User."/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="5. “Text” includes all text on any page of the TopCV.vn website, whether it is authored documents, targeted search content, or instructional information."/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="6. “You” here refers to the shorthand term for Users of TopCV's services."/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="7. “User” refers to any individual or organization that uses any aspect of the TopCV.vn website and/or TopCV.vn Services."/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="8. “User Content” means all information, data, text, software, music, sound, images, graphics, videos, advertisements, messages, or other materials submitted, posted, or displayed by Users on or through the TopCV.vn website."/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="3. REGISTRATION"
+                                android:textSize="18dp"
+                                android:textStyle="bold"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="To use the Services, you must create an account as required by TopCV. You agree that your use of the account must comply with TopCV's regulations, and all information you provide to us is accurate, precise, and complete at the time it is requested. All your rights and obligations will be based on the account information you have registered. Therefore, if there is any inaccurate information, we will not be responsible if that information affects or limits your rights."/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="4. PASSWORD AND SECURITY"
+                                android:textSize="18dp"
+                                android:textStyle="bold"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="1. When you register to use the TopCV.vn website, you will be required to create a password. To prevent fraud, you must keep this password confidential and must not disclose or share it with anyone. If you know or suspect that someone else knows your password, you should notify us immediately by contacting us at the email hotro@topcv.vn."/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="2. If TopCV.vn has reason to believe there is a potential breach of security or misuse of the TopCV.vn website, we may require you to change your password or we may suspend your account."/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="3. In the event that you lose your password or misuse the TopCV.vn website:"/>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_marginLeft="15dp">
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="10px" android:text="- You will bear all losses or damages arising; and"/>
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="10px" android:text="- You are responsible for fully compensating TopCV in the event that TopCV incurs any losses or damages."/>
+                            </LinearLayout>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="5. ACCESS RIGHTS AND INFORMATION COLLECTION"
+                                android:textSize="18dp"
+                                android:textStyle="bold"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="1. When using the TopCV.vn website, you acknowledge that we have the right to collect the following information from you (including all changes and updates, if any):"/>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_marginLeft="15dp">
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="10px" android:text="- Personal Information: including the information you provide us to create your profile, such as name, phone number, email address, etc."/>
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="10px" android:text="- General Information: such as information about work experience, career orientation, job goals, skills, and income, etc."/>
+                            </LinearLayout>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="2. You acknowledge and agree to be solely responsible for the form, content, and accuracy of any profiles or documents you upload on the TopCV.vn website, and you also agree to be solely responsible for any consequences arising from this upload."/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="3. TopCV has the right to suggest services and products from third parties to you based on the appropriate criteria you specified during registration and at any time thereafter, or when you have agreed to receive such proposals. These proposals will be made by TopCV or third parties."/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="4. TopCV has the discretion to comply with legal requirements, requests from enforcement agencies, or requests from regulatory authorities (“Authorized Third Parties”), and this compliance may include the disclosure of certain user information. Additionally, Authorized Third Parties are allowed to retain backup copies of user information."/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="5. You understand and acknowledge that all information you provide, including personal information, profiles, and/or account information (including all changes and updates, if any), will be disclosed to potential Employers on TopCV with your consent."/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="6. TopCV fully respects the privacy rights of users. If you do not want your personal profile to be made public, please turn off the job-seeking feature and the feature allowing employers to view your profile to avoid being disturbed."/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="7. You understand and acknowledge that you do not have ownership rights in your account, and if you cancel your account on the TopCV.vn website or your account is terminated, all your account information on the TopCV.vn website, including resumes, personal information, cover letters, and saved jobs, will be marked as deleted and may be removed from the TopCV database and will be removed from any public areas on the TopCV.vn website. The information may continue to be displayed for a period of time due to delays in transmitting the deletion signal through TopCV.vn's servers or due to requests from relevant authorities. Additionally, third parties may be allowed to retain copies of your information."/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="8. TopCV reserves the right to delete your account and all your information after a long period of inactivity. A long period is understood to be from ..... months or more. You need the consent of TopCV if you wish to recover your information."/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="6. INTELLECTUAL PROPERTY RIGHTS STATEMENT"
+                                android:textSize="18dp"
+                                android:textStyle="bold"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="1. You represent and warrant that: (i) you own the Content you post on or through the Services, or in other words, you have the right to grant the rights and licenses set forth in these Terms of Use; (ii) the posting and use of the Content on or through the Services does not violate, misappropriate, or infringe upon the rights of any third party, including but not limited to privacy rights, publicity rights, copyright, trademark, and/or other intellectual property rights; (iii) you agree to pay all royalties, fees, and any other amounts owed due to the Content you post on or through the Services; and (iv) you have the right and legal capacity to enter into these Terms of Use in your authority."/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="2. The Services contain content owned or licensed by TopCV (TopCV Content). TopCV Content is protected by copyright, trademark, patent, trade secret, and other laws, and between you and TopCV, TopCV owns and holds all rights to the Services and TopCV Content. You may not remove, alter, or obscure any copyright notice, trademark, service mark, or other proprietary rights notice that is included with or accompanies TopCV Content, and you may not copy, modify, adapt, prepare derivative works based on, perform, display, publish, distribute, transmit, broadcast, sell, license, or exploit TopCV Content."/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="3. The TopCV logo and name are trademarks of TopCV and may not be copied, imitated, or used in whole or in part without prior written permission from TopCV. Additionally, all page headers, custom graphics, button icons, and scripts are service marks, trademarks, and/or trade dress of TopCV and may not be copied, imitated, or used in whole or in part without prior written permission from TopCV."/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="4. Despite the aim of TopCV to provide as many services as possible, there may be instances where the services may be interrupted, including but not limited to interruptions for scheduled maintenance or upgrades, emergency repairs, or due to equipment and/or telecommunications link failures. Furthermore, TopCV reserves the right to remove any content from the service for any reason that, in its opinion, violates these Terms, violates laws, rules, or regulations, is defamatory, harassing, offensive, or illegal, or infringes rights, or endangers or threatens the safety of users of any website belonging to TopCV.vn. TopCV has the right to expel users and prevent their subsequent access to the TopCV.vn website and/or use of TopCV services when violating these Terms or violating laws, rules, or regulations. TopCV is permitted to take any actions related to user content that it deems necessary or appropriate if it believes that the user content may create legal liability for TopCV, harm the TopCV brand or public image, or lead to a loss of users for TopCV. Content deleted from the service may continue to be stored by TopCV, including but not limited to storage to comply with certain legal obligations but may not be retrievable without a valid court order. TopCV will not be legally liable to you for any modifications, suspensions, or interruptions of the services or the loss of any content. You also acknowledge that the internet may not be secure and that sending content or other information may not be safe."/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="5. TopCV will not be responsible for any information posted by any third party, regardless of the reason, or for any content posted on TopCV by any organization. However, TopCV will make every effort to control and minimize instances of fraudulent job postings and incorrect information to protect Users. TopCV does not represent or guarantee the truthfulness, accuracy, or reliability of User Content, products derived from User Content, or any other communications posted by Users, nor does it endorse any opinions expressed by Users. You acknowledge that any reliance on materials posted by other Users is at your own risk."/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="7. DISCLAIMER OF LIABILITY"
+                                android:textSize="18dp"
+                                android:textStyle="bold"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="1. TopCV does not represent or warrant that the services will be error-free or uninterrupted; that errors will be corrected; or that the service or the server providing the service is free of any harmful components, including but not limited to viruses. TopCV makes no representations or warranties that the information (including any instructions) about the service is accurate, complete, or useful. You acknowledge that you use the service at your own risk. TopCV does not warrant that your use of the service is lawful in any specific jurisdiction, and TopCV expressly disclaims making such warranties. Some jurisdictions limit or do not allow the exclusion of implied warranties or other warranties, so the above disclaimer may not apply to you to the extent that the law of that jurisdiction applies to you and these Terms of Use."/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="2. By accessing or using the service, you represent and warrant that your activities are legal in all jurisdictions where you access or use the service."/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="3. TopCV does not endorse the content and specifically disclaims any responsibility or liability to any individual or entity for any loss, damage (whether actual, consequential, punitive, or otherwise), injury, claim, liability, or cause of action of any kind or nature based on or arising out of any content."/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="8. LIMITATION OF LEGAL LIABILITY"
+                                android:textSize="18dp"
+                                android:textStyle="bold"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="In all situations, TopCV will not be legally responsible to you for any loss or damage of any kind (including but not limited to any loss or damage that is direct, indirect, economic, punitive, incidental, or consequential) directly or indirectly related to: (a) the services; (b) TopCV content; (c) user content; (d) your use, inability to use, or effectiveness of the services; (e) any actions taken in connection with TopCV's or law enforcement's investigation regarding your use of the services or any other party; (f) any actions taken in relation to copyright owners or other intellectual property rights; (g) any errors or omissions in the operation of the services; or (h) any damage to any computer, mobile device, equipment, or other technology of the user, including but not limited to damage due to any security breach or due to any viruses, errors, impersonation, fraud, faults, omissions, interruptions, defects, delays in operations or transmission, network errors or computer line failures, any other technical incidents or glitches, including but not limited to damages due to loss of profits, loss of goodwill, loss of data, cessation of work, accuracy of results, or computer errors or malfunctions, even if foreseeable or if TopCV had been informed or should have known about the possibility of such damages, whether in contract, tort, strict liability, or personal fault (including but not limited to any cause partially or wholly due to negligence, acts of God, telecommunications failures, theft, or destruction of services). In any case, TopCV shall not be liable to you or anyone else for any loss, damage, or injury, including but not limited to personal injury or death."/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="9. DISPUTE RESOLUTION"
+                                android:textSize="18dp"
+                                android:textStyle="bold"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="1. Any disputes arising during the use of TopCV's services will be resolved according to the current laws of the Socialist Republic of Vietnam."/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="2. Any complaints arising during the use of the product must be sent to TopCV immediately after the event that triggers the complaint occurs:"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Contact Address: 3rd Floor, Gold Season Building, 47 Nguyen Tuan, Thanh Xuan Trung Ward, Thanh Xuan District, Hanoi"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Phone: 024 6680 5588"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Email: legal@topcv.vn"
+                                android:layout_marginBottom="10px"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="3. TopCV will base its resolution on each specific case accordingly. When exercising the right to complain, the complainant is obliged to provide relevant documents, evidence, and grounds related to the complaint and must be responsible for the content of the complaint, documents, evidence, and grounds provided by them in accordance with the law."/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="4. TopCV will only assist in resolving complaints and accusations from Users if you have fully, truthfully, and accurately provided information when registering an account."/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="5. In disputes between Users or disputes with Third Parties, TopCV may provide contact information to the parties involved so that they can resolve the issue themselves, or TopCV will base its resolution on the actual situation. Accordingly, TopCV will maximize the protection of the legitimate rights and interests of Users."/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="6. Users agree to indemnify and hold TopCV harmless from any legal obligations, litigation, losses, costs including, but not limited to, court fees, and consulting fees related to the resolution or arising from User violations during the use of the product."/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="7. If the dispute is not resolved within sixty (60) days from the date one Party notifies the other Party in writing about the dispute, either Party has the right to bring the case to the competent court in Hanoi in accordance with the law, and the losing Party shall bear all litigation costs in court."/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="10. EFFECTIVENESS"
+                                android:textSize="18dp"
+                                android:textStyle="bold"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="1. The provisions of these Terms of Use may be updated or modified at any time without prior notice to users. TopCV will clearly announce on the Website any changes or additions and update you to obtain your consent. The methods of announcement include, but are not limited to, email channels, registering a TopCV account, and notifications displayed on our Website before the changes take effect. If you do not agree with TopCV's updates or modifications, you will not be able to continue using TopCV's Services."/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="2. In the event that one or more provisions of these Terms of Use conflict with the provisions of law and are declared invalid by the Court, that provision will be amended to comply with current legal regulations, and the remaining provisions of these Terms of Use will remain in effect."/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="3. These Terms of Use are considered as a Contract. Users understand that this is an electronic contract, and the legal validity of the electronic contract cannot be denied merely because it is presented in the form of data messages according to the Law on Electronic Transactions. By clicking &quot;I agree&quot; button, Users fully agree to and understand the terms of this Contract, and the Contract takes effect from this moment. If you violate these Terms, you agree to take full responsibility and compensate for damages (if any) to TopCV."/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="CONTACT INFORMATION"
+                                android:textSize="18dp"
+                                android:textStyle="bold"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10px"
+                                android:text="If you have any questions about these Terms of Use, please email us at legal@topcv.vn for the quickest response."/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
