@@ -13,6 +13,12 @@
         android:theme="@style/Theme.TopCVRecruiter"
         tools:targetApi="31">
         <activity
+            android:name=".JobActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ArticleActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -23,20 +29,16 @@
         </activity>
         <activity
             android:name=".AboutActicity"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".PolicyActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".PrivatePolicyActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".TermOfServiceActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
     </application>
 
 </manifest>
