@@ -1,66 +1,71 @@
 package com.example.topcvrecruiter.Fragment;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.example.topcvrecruiter.ArticleActivity;
+import com.example.topcvrecruiter.JobActivity;
 import com.example.topcvrecruiter.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PostingFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.Calendar;
+
 public class PostingFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public PostingFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment PostingFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static PostingFragment newInstance(String param1, String param2) {
-        PostingFragment fragment = new PostingFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    private Button post_button;
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_posting, container, false);
+        post_button = view.findViewById(R.id.post_button);
+        post_button.setOnClickListener(view1 -> {
+            showPostTypeDialog();
+        });
+        return view;
     }
+    private void showPostTypeDialog() {
+        // Create AlertDialog to ask user if they want to post Article or Job
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Choose Post Type");
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_posting, container, false);
+        // Define options for the dialog (Article and Job)
+        String[] options = {"Article", "Job"};
+
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == 0) {
+                    // If user chooses Article, navigate to ArticleActivity
+                    Intent intent = new Intent(getActivity(), ArticleActivity.class);
+                    startActivity(intent);
+                } else if (which == 1) {
+                    // If user chooses Job, navigate to JobActivity
+                    Intent intent = new Intent(getActivity(), JobActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        // Add "Cancel" button if the user doesn't want to choose
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();  // Close the dialog if the user cancels
+            }
+        });
+
+        // Show the dialog
+        builder.create().show();
     }
 }
