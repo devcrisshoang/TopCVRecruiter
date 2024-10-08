@@ -13,6 +13,9 @@
         android:theme="@style/Theme.TopCVRecruiter"
         tools:targetApi="31">
         <activity
+            android:name=".JobDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".JobActivity"
             android:exported="false" />
         <activity

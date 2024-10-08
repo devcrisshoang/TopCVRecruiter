@@ -40,11 +40,13 @@
         android:layout_weight="1">
 
     </androidx.recyclerview.widget.RecyclerView>
+
     <Button
         android:id="@+id/post_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
+        android:backgroundTint="@color/green_color"
         android:text="Post">
 
     </Button>

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".JobActivity">
+    tools:context=".JobDetailsActivity">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -32,7 +32,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Posting Job"
+                android:text="Job Details"
                 android:textColor="@color/green_color"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -59,7 +59,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Job name:"
+                android:text="Job description:"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -69,13 +69,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/edit_text_rounded_corner"
-                android:hint="Mobile Intern, ..."
+                android:hint="Write a little about this job"
                 android:padding="10sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Working Experience Require:"
+                android:text="Skill Require:"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -85,13 +85,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/edit_text_rounded_corner"
-                android:hint="Topcv@gmail.com..."
+                android:hint="Communication, presentation, manage,..."
                 android:padding="10sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Working address:"
+                android:text="Benefit:"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -101,18 +101,79 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/edit_text_rounded_corner"
-                android:hint="Ha Noi, Ho Chi Minh city, ..."
+                android:hint="13th salary, learning new skill,..."
+                android:padding="10sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gender Require:"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/edit_text_rounded_corner"
+                android:hint="Male, female, ..."
+                android:padding="10sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Working Time:"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <EditText
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/edit_text_rounded_corner"
+                android:hint="7 - 8 hours per day..."
+                android:padding="10sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Working_Method:"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <EditText
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/edit_text_rounded_corner"
+                android:hint="Online or offline,..."
+                android:padding="10sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Working_Position:"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <EditText
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/edit_text_rounded_corner"
+                android:hint="Worker, employee, CEO, ..."
                 android:padding="10sp" />
 
         </LinearLayout>
 
         <Button
-            android:id="@+id/continue_button"
+            android:id="@+id/post_button"
             android:layout_margin="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/green_color"
-            android:text="Continue" />
+            android:text="Post" />
     </LinearLayout>
 
 </LinearLayout>
