@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">TopCV Recruiter</string>
+    <string name="facebook_app_id">1055763876209954</string>
+    <string name="fb_login_protocol_scheme">fb1234</string>
+    <string name="facebook_client_token">56789</string>
+    <string name="default_web_client_id">571562209461-aefv4e1tn0fpa0vghujm1enl5tijdl28.apps.googleusercontent.com</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
