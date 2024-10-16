@@ -50,4 +50,5 @@ dependencies {
 
     // Facebook SDK
     implementation("com.facebook.android:facebook-android-sdk:latest.release")
+    implementation(kotlin("script-runtime"))
 }
