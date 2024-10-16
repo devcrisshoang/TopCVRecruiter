@@ -1,0 +1,153 @@
+{
+  "project_info": {
+    "project_number": "571562209461",
+    "project_id": "dang-nhap-49625",
+    "storage_bucket": "dang-nhap-49625.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:571562209461:android:62198ebf247d21738b8efc",
+        "android_client_info": {
+          "package_name": "com.example.dangnhap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "571562209461-e7l18sc2vi2cmav207e19ejerdp8o7n9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dangnhap",
+            "certificate_hash": "b2b17d355ba35382ae2c3d0f78510ea61b5483fd"
+          }
+        },
+        {
+          "client_id": "571562209461-q1kt0ou457k47sjosnlunka2n2t3llfd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dangnhap",
+            "certificate_hash": "32b21bd7fb70c31162e014beb0340aef65eeb731"
+          }
+        },
+        {
+          "client_id": "571562209461-qt2r52ja591qhrsrln9qks96dglphiq5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dangnhap",
+            "certificate_hash": "a1bbeabb47dcdd1dfee852a8856190bb04864307"
+          }
+        },
+        {
+          "client_id": "571562209461-aefv4e1tn0fpa0vghujm1enl5tijdl28.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCc8DCWku4DAm9-zixPt5005n-bAXctqgc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "571562209461-aefv4e1tn0fpa0vghujm1enl5tijdl28.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:571562209461:android:321bebd6bcc2eca88b8efc",
+        "android_client_info": {
+          "package_name": "com.example.topcv"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "571562209461-21h89sbgqcqmiv6cn1lcn4ao5gcen05i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.topcv",
+            "certificate_hash": "b2b17d355ba35382ae2c3d0f78510ea61b5483fd"
+          }
+        },
+        {
+          "client_id": "571562209461-uheb493euv845tumsu8o2p4l6or4qqap.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.topcv",
+            "certificate_hash": "a1bbeabb47dcdd1dfee852a8856190bb04864307"
+          }
+        },
+        {
+          "client_id": "571562209461-aefv4e1tn0fpa0vghujm1enl5tijdl28.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCc8DCWku4DAm9-zixPt5005n-bAXctqgc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "571562209461-aefv4e1tn0fpa0vghujm1enl5tijdl28.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:571562209461:android:078eb4227514efbf8b8efc",
+        "android_client_info": {
+          "package_name": "com.example.topcvrecruiter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "571562209461-0u2ia1fnkqvtscbnrrj0r6ge4qnkg3jr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.topcvrecruiter",
+            "certificate_hash": "b2b17d355ba35382ae2c3d0f78510ea61b5483fd"
+          }
+        },
+        {
+          "client_id": "571562209461-mofl8jpo8e9l67ka3ucnj9jdok6764gt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.topcvrecruiter",
+            "certificate_hash": "a1bbeabb47dcdd1dfee852a8856190bb04864307"
+          }
+        },
+        {
+          "client_id": "571562209461-aefv4e1tn0fpa0vghujm1enl5tijdl28.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCc8DCWku4DAm9-zixPt5005n-bAXctqgc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "571562209461-aefv4e1tn0fpa0vghujm1enl5tijdl28.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
