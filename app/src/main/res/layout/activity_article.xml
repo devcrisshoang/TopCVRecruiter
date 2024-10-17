@@ -57,7 +57,9 @@
             android:textStyle="bold">
 
         </TextView>
+
         <EditText
+            android:id="@+id/editTextTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -74,22 +76,24 @@
             android:textStyle="bold">
 
         </TextView>
+
         <EditText
+            android:id="@+id/editTextContent"
             android:layout_width="match_parent"
             android:layout_height="400dp"
             android:layout_margin="5dp"
+            android:layout_weight="1"
             android:background="@drawable/edit_text_rounded_corner"
+            android:gravity="top"
             android:hint="Title here"
             android:padding="10sp"
-            android:gravity="top"
-            android:layout_weight="1"
             android:textSize="20sp" />
         <Button
-            android:id="@+id/add_new_cv_button"
+            android:id="@+id/add_new_article_button"
             android:layout_margin="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/green_color"
-            android:text="Add new CV" />
+            android:text="Add new article" />
     </LinearLayout>
 </LinearLayout>

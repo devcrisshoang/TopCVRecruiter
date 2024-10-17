@@ -26,7 +26,7 @@
             android:id="@+id/textViewWelcome"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Welcome to TopCV"
+            android:text="Welcome to TopCV Recruiter"
             android:textAlignment="center"
             android:textSize="20sp" />
 

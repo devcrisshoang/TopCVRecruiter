@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/tvJobName"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Job Name: " />
+    <TextView
+        android:id="@+id/tvWorkingExperienceRequire"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Working Experience Require: " />
+    <TextView
+        android:id="@+id/tvWorkingAddress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Working Address: " />
+    <TextView
+        android:id="@+id/tvCreateTime"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Create Time: " />
+    <TextView
+        android:id="@+id/tvApplicationDate"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Application Date: " />
+    <TextView
+        android:id="@+id/tvApplicationStatus"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Status: " />
+
+</LinearLayout>

@@ -15,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 public class JobActivity extends AppCompatActivity {
     private Button continue_button;
     private ImageButton back_button;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,4 +36,7 @@ public class JobActivity extends AppCompatActivity {
             finish();
         });
     }
+
+
+
 }
