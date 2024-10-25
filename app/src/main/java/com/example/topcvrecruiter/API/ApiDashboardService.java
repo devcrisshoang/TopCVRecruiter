@@ -1,5 +1,8 @@
 package com.example.topcvrecruiter.API;
 
+import com.example.topcvrecruiter.model.Applicant;
+
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
@@ -42,4 +45,10 @@ public interface ApiDashboardService {
 
     @GET("api/Recruiter/{id}/ResumeCount")
     Observable<String> getResumeCount(@Path("id") int recruiterId);
+
+    @GET("api/Recruiter/{id}/ApplicantsForJob")
+    Observable<List<Applicant>> getListApplicants(@Path("id") int recruiterId);
+
+    @GET("api/Recruiter/{id}/SuggestedApplicants")
+    Observable<List<Applicant>> getListSuggestedApplicants(@Path("id") int recruiterId);
 }
