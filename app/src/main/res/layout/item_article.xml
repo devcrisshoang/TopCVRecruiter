@@ -1,51 +1,53 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="5dp"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:gravity="center"
+    android:background="@drawable/edit_text_rounded_corner"
+    android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/tvArticleName"
-        android:layout_width="0dp"
+    <!-- ImageView bên trái -->
+
+    <!-- LinearLayout chứa hai TextView căn giữa -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Article Name: This is a long article name that will be truncated if it exceeds one line."
-        android:textSize="20sp"
-        android:textColor="#333333"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:paddingBottom="8dp"
-        android:layout_marginBottom="8dp"/>
+        android:layout_weight="1"
+        android:padding="15dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textSize="15sp"
+            android:layout_gravity="center"
+            android:text="The employer has just viewed your application information." />
+
+        <TextView
+            android:id="@+id/content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Data science recruitment, Google corporation just viewed your recruitment information."
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:textSize="14sp"
+            android:textColor="@android:color/black"/>
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/tvContent"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Content: This is a long content that will be truncated if it exceeds two lines. Content continues here..."
-        android:textSize="14sp"
-        android:textColor="#666666"
-        app:layout_constraintTop_toBottomOf="@+id/tvArticleName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:paddingBottom="8dp"
-        android:layout_marginBottom="8dp"/>
-
-    <TextView
-        android:id="@+id/tvCreateTime"
+        android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Create Time: "
-        android:textSize="12sp"
-        android:textColor="#999999"
-        app:layout_constraintTop_toBottomOf="@+id/tvContent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:text="Create Time: 25-10-2024" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_gravity="center"
+        android:text="10:10 PM"
+        android:layout_marginRight="5dp"/>
+</LinearLayout>

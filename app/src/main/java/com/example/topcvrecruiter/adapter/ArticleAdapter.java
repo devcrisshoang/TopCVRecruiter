@@ -89,9 +89,9 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            articleName = itemView.findViewById(R.id.tvArticleName);
-            content = itemView.findViewById(R.id.tvContent);
-            createTime = itemView.findViewById(R.id.tvCreateTime);
+            articleName = itemView.findViewById(R.id.name);
+            content = itemView.findViewById(R.id.content);
+            createTime = itemView.findViewById(R.id.time);
 
         }
     }
