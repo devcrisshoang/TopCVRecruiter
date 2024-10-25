@@ -1,39 +1,53 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="5dp"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:gravity="center"
+    android:background="@drawable/edit_text_rounded_corner"
+    android:orientation="horizontal">
 
+    <!-- ImageView bên trái -->
+
+    <!-- LinearLayout chứa hai TextView căn giữa -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="15dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/job_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:textSize="15sp"
+            android:layout_gravity="center"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="The employer has just viewed your application information." />
+
+        <TextView
+            android:id="@+id/job_address"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Data science recruitment, Google corporation just viewed your recruitment information."
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:textSize="14sp"
+            android:textColor="@android:color/black"/>
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/tvJobName"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Job Name: " />
-    <TextView
-        android:id="@+id/tvWorkingExperienceRequire"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Working Experience Require: " />
-    <TextView
-        android:id="@+id/tvWorkingAddress"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Working Address: " />
-    <TextView
-        android:id="@+id/tvCreateTime"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Create Time: " />
-    <TextView
-        android:id="@+id/tvApplicationDate"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Application Date: " />
-    <TextView
-        android:id="@+id/tvApplicationStatus"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Status: " />
-
+        android:id="@+id/job_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="10:10 PM"
+        android:layout_marginRight="5dp"/>
 </LinearLayout>

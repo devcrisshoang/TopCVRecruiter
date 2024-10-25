@@ -112,6 +112,7 @@
                 android:textStyle="bold" />
 
             <EditText
+                android:id="@+id/et_gender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -127,6 +128,7 @@
 
             <EditText
 
+                android:id="@+id/et_working_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -142,6 +144,7 @@
 
             <EditText
 
+                android:id="@+id/et_working_method"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -158,6 +161,7 @@
 
             <EditText
 
+                android:id="@+id/et_working_position"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"

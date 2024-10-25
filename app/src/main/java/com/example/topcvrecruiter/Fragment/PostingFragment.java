@@ -18,14 +18,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.topcvrecruiter.API.ApiJobService;
 import com.example.topcvrecruiter.API.ApiPostingService;
-
 import com.example.topcvrecruiter.adapter.ArticleAdapter;
 import com.example.topcvrecruiter.ArticleActivity;
 import com.example.topcvrecruiter.JobActivity;
 import com.example.topcvrecruiter.R;
-
+import com.example.topcvrecruiter.adapter.JobAdapter;
 import com.example.topcvrecruiter.model.Article;
+import com.example.topcvrecruiter.model.Job;
 
 import java.util.List;
 
@@ -36,19 +37,22 @@ import retrofit2.Response;
 public class PostingFragment extends Fragment {
     private Button post_button;
     private RecyclerView recyclerView;
-    private ArticleAdapter adapter;
+    private ArticleAdapter articleAdapter;
+    private JobAdapter jobAdapter;
     private List<Article> articleList;
-    private Button articleButton;
-
+    private Button articleButton, jobButton;
+    private List<Job> jobList;
 
     @Nullable
     @Override
-
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_posting, container, false);
 
         post_button = view.findViewById(R.id.post_button);
         recyclerView = view.findViewById(R.id.recycler_view_post);
+        articleButton = view.findViewById(R.id.article);
+        jobButton = view.findViewById(R.id.job);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL));
 
@@ -56,37 +60,33 @@ public class PostingFragment extends Fragment {
             showPostTypeDialog();
         });
 
-
-
-        articleButton = view.findViewById(R.id.article);
         articleButton.setOnClickListener(v -> {
-            // Reload the Fragment
-            getParentFragmentManager().beginTransaction().detach(this).attach(this).commit();
+            loadArticles();
         });
 
+        jobButton.setOnClickListener(v -> {
+            loadJobs();
+        });
 
-        loadArticles(); // Gọi hàm để tải dữ liệu từ API
+        loadArticles();
         return view;
-
     }
 
-
     private void loadArticles() {
-        // Khởi tạo Retrofit service
         ApiPostingService apiService = ApiPostingService.retrofit.create(ApiPostingService.class);
-
-        Call<List<Article>> call = apiService.getArticles(); // Gọi API để lấy danh sách bài viết
+        Call<List<Article>> call = apiService.getArticles();
         call.enqueue(new Callback<List<Article>>() {
             @Override
             public void onResponse(Call<List<Article>> call, Response<List<Article>> response) {
                 if (response.isSuccessful()) {
                     articleList = response.body();
                     if (articleList != null) {
-                        if (adapter == null) {
-                            adapter = new ArticleAdapter(articleList);
-                            recyclerView.setAdapter(adapter);
+
+                        if (!(recyclerView.getAdapter() instanceof ArticleAdapter) || articleAdapter == null) {
+                            articleAdapter = new ArticleAdapter(articleList);
+                            recyclerView.setAdapter(articleAdapter);
                         } else {
-                            adapter.updateData(articleList);
+                            articleAdapter.updateData(articleList);
                         }
                     }
                 } else {
@@ -94,53 +94,56 @@ public class PostingFragment extends Fragment {
                 }
             }
 
-
             @Override
             public void onFailure(Call<List<Article>> call, Throwable t) {
                 Toast.makeText(requireContext(), "Error loading articles: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
-
-
-    //
-    private void showPostTypeDialog() {
-        // Create AlertDialog to ask user if they want to post Article or Job
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Choose Post Type");
-
-        // Define options for the dialog (Article and Job)
-        String[] options = {"Article", "Job"};
-
-        builder.setItems(options, new DialogInterface.OnClickListener() {
+    private void loadJobs() {
+        ApiJobService apiService = ApiJobService.retrofit.create(ApiJobService.class);
+        Call<List<Job>> call = apiService.getJobs();
+        call.enqueue(new Callback<List<Job>>() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (which == 0) {
-                    // If user chooses Article, navigate to ArticleActivity
-                    Intent intent = new Intent(getActivity(), ArticleActivity.class);
-                    startActivity(intent);
-                } else if (which == 1) {
-                    // If user chooses Job, navigate to JobActivity
-                    Intent intent = new Intent(getActivity(), JobActivity.class);
-                    startActivity(intent);
+            public void onResponse(Call<List<Job>> call, Response<List<Job>> response) {
+                if (response.isSuccessful()) {
+                    jobList = response.body();
+                    if (jobList != null) {
+
+                        if (!(recyclerView.getAdapter() instanceof JobAdapter) || jobAdapter == null) {
+                            jobAdapter = new JobAdapter(jobList);
+                            recyclerView.setAdapter(jobAdapter);
+                        } else {
+                            jobAdapter.updateData(jobList);
+                        }
+                    }
+                } else {
+                    Toast.makeText(requireContext(), "Failed to load jobs", Toast.LENGTH_SHORT).show();
                 }
             }
-        });
 
-        // Add "Cancel" button if the user doesn't want to choose
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();  // Close the dialog if the user cancels
+            public void onFailure(Call<List<Job>> call, Throwable t) {
+                Toast.makeText(requireContext(), "Error loading jobs: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void showPostTypeDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Choose Post Type");
+        String[] options = {"Article", "Job"};
+
+        builder.setItems(options, (dialog, which) -> {
+            if (which == 0) {
+                startActivity(new Intent(getActivity(), ArticleActivity.class));
+            } else if (which == 1) {
+                startActivity(new Intent(getActivity(), JobActivity.class));
             }
         });
 
-        // Show the dialog
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
         builder.create().show();
     }
 }
-
-
-

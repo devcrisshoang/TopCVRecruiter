@@ -1,9 +1,8 @@
 package com.example.topcvrecruiter.API;
 
-import android.app.AlertDialog;
 
-import com.example.topcvrecruiter.model.Article;
 import com.example.topcvrecruiter.model.Job;
+import com.example.topcvrecruiter.model.JobDetails;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -40,13 +39,16 @@ public interface ApiJobService {
 
 
 
-    ApiPostingService apiService = retrofit.create(ApiPostingService.class);
+    ApiJobService apiService = retrofit.create(ApiJobService.class);
 
 
     @GET("api/Job")
     Call<List<Job>> getJobs();
 
     @POST("api/Job")
-    Call<Job> postJob(@Body Job job);
+    Call<Job> postJob (@Body Job job);
 
+
+    @POST("api/JobDetails")
+    Call<JobDetails> postJobDetails (@Body JobDetails jobDetails);
 }

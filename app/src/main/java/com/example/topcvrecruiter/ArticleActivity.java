@@ -58,9 +58,12 @@ public class ArticleActivity extends AppCompatActivity {
                     postArticle(title, content);
                 } else {
                     Toast.makeText(ArticleActivity.this, "Vui lòng nhập đủ thông tin", Toast.LENGTH_SHORT).show();
+
                 }
+                finish();
             }
         });
+
     }
 
 

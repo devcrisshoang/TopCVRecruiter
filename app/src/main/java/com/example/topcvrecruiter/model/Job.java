@@ -1,13 +1,30 @@
 package com.example.topcvrecruiter.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Job {
+    @SerializedName("id")
     private int id;
+
+    @SerializedName("job_Name")
     private String job_Name;
+
+    @SerializedName("working_Experience_Require")
     private String working_Experience_Require;
+
+    @SerializedName("working_Address")
     private String working_Address;
+
+    @SerializedName("create_Time")
     private String create_Time;
+
+    @SerializedName("application_Date")
     private String application_Date;
+
+    @SerializedName("application_Status")
     private boolean application_Status;
+
+    @SerializedName("iD_Recruiter")
     private int iD_Recruiter;
 
     // Getters và Setters
@@ -73,6 +90,14 @@ public class Job {
     }
 
     public void setiD_Recruiter(int iD_Recruiter) {
+        this.iD_Recruiter = iD_Recruiter;
+    }
+
+    public Job(String job_Name, String working_Experience_Require, String working_Address, String create_Time, int iD_Recruiter) {
+        this.job_Name = job_Name;
+        this.working_Experience_Require = working_Experience_Require;
+        this.working_Address = working_Address;
+        this.create_Time = create_Time;
         this.iD_Recruiter = iD_Recruiter;
     }
 }
