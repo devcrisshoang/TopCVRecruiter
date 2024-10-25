@@ -19,17 +19,19 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/ActionOfRecruiterTextView"
+            android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:layout_weight="1"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textSize="15sp"
             android:layout_gravity="center"
             android:text="The employer has just viewed your application information." />
 
         <TextView
-            android:id="@+id/ActionDetailsOfRecruiterTextView"
+            android:id="@+id/content"
             android:layout_weight="1"
             android:layout_gravity="center"
             android:layout_width="match_parent"
@@ -42,7 +44,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/TimeOfNotification"
+        android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
