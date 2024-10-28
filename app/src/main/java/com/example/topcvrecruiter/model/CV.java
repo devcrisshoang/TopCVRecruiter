@@ -1,9 +1,12 @@
 package com.example.topcvrecruiter.model;
 
-public class CV {
+import java.io.Serializable;
+
+public class CV implements Serializable {
     private int id;
     private String name;
     private String email;
+    private String phone_Number;
     private String education;
     private String experience;
     private String skills;
@@ -12,10 +15,11 @@ public class CV {
     private int image;
 
 
-    public CV(int id, String name, String email, String education, String experience, String skills, String certifications, String position, int image) {
+    public CV(int id, String name, String email, String phoneNumber, String education, String experience, String skills, String certifications, String position, int image) {
         this.id = id;
         this.name = name;
         this.email = email;
+        phone_Number = phoneNumber;
         this.education = education;
         this.experience = experience;
         this.skills = skills;
@@ -94,6 +98,14 @@ public class CV {
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    public String getPhone_Number() {
+        return phone_Number;
+    }
+
+    public void setPhone_Number(String phone_Number) {
+        this.phone_Number = phone_Number;
     }
 }
 

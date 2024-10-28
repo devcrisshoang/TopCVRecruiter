@@ -25,6 +25,12 @@
             android:name=".NumberApplicantActivity"
             android:exported="false" />
         <activity
+            android:name=".NumberJobOfRecruiterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".NumberResumeActivity"
+            android:exported="false" />
+        <activity
             android:name=".VerifyPhoneActivity"
             android:exported="false" />
         <activity

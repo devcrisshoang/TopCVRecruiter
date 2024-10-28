@@ -1,6 +1,8 @@
 package com.example.topcvrecruiter.API;
 
 import com.example.topcvrecruiter.model.Applicant;
+import com.example.topcvrecruiter.model.CV;
+import com.example.topcvrecruiter.model.Job;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -40,15 +42,21 @@ public interface ApiDashboardService {
     @GET("api/Recruiter/{id}/JobCount")
     Observable<Integer> getJobCount(@Path("id") int recruiterId);
 
+    @GET("api/Recruiter/{id}/ResumeCount")
+    Observable<String> getResumeCount(@Path("id") int recruiterId);
+
     @GET("api/Recruiter/{id}/ApplicationRatio")
     Observable<String> getApplicationRatio(@Path("id") int recruiterId);
 
-    @GET("api/Recruiter/{id}/ResumeCount")
-    Observable<String> getResumeCount(@Path("id") int recruiterId);
+    @GET("api/Recruiter/{id}/SuggestedApplicants")
+    Observable<List<Applicant>> getListSuggestedApplicants(@Path("id") int recruiterId);
 
     @GET("api/Recruiter/{id}/ApplicantsForJob")
     Observable<List<Applicant>> getListApplicants(@Path("id") int recruiterId);
 
-    @GET("api/Recruiter/{id}/SuggestedApplicants")
-    Observable<List<Applicant>> getListSuggestedApplicants(@Path("id") int recruiterId);
+    @GET("api/Recruiter/{id}/ResumesForJobs")
+    Observable<List<CV>> getListResume(@Path("id") int recruiterId);
+
+    @GET("api/Recruiter/{id}/JobsList")
+    Observable<List<Job>> getListJobs(@Path("id") int recruiterId);
 }

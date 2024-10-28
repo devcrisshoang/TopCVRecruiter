@@ -17,8 +17,13 @@ import android.widget.TextView;
 import com.example.topcvrecruiter.API.ApiDashboardService;
 import com.example.topcvrecruiter.Adapter.DashboardApplicantAdapter;
 import com.example.topcvrecruiter.NumberApplicantActivity;
+import com.example.topcvrecruiter.NumberJobOfRecruiterActivity;
+import com.example.topcvrecruiter.NumberResumeActivity;
 import com.example.topcvrecruiter.R;
 import com.example.topcvrecruiter.model.Applicant;
+import com.example.topcvrecruiter.model.CV;
+import com.example.topcvrecruiter.model.Job;
+import com.example.topcvrecruiter.model.Jobs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,12 +104,17 @@ public class DashboardFragment extends Fragment {
         //return inflater.inflate(R.layout.fragment_dashboard, container, false);
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
+        //Card View TextView
         applicantCountTextView = view.findViewById(R.id.electricity_amount);
         jobCountTextView = view.findViewById(R.id.job_count);
         recruitingRateTextView = view.findViewById(R.id.recruiting_rate);
         resumeCountTextView = view.findViewById(R.id.resume_amount);
 
+        //Card View onclick view
         applicantCardView = view.findViewById(R.id.applicant_cardView);
+        jobCardView = view.findViewById(R.id.job_cardView);
+        resumeCardView = view.findViewById((R.id.resume_cardView));
+        rateCardView = view.findViewById(R.id.rate_cardView);
 
         applicantsRecyclerView = view.findViewById(R.id.aplicants_Recycler_View);
         applicantsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -115,6 +125,9 @@ public class DashboardFragment extends Fragment {
         fetchDashboardData(1);
 
         applicantCardView.setOnClickListener(view1 -> fetchListApplicants(1));
+        jobCardView.setOnClickListener(view2 -> fetchListJobs(1));
+        resumeCardView.setOnClickListener(view3 -> fetchListResumes(1));
+
         return view;
     }
 
@@ -147,6 +160,69 @@ public class DashboardFragment extends Fragment {
                 });
 
     }
+    private  void  fetchListJobs(int recruiterId) {
+        apiDashboardService.getListJobs(recruiterId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Job>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<Job> jobs) {
+                        Intent intent = new Intent(getContext(), NumberJobOfRecruiterActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("jobsList", new ArrayList<>(jobs));
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e("DashboardFragment", "Error fetching jobs list", e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    });
+    };
+    private  void  fetchListResumes(int recruiterId){
+        apiDashboardService.getListResume(recruiterId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<CV>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<CV> resumes) {
+                        Intent intent = new Intent(getContext(), NumberResumeActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("resumeList", new ArrayList<>(resumes));
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e("DashboardFragment", "Error fetching resumes list", e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                });
+    };
+
     private void fetchApplicantCountAndOpenActivity(int recruiterId) {
         apiDashboardService.getApplicantCount(recruiterId)
                 .subscribeOn(Schedulers.io())
