@@ -23,7 +23,6 @@ import com.example.topcvrecruiter.R;
 import com.example.topcvrecruiter.model.Applicant;
 import com.example.topcvrecruiter.model.CV;
 import com.example.topcvrecruiter.model.Job;
-import com.example.topcvrecruiter.model.Jobs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -125,8 +124,8 @@ public class DashboardFragment extends Fragment {
         fetchDashboardData(1);
 
         applicantCardView.setOnClickListener(view1 -> fetchListApplicants(1));
-        jobCardView.setOnClickListener(view2 -> fetchListJobs(1));
-        resumeCardView.setOnClickListener(view3 -> fetchListResumes(1));
+        jobCardView.setOnClickListener(view1 -> fetchListJobs(1));
+        resumeCardView.setOnClickListener(view1 -> fetchListResumes(1));
 
         return view;
     }

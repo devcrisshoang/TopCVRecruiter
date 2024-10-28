@@ -23,51 +23,60 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:gravity="center"
+        android:weightSum="5"
+        android:layout_gravity="center"
         android:orientation="vertical">
-
         <!-- Job Name -->
+
+        <!-- Working Experience Requirement -->
         <TextView
             android:id="@+id/job_jobNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Job 1"
-            android:textStyle="bold"
-            android:textSize="20sp"
+            android:layout_weight="3"
             android:gravity="center"
-            android:textAlignment="center"/>
+            android:text="Job"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-        <!-- Working Experience Requirement -->
         <TextView
             android:id="@+id/job_experienceRequirementTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="experience"
             android:maxLines="2"
             android:ellipsize="end"
             android:textSize="14sp"
             android:textColor="@android:color/black"
-            android:gravity="center"
-            android:textAlignment="center"/>
+            android:gravity="center" />
 
         <!-- Working Address -->
         <TextView
             android:id="@+id/job_workingAddressTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="address"
             android:maxLines="2"
             android:ellipsize="end"
             android:textSize="14sp"
             android:textColor="@android:color/black"
-            android:gravity="center"
-            android:textAlignment="center"/>
-
+            android:gravity="center" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.5"
+        android:weightSum="2"
+        android:gravity="center"
+        android:orientation="vertical">
         <!-- Create Time -->
         <TextView
             android:id="@+id/job_createTimeTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="Create Time"
             android:maxLines="1"
             android:ellipsize="end"
@@ -75,16 +84,15 @@
             android:textColor="@android:color/black"
             android:gravity="center"
             android:textAlignment="center"/>
-
+        <!-- Application Date -->
+        <TextView
+            android:layout_weight="1"
+            android:id="@+id/job_applicationDateTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:text="2024-10-22"
+            android:textSize="14sp" />
     </LinearLayout>
-
-    <!-- Application Date -->
-    <TextView
-        android:id="@+id/job_applicationDateTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginEnd="5dp"
-        android:text="2024-10-22"
-        android:textSize="14sp" />
 </LinearLayout>

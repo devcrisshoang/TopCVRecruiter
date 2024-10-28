@@ -9,15 +9,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.topcvrecruiter.R;
-import com.example.topcvrecruiter.model.Applicant;
 import com.example.topcvrecruiter.model.Job;
-import com.example.topcvrecruiter.model.Jobs;
 
 import java.util.List;
 
 public class DasboardJobAdapter extends RecyclerView.Adapter<DasboardJobAdapter.DashboardViewHolder>{
     private List<Job> listJob;
-    public DasboardJobAdapter(List<Job> listJob){
+    public DasboardJobAdapter(List<Job> listJob) {
         this.listJob = listJob;
     }
     public void setListJob(List<Job> listJob) {
@@ -29,7 +27,7 @@ public class DasboardJobAdapter extends RecyclerView.Adapter<DasboardJobAdapter.
     @Override
     public DashboardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_job, parent, false);
-        return new DasboardJobAdapter.DashboardViewHolder(view);
+        return new DashboardViewHolder(view);
     }
 
     @Override
@@ -39,8 +37,8 @@ public class DasboardJobAdapter extends RecyclerView.Adapter<DasboardJobAdapter.
         holder.jobNameTextView.setText(job.getJob_Name());
         holder.experienceRequirementTextView.setText(job.getWorking_Experience_Require());
         holder.workingAddressTextView.setText(job.getWorking_Address());
-        holder.createTimeTextView.setText(job.getCreate_Time().toString());
-        holder.applicationDateTextView.setText(job.getApplication_Date().toString());
+        holder.createTimeTextView.setText(job.getCreate_Time());
+        holder.applicationDateTextView.setText(job.getApplication_Date());
     }
 
     @Override
@@ -55,6 +53,7 @@ public class DasboardJobAdapter extends RecyclerView.Adapter<DasboardJobAdapter.
         private TextView workingAddressTextView;
         private TextView createTimeTextView;
         private TextView applicationDateTextView;
+
         public DashboardViewHolder(@NonNull View itemView) {
             super(itemView);
             jobNameTextView = itemView.findViewById(R.id.job_jobNameTextView);

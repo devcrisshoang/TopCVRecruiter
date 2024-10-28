@@ -4,28 +4,30 @@ import java.io.Serializable;
 
 public class CV implements Serializable {
     private int id;
-    private String name;
+    private String applicant_Name;
     private String email;
     private String phone_Number;
     private String education;
-    private String experience;
     private String skills;
-    private String certifications;
-    private String position;
-    private int image;
+    private String certificate;
+    private String job_Applying;
+    private String introduction;
+    private String image;
+    private int iD_Applicant;
 
 
-    public CV(int id, String name, String email, String phoneNumber, String education, String experience, String skills, String certifications, String position, int image) {
+    public CV(int id, String applicant_Name, String email, String phone_Number, String education, String skills, String certificate, String job_Applying, String introduction, String image, int iD_Applicant) {
         this.id = id;
-        this.name = name;
+        this.applicant_Name = applicant_Name;
         this.email = email;
-        phone_Number = phoneNumber;
+        this.phone_Number = phone_Number;
         this.education = education;
-        this.experience = experience;
         this.skills = skills;
-        this.certifications = certifications;
-        this.position = position;
+        this.certificate = certificate;
+        this.job_Applying = job_Applying;
+        this.introduction = introduction;
         this.image = image;
+        this.iD_Applicant = iD_Applicant;
     }
 
     public int getId() {
@@ -36,20 +38,12 @@ public class CV implements Serializable {
         this.id = id;
     }
 
-    public int getImage() {
-        return image;
+    public String getApplicant_Name() {
+        return applicant_Name;
     }
 
-    public void setImage(int image) {
-        this.image = image;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setApplicant_Name(String applicant_Name) {
+        this.applicant_Name = applicant_Name;
     }
 
     public String getEmail() {
@@ -60,20 +54,20 @@ public class CV implements Serializable {
         this.email = email;
     }
 
+    public String getPhone_Number() {
+        return phone_Number;
+    }
+
+    public void setPhone_Number(String phone_Number) {
+        this.phone_Number = phone_Number;
+    }
+
     public String getEducation() {
         return education;
     }
 
     public void setEducation(String education) {
         this.education = education;
-    }
-
-    public String getExperience() {
-        return experience;
-    }
-
-    public void setExperience(String experience) {
-        this.experience = experience;
     }
 
     public String getSkills() {
@@ -84,28 +78,44 @@ public class CV implements Serializable {
         this.skills = skills;
     }
 
-    public String getCertifications() {
-        return certifications;
+    public String getCertificate() {
+        return certificate;
     }
 
-    public void setCertifications(String certifications) {
-        this.certifications = certifications;
+    public void setCertificate(String certificate) {
+        this.certificate = certificate;
     }
 
-    public String getPosition() {
-        return position;
+    public String getJob_Applying() {
+        return job_Applying;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
+    public void setJob_Applying(String job_Applying) {
+        this.job_Applying = job_Applying;
     }
 
-    public String getPhone_Number() {
-        return phone_Number;
+    public String getIntroduction() {
+        return introduction;
     }
 
-    public void setPhone_Number(String phone_Number) {
-        this.phone_Number = phone_Number;
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public int getiD_Applicant() {
+        return iD_Applicant;
+    }
+
+    public void setiD_Applicant(int iD_Applicant) {
+        this.iD_Applicant = iD_Applicant;
     }
 }
 

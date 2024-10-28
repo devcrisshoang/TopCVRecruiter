@@ -28,7 +28,6 @@ public class NumberJobOfRecruiterActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra("jobsList")) {
             jobsList = (List<Job>) intent.getSerializableExtra("jobsList");
-            // xử lý jobsList để hiển thị
         } else {
             Log.e("NumberJobOfRecruiterActivity", "No job list received");
         }

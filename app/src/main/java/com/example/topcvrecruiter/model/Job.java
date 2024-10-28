@@ -1,27 +1,20 @@
 package com.example.topcvrecruiter.model;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class Job implements Serializable {
     private int id;
     private String job_Name;
     private String working_Experience_Require;
     private String working_Address;
-    private Date create_Time;
-    private Date application_Date;
+    private String create_Time;
+    private String application_Date;
     private boolean application_Status;
     private int iD_Recruiter;
 
-    public Job(int id, String job_Name, String working_Experience_Require, String working_Address, Date create_Time, Date application_Date, boolean application_Status) {
-        this.id = id;
-        this.job_Name = job_Name;
-        this.working_Experience_Require = working_Experience_Require;
-        this.working_Address = working_Address;
-        this.create_Time = create_Time;
-        this.application_Date = application_Date;
-        this.application_Status = application_Status;
-    }
 
     public int getId() {
         return id;
@@ -55,19 +48,19 @@ public class Job implements Serializable {
         this.working_Address = working_Address;
     }
 
-    public Date getCreate_Time() {
+    public String getCreate_Time() {
         return create_Time;
     }
 
-    public void setCreate_Time(Date create_Time) {
+    public void setCreate_Time(String create_Time) {
         this.create_Time = create_Time;
     }
 
-    public Date getApplication_Date() {
+    public String getApplication_Date() {
         return application_Date;
     }
 
-    public void setApplication_Date(Date application_Date) {
+    public void setApplication_Date(String application_Date) {
         this.application_Date = application_Date;
     }
 
@@ -77,5 +70,24 @@ public class Job implements Serializable {
 
     public void setApplication_Status(boolean application_Status) {
         this.application_Status = application_Status;
+    }
+
+    public int getiD_Recruiter() {
+        return iD_Recruiter;
+    }
+
+    public void setiD_Recruiter(int iD_Recruiter) {
+        this.iD_Recruiter = iD_Recruiter;
+    }
+
+    public Job(int id, String job_Name, String working_Experience_Require, String working_Address, String create_Time, String application_Date, boolean application_Status, int iD_Recruiter) {
+        this.id = id;
+        this.job_Name = job_Name;
+        this.working_Experience_Require = working_Experience_Require;
+        this.working_Address = working_Address;
+        this.create_Time = create_Time;
+        this.application_Date = application_Date;
+        this.application_Status = application_Status;
+        this.iD_Recruiter = iD_Recruiter;
     }
 }

@@ -8,11 +8,19 @@ public class Applicant implements Serializable {
     private String phone_number;
     private String email;
 
-
-    public Applicant(String applicant_Name, String phone_number, String email) {
+    public Applicant(int id, String applicant_Name, String phone_number, String email) {
+        this.id = id;
         this.applicant_Name = applicant_Name;
         this.phone_number = phone_number;
         this.email = email;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getApplicant_Name() {

@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
     android:background="@drawable/edit_text_rounded_corner_green"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:padding="10dp">
 
     <!-- Applicant Image -->
     <ImageView
@@ -12,120 +13,142 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_gravity="center"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
         android:background="@drawable/icon_rounded_corner"
         android:padding="10dp"
         android:src="@drawable/fpt_ic" />
 
+    <!-- Main Content Section -->
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="center"
+        android:weightSum="2">
 
-        <!-- Applicant Name -->
-        <TextView
-            android:id="@+id/resume_applicantNameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Lo thi thieu"
-            android:textAlignment="center"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+        <!-- Top Section: Name, Email, Phone Number -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
 
-        <!-- Email -->
-        <TextView
-            android:id="@+id/resume_emailTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLines="1"
-            android:text="HenNguoiHomsau@gmail.com"
-            android:textAlignment="center"
-            android:textColor="@android:color/black"
-            android:textSize="14sp" />
+            <!-- Applicant Name -->
+            <TextView
+                android:id="@+id/resume_applicantNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lo thi thieu"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:gravity="center" />
 
-        <!-- Phone Number -->
-        <TextView
-            android:id="@+id/resume_phoneNumberTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLines="1"
-            android:text="02316548"
-            android:textAlignment="center"
-            android:textColor="@android:color/black"
-            android:textSize="14sp" />
+            <!-- Email -->
+            <TextView
+                android:id="@+id/resume_emailTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="HenNguoiHomsau@gmail.com"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"
+                android:textAlignment="center"
+                android:gravity="center" />
 
-        <!-- Education -->
-        <TextView
-            android:id="@+id/resume_educationTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLines="1"
-            android:text="None"
-            android:textAlignment="center"
-            android:textColor="@android:color/black"
-            android:textSize="14sp" />
+            <!-- Phone Number -->
+            <TextView
+                android:id="@+id/resume_phoneNumberTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="02316548"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"
+                android:textAlignment="center"
+                android:gravity="center" />
+        </LinearLayout>
 
-        <!-- Skills -->
-        <TextView
-            android:id="@+id/resume_skillsTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLines="1"
-            android:text="None"
-            android:textAlignment="center"
-            android:textColor="@android:color/black"
-            android:textSize="14sp" />
+        <!-- Bottom Section: Education, Skills, Certificate, Job Applying, Introduction -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
-        <!-- Certificate -->
-        <TextView
-            android:id="@+id/resume_certificateTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLines="1"
-            android:text="None"
-            android:textAlignment="center"
-            android:textColor="@android:color/black"
-            android:textSize="14sp" />
+            <!-- Left Column -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
 
-        <!-- Job Applying -->
-        <TextView
-            android:id="@+id/resume_jobApplyingTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLines="1"
-            android:text="None"
-            android:textAlignment="center"
-            android:textColor="@android:color/black"
-            android:textSize="14sp" />
+                <!-- Education -->
+                <TextView
+                    android:id="@+id/resume_educationTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="None"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:gravity="center" />
 
-        <!-- Introduction -->
-        <TextView
-            android:id="@+id/resume_introductionTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLines="2"
-            android:text="None"
-            android:textAlignment="center"
-            android:textColor="@android:color/black"
-            android:textSize="14sp" />
+                <!-- Skills -->
+                <TextView
+                    android:id="@+id/resume_skillsTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="None"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:gravity="center" />
+
+                <!-- Certificate -->
+                <TextView
+                    android:id="@+id/resume_certificateTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="None"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:gravity="center" />
+            </LinearLayout>
+
+            <!-- Right Column -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <!-- Job Applying -->
+                <TextView
+                    android:id="@+id/resume_jobApplyingTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="None"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:gravity="center" />
+
+                <!-- Introduction -->
+                <TextView
+                    android:id="@+id/resume_introductionTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text="None"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:gravity="center" />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
