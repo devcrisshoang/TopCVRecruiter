@@ -21,6 +21,9 @@
             android:name=".VerifyPhoneActivity"
             android:exported="false" />
         <activity
+            android:name=".JobDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".InformationActivity"
             android:exported="false" />
 
