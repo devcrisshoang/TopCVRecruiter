@@ -1,5 +1,7 @@
 package com.example.topcvrecruiter.adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.topcvrecruiter.R;
 import com.example.topcvrecruiter.model.Job;
+import com.example.topcvrecruiter.model.JobDetails;
+import com.example.topcvrecruiter.JobDetailActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,8 +20,10 @@ import java.util.Locale;
 
 public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
     private List<Job> jobList;
+    private Context context;
 
-    public JobAdapter(List<Job> jobList) {
+    public JobAdapter(Context context, List<Job> jobList) {
+        this.context = context;
         this.jobList = jobList;
     }
 
@@ -66,6 +72,13 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
             e.printStackTrace();
             holder.jobTime.setText("Create Time: " + job.getCreate_Time());
         }
+
+        // Thiết lập sự kiện khi nhấn vào item
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, JobDetailActivity.class);
+            intent.putExtra("jobId", job.getId()); // Truyền jobId
+            context.startActivity(intent);
+        });
     }
 
     @Override

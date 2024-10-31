@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -53,97 +52,104 @@ public class PostingFragment extends Fragment {
         articleButton = view.findViewById(R.id.article);
         jobButton = view.findViewById(R.id.job);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext())); // Thay requireContext() bằng getContext()
 
-        post_button.setOnClickListener(view1 -> {
-            showPostTypeDialog();
-        });
+        post_button.setOnClickListener(view1 -> showPostTypeDialog());
 
-        articleButton.setOnClickListener(v -> {
-            loadArticles();
-        });
+        articleButton.setOnClickListener(v -> loadArticles());
 
-        jobButton.setOnClickListener(v -> {
-            loadJobs();
-        });
+        jobButton.setOnClickListener(v -> loadJobs());
 
         loadArticles();
         return view;
     }
 
     private void loadArticles() {
-        ApiPostingService apiService = ApiPostingService.retrofit.create(ApiPostingService.class);
-        Call<List<Article>> call = apiService.getArticles();
-        call.enqueue(new Callback<List<Article>>() {
-            @Override
-            public void onResponse(Call<List<Article>> call, Response<List<Article>> response) {
-                if (response.isSuccessful()) {
-                    articleList = response.body();
-                    if (articleList != null) {
-
-                        if (!(recyclerView.getAdapter() instanceof ArticleAdapter) || articleAdapter == null) {
-                            articleAdapter = new ArticleAdapter(articleList);
-                            recyclerView.setAdapter(articleAdapter);
-                        } else {
-                            articleAdapter.updateData(articleList);
+        if (getContext() != null) { // Kiểm tra context trước khi sử dụng
+            articleButton.setTextColor(getResources().getColor(R.color.green_color));
+            jobButton.setTextColor(getResources().getColor(R.color.black));
+            ApiPostingService apiService = ApiPostingService.retrofit.create(ApiPostingService.class);
+            Call<List<Article>> call = apiService.getArticles();
+            call.enqueue(new Callback<List<Article>>() {
+                @Override
+                public void onResponse(Call<List<Article>> call, Response<List<Article>> response) {
+                    if (response.isSuccessful()) {
+                        articleList = response.body();
+                        if (articleList != null) {
+                            if (!(recyclerView.getAdapter() instanceof ArticleAdapter) || articleAdapter == null) {
+                                articleAdapter = new ArticleAdapter(getContext(), articleList);
+                                recyclerView.setAdapter(articleAdapter);
+                            } else {
+                                articleAdapter.updateData(articleList);
+                            }
                         }
+                    } else {
+                        showToast("Failed to load articles");
                     }
-                } else {
-                    Toast.makeText(requireContext(), "Failed to load articles", Toast.LENGTH_SHORT).show();
                 }
-            }
 
-            @Override
-            public void onFailure(Call<List<Article>> call, Throwable t) {
-                Toast.makeText(requireContext(), "Error loading articles: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(Call<List<Article>> call, Throwable t) {
+                    showToast("Error loading articles: " + t.getMessage());
+                }
+            });
+        }
     }
 
     private void loadJobs() {
-        ApiJobService apiService = ApiJobService.retrofit.create(ApiJobService.class);
-        Call<List<Job>> call = apiService.getJobs();
-        call.enqueue(new Callback<List<Job>>() {
-            @Override
-            public void onResponse(Call<List<Job>> call, Response<List<Job>> response) {
-                if (response.isSuccessful()) {
-                    jobList = response.body();
-                    if (jobList != null) {
-
-                        if (!(recyclerView.getAdapter() instanceof JobAdapter) || jobAdapter == null) {
-                            jobAdapter = new JobAdapter(jobList);
-                            recyclerView.setAdapter(jobAdapter);
-                        } else {
-                            jobAdapter.updateData(jobList);
+        if (getContext() != null) { // Kiểm tra context trước khi sử dụng
+            jobButton.setTextColor(getResources().getColor(R.color.green_color));
+            articleButton.setTextColor(getResources().getColor(R.color.black));
+            ApiJobService apiService = ApiJobService.retrofit.create(ApiJobService.class);
+            Call<List<Job>> call = apiService.getJobs();
+            call.enqueue(new Callback<List<Job>>() {
+                @Override
+                public void onResponse(Call<List<Job>> call, Response<List<Job>> response) {
+                    if (response.isSuccessful()) {
+                        jobList = response.body();
+                        if (jobList != null) {
+                            if (!(recyclerView.getAdapter() instanceof JobAdapter) || jobAdapter == null) {
+                                jobAdapter = new JobAdapter(getContext(), jobList);
+                                recyclerView.setAdapter(jobAdapter);
+                            } else {
+                                jobAdapter.updateData(jobList);
+                            }
                         }
+                    } else {
+                        showToast("Failed to load jobs");
                     }
-                } else {
-                    Toast.makeText(requireContext(), "Failed to load jobs", Toast.LENGTH_SHORT).show();
                 }
-            }
 
-            @Override
-            public void onFailure(Call<List<Job>> call, Throwable t) {
-                Toast.makeText(requireContext(), "Error loading jobs: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(Call<List<Job>> call, Throwable t) {
+                    showToast("Error loading jobs: " + t.getMessage());
+                }
+            });
+        }
     }
 
     private void showPostTypeDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Choose Post Type");
-        String[] options = {"Article", "Job"};
+        if (getContext() != null) { // Kiểm tra context trước khi sử dụng
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Choose Post Type");
+            String[] options = {"Article", "Job"};
 
-        builder.setItems(options, (dialog, which) -> {
-            if (which == 0) {
-                startActivity(new Intent(getActivity(), ArticleActivity.class));
-            } else if (which == 1) {
-                startActivity(new Intent(getActivity(), JobActivity.class));
-            }
-        });
+            builder.setItems(options, (dialog, which) -> {
+                if (which == 0) {
+                    startActivity(new Intent(getActivity(), ArticleActivity.class));
+                } else if (which == 1) {
+                    startActivity(new Intent(getActivity(), JobActivity.class));
+                }
+            });
 
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-        builder.create().show();
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+            builder.create().show();
+        }
+    }
+
+    private void showToast(String message) {
+        if (getContext() != null) {
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        }
     }
 }

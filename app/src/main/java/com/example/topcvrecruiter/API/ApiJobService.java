@@ -14,8 +14,11 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.PUT;
 
 public interface ApiJobService {
 
@@ -45,10 +48,28 @@ public interface ApiJobService {
     @GET("api/Job")
     Call<List<Job>> getJobs();
 
+    @GET("api/Job/{jobId}")
+    Call<Job> getJobById(@Path("jobId") int jobId);
+
     @POST("api/Job")
     Call<Job> postJob (@Body Job job);
 
-
     @POST("api/JobDetails")
     Call<JobDetails> postJobDetails (@Body JobDetails jobDetails);
+
+    @GET("api/JobDetails/ByJob/{jobId}")
+    Call<List<JobDetails>> getJobDetailsByJobId(@Path("jobId") int jobId);
+
+    @DELETE("api/Job/{id}")
+    Call<Void> deleteJobById(@Path("id") int id);
+
+    @PUT("api/Job/{id}")
+    Call<Job> updateJob(@Path("id") int jobId, @Body Job job);
+
+    @PUT("api/JobDetails/{id}")
+    Call<JobDetails> putJobDetails(@Path("id") int jobDetailsId, @Body JobDetails jobDetails);
+
+
+
+
 }

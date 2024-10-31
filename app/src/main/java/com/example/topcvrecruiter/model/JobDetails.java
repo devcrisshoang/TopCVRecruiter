@@ -9,7 +9,16 @@ public class JobDetails {
     private String working_Time;
     private String working_Method;
     private String working_Position;
+    private String number_Of_People;
     private int iD_Job;
+
+    public String getNumber_Of_People() {
+        return number_Of_People;
+    }
+
+    public void setNumber_Of_People(String number_Of_People) {
+        this.number_Of_People = number_Of_People;
+    }
 
     public int getId() {
         return id;
@@ -83,14 +92,15 @@ public class JobDetails {
         this.iD_Job = iD_Job;
     }
 
-    public JobDetails(String job_Description, String skill_Require, String gender_Require, String benefit, String working_Time, String working_Method, String working_Position, int iD_Job) {
+    public JobDetails(String job_Description, String skill_Require, String benefit,String gender_Require, String working_Time, String working_Method, String working_Position,String number_Of_People, int iD_Job) {
         this.job_Description = job_Description;
         this.skill_Require = skill_Require;
-        this.gender_Require = gender_Require;
         this.benefit = benefit;
+        this.gender_Require = gender_Require;
         this.working_Time = working_Time;
         this.working_Method = working_Method;
         this.working_Position = working_Position;
+        this.number_Of_People = number_Of_People;
         this.iD_Job = iD_Job;
     }
 }
