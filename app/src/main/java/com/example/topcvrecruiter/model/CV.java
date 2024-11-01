@@ -4,13 +4,13 @@ import java.io.Serializable;
 
 public class CV implements Serializable {
     private int id;
-    private String applicant_Name;
+    private String applicant_Name;//
     private String email;
     private String phone_Number;
     private String education;
     private String skills;
     private String certificate;
-    private String job_Applying;
+    private String job_Applying;//
     private String introduction;
     private String image;
     private int iD_Applicant;

@@ -222,34 +222,6 @@ public class DashboardFragment extends Fragment {
                 });
     };
 
-    private void fetchApplicantCountAndOpenActivity(int recruiterId) {
-        apiDashboardService.getApplicantCount(recruiterId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Integer>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                    }
-
-                    @Override
-                    public void onNext(@NonNull Integer applicantCount) {
-                        // Pass applicant count to the new activity
-                        Intent intent = new Intent(getContext(), NumberApplicantActivity.class);
-                        intent.putExtra("applicant_count", applicantCount);
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-                        Log.e("API_ERROR", "Error fetching applicant count", e);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                    }
-                });
-    }
-
     private void fetchDashboardData(int recruiterId) {
         apiDashboardService.getApplicantCount(recruiterId)
                 .subscribeOn(Schedulers.io())
