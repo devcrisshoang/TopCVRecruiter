@@ -28,7 +28,7 @@ public class DashboardResumeAdapter extends RecyclerView.Adapter<DashboardResume
     @NonNull
     @Override
     public DashboardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_resume, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_applicant, parent, false);
         return new DashboardViewHolder(view);
     }
 
@@ -37,13 +37,7 @@ public class DashboardResumeAdapter extends RecyclerView.Adapter<DashboardResume
         CV cv = listCV.get(position);
         if(cv == null) return;
         holder.applicantNameTextView.setText(cv.getApplicant_Name());
-        holder.phoneNumberTextView.setText(cv.getPhone_Number());
-        holder.emailTextView.setText(cv.getEmail());
-        holder.educationTextView.setText(cv.getEducation());
-        holder.skillsTextView.setText(cv.getSkills());
-        holder.certificateTextView.setText(cv.getCertificate());
         holder.jobApplyingTextView.setText(cv.getJob_Applying());
-        holder.introductionTextView.setText(cv.getIntroduction());
 
 
     }
@@ -55,23 +49,11 @@ public class DashboardResumeAdapter extends RecyclerView.Adapter<DashboardResume
     public class DashboardViewHolder extends RecyclerView.ViewHolder{
 
         private TextView applicantNameTextView;
-        private TextView phoneNumberTextView;
-        private TextView emailTextView;
-        private TextView educationTextView;
-        private TextView skillsTextView;
-        private TextView certificateTextView;
         private TextView jobApplyingTextView;
-        private TextView introductionTextView;
         public DashboardViewHolder(@NonNull View itemView) {
             super(itemView);
-            applicantNameTextView = itemView.findViewById(R.id.resume_applicantNameTextView);
-            phoneNumberTextView = itemView.findViewById(R.id.resume_phoneNumberTextView);
-            emailTextView = itemView.findViewById(R.id.resume_emailTextView);
-            educationTextView = itemView.findViewById(R.id.resume_educationTextView);
-            skillsTextView = itemView.findViewById(R.id.resume_skillsTextView);
-            certificateTextView = itemView.findViewById(R.id.resume_certificateTextView);
-            jobApplyingTextView = itemView.findViewById(R.id.resume_jobApplyingTextView);
-            introductionTextView = itemView.findViewById(R.id.resume_introductionTextView);
+            applicantNameTextView = itemView.findViewById(R.id.ActionOfRecruiterTextView);
+            jobApplyingTextView = itemView.findViewById(R.id.ActionDetailsOfRecruiterTextView);
 
         }
     }

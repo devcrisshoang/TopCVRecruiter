@@ -59,4 +59,8 @@ public interface ApiDashboardService {
 
     @GET("api/Recruiter/{id}/JobsList")
     Observable<List<Job>> getListJobs(@Path("id") int recruiterId);
+
+    @GET("api/Recruiter/{idRecruiter}/applicant/{idApplicant}/cv")
+    Observable<CV> getCvForApplicant(@Path("idApplicant") int applicantId, @Path("idRecruiter") int recruiterId);
+
 }

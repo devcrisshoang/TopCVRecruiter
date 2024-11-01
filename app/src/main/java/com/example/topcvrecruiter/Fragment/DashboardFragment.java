@@ -1,5 +1,8 @@
 package com.example.topcvrecruiter.Fragment;
 
+import static android.app.Activity.RESULT_OK;
+import static com.github.dhaval2404.imagepicker.ImagePicker.REQUEST_CODE;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -29,6 +32,7 @@ import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.annotations.Nullable;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -58,6 +62,7 @@ public class DashboardFragment extends Fragment {
     private CardView jobCardView;
     private CardView rateCardView;
     private CardView resumeCardView;
+    private int recruitmentRate;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -129,6 +134,14 @@ public class DashboardFragment extends Fragment {
 
         return view;
     }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            recruitmentRate = data.getIntExtra("recruitment_rate", 0);
+        }
+    }
+
 
     private void fetchListApplicants(int recruiterId) {
         apiDashboardService.getListApplicants(recruiterId)

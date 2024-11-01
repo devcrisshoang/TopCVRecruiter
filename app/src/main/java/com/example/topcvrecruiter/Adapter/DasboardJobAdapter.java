@@ -26,7 +26,7 @@ public class DasboardJobAdapter extends RecyclerView.Adapter<DasboardJobAdapter.
     @NonNull
     @Override
     public DashboardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_job, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_applicant, parent, false);
         return new DashboardViewHolder(view);
     }
 
@@ -35,10 +35,7 @@ public class DasboardJobAdapter extends RecyclerView.Adapter<DasboardJobAdapter.
         Job job = listJob.get(position);
         if(job == null) return;
         holder.jobNameTextView.setText(job.getJob_Name());
-        holder.experienceRequirementTextView.setText(job.getWorking_Experience_Require());
-        holder.workingAddressTextView.setText(job.getWorking_Address());
         holder.createTimeTextView.setText(job.getCreate_Time());
-        holder.applicationDateTextView.setText(job.getApplication_Date());
     }
 
     @Override
@@ -49,18 +46,11 @@ public class DasboardJobAdapter extends RecyclerView.Adapter<DasboardJobAdapter.
     public class DashboardViewHolder extends RecyclerView.ViewHolder{
 
         private TextView jobNameTextView;
-        private TextView experienceRequirementTextView;
-        private TextView workingAddressTextView;
         private TextView createTimeTextView;
-        private TextView applicationDateTextView;
-
         public DashboardViewHolder(@NonNull View itemView) {
             super(itemView);
-            jobNameTextView = itemView.findViewById(R.id.job_jobNameTextView);
-            experienceRequirementTextView = itemView.findViewById(R.id.job_experienceRequirementTextView);
-            workingAddressTextView = itemView.findViewById(R.id.job_workingAddressTextView);
-            createTimeTextView = itemView.findViewById(R.id.job_createTimeTextView);
-            applicationDateTextView = itemView.findViewById(R.id.job_applicationDateTextView);
+            jobNameTextView = itemView.findViewById(R.id.ActionOfRecruiterTextView);
+            createTimeTextView = itemView.findViewById(R.id.ActionDetailsOfRecruiterTextView);
 
         }
     }
