@@ -130,7 +130,7 @@
                         android:textSize="15sp" />
 
                     <TextView
-                        android:id="@id/salary"
+                        android:id="@+id/salary"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:text="Up to $20000"

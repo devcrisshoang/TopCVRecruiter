@@ -36,29 +36,29 @@ public interface ApiDashboardService {
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())  // Sử dụng RxJava3
             .build()
             .create(ApiDashboardService.class);
-    @GET("api/Recruiter/{id}/ApplicantCount")
-    Observable<Integer> getApplicantCount(@Path("id") int recruiterId);
+    //--------------------APPLICANT-------------------------//
+    @GET("api/Recruiter/{id}/ApplicantsForJobToList")
+    Observable<List<Applicant>> getListApplicants(@Path("id") int recruiterId);
 
-    @GET("api/Recruiter/{id}/JobCount")
-    Observable<Integer> getJobCount(@Path("id") int recruiterId);
+    //--------------------JOB-------------------------//
+    @GET("api/Recruiter/{id}/JobsOfRecruiterToList")
+    Observable<List<Job>> getListJobs(@Path("id") int recruiterId);
 
-    @GET("api/Recruiter/{id}/ResumeCount")
-    Observable<String> getResumeCount(@Path("id") int recruiterId);
+    //--------------------RESUME-------------------------//
+    @GET("api/Recruiter/{id}/ResumesForJobsToList")
+    Observable<List<CV>> getListResume(@Path("id") int recruiterId);
 
-    @GET("api/Recruiter/{id}/ApplicationRatio")
-    Observable<String> getApplicationRatio(@Path("id") int recruiterId);
+    //--------------------RATE-------------------------//
+
+    //--------------------SUCCESS/FAILED-------------------------//
+    @GET("api/Recruiter/{id}/AcceptedApplicants")
+    Observable<List<Applicant>> getAcceptedApplicants(@Path("id") int recruiterId);
+    @GET("api/Recruiter/{id}/RejectedApplicants")
+    Observable<List<Applicant>> getRejectedApplicants(@Path("id") int recruiterId);
+
 
     @GET("api/Recruiter/{id}/SuggestedApplicants")
     Observable<List<Applicant>> getListSuggestedApplicants(@Path("id") int recruiterId);
-
-    @GET("api/Recruiter/{id}/ApplicantsForJob")
-    Observable<List<Applicant>> getListApplicants(@Path("id") int recruiterId);
-
-    @GET("api/Recruiter/{id}/ResumesForJobs")
-    Observable<List<CV>> getListResume(@Path("id") int recruiterId);
-
-    @GET("api/Recruiter/{id}/JobsList")
-    Observable<List<Job>> getListJobs(@Path("id") int recruiterId);
 
     @GET("api/Recruiter/{idRecruiter}/applicant/{idApplicant}/cv")
     Observable<CV> getCvForApplicant(@Path("idApplicant") int applicantId, @Path("idRecruiter") int recruiterId);

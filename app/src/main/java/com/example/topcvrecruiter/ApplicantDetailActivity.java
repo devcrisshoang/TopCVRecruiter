@@ -3,7 +3,6 @@ package com.example.topcvrecruiter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -35,14 +34,15 @@ public class ApplicantDetailActivity extends AppCompatActivity {
     private Button rejectButton;
     private ImageButton backButton;
 
-    private int recruitmentRate = 0;
+    private int rateSuccess = 0;
+    private int rateFail = 0;
 
     private ApiDashboardService apiService;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cv_details);
+        setContentView(R.layout.activity_resume);
         apiService = ApiDashboardService.apiDashboardService;
 
         // Initialize the views
@@ -55,7 +55,7 @@ public class ApplicantDetailActivity extends AppCompatActivity {
         educationTextView = findViewById(R.id.education);
         skillTextView = findViewById(R.id.skill);
         certificationTextView = findViewById(R.id.certification);
-        acceptButton = findViewById(R.id.accept_button);
+        acceptButton = findViewById(R.id.recruit_button);
         rejectButton = findViewById(R.id.reject_button);
         backButton = findViewById(R.id.back_button);
 
@@ -63,7 +63,7 @@ public class ApplicantDetailActivity extends AppCompatActivity {
         int applicantId = getIntent().getIntExtra("applicant_id", -1);
 
         // Fetch the CV data
-        fetchCvForApplicant(applicantId, 1);
+        fetchCvForApplicant(applicantId, 5);
 
         // Set up the back button listener
         backButton.setOnClickListener(v -> {
@@ -71,29 +71,32 @@ public class ApplicantDetailActivity extends AppCompatActivity {
         });
 
         // Set up the accept button
-        acceptButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                recruitmentRate++; // Increase recruitment rate
-                passRecruitmentRateBack();
-            }
+        acceptButton.setOnClickListener(v -> {
+            rateSuccess++; // Increase recruitment rate
+            finishWithSuccessResult();
         });
 
         // Set up the reject button
-        rejectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                recruitmentRate--; // Decrease recruitment rate
-                passRecruitmentRateBack();
-            }
+        rejectButton.setOnClickListener(v -> {
+            rateFail++; // Decrease recruitment rate
+            finishWithFailResult();
+
         });
     }
 
-    private void passRecruitmentRateBack() {
+    private void finishWithSuccessResult() {
+        // Create an Intent to pass back the result
         Intent resultIntent = new Intent();
-        resultIntent.putExtra("recruitment_rate", recruitmentRate);
-        setResult(RESULT_OK, resultIntent);
-        finish();
+        resultIntent.putExtra("rateSuccess", rateSuccess);
+        setResult(RESULT_OK, resultIntent); // RESULT_OK indicates a successful result
+        finish(); // Close the activity
+    }
+    private void finishWithFailResult() {
+        // Create an Intent to pass back the result
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("rateFail", rateFail);
+        setResult(RESULT_OK, resultIntent); // RESULT_OK indicates a successful result
+        finish(); // Close the activity
     }
 
     private void fetchCvForApplicant(int applicantId, int recruiterId) {

@@ -1,11 +1,12 @@
 package com.example.topcvrecruiter.Fragment;
 
-import static android.app.Activity.RESULT_OK;
-import static com.github.dhaval2404.imagepicker.ImagePicker.REQUEST_CODE;
-
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,6 +19,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.topcvrecruiter.API.ApiDashboardService;
+
+
 import com.example.topcvrecruiter.Adapter.DashboardApplicantAdapter;
 import com.example.topcvrecruiter.NumberApplicantActivity;
 import com.example.topcvrecruiter.NumberJobOfRecruiterActivity;
@@ -29,10 +32,10 @@ import com.example.topcvrecruiter.model.Job;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.annotations.Nullable;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -43,11 +46,13 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
  * create an instance of this fragment.
  */
 public class DashboardFragment extends Fragment {
+    private static final int REQUEST_CODE = 1;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final int RecruiterId = 5;
 
     private TextView applicantCountTextView;
     private TextView jobCountTextView;
@@ -62,7 +67,11 @@ public class DashboardFragment extends Fragment {
     private CardView jobCardView;
     private CardView rateCardView;
     private CardView resumeCardView;
-    private int recruitmentRate;
+    private int totalAccepted = 0;
+    private int totalRejected = 0;
+    float rate;
+    private ActivityResultLauncher<Intent> applicantDetailLauncher;
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -97,7 +106,23 @@ public class DashboardFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        apiDashboardService = ApiDashboardService.apiDashboardService;
+//        apiDashboardService = ApiDashboardService.apiDashboardService;
+//        applicantDetailLauncher = registerForActivityResult(
+//                new ActivityResultContracts.StartActivityForResult(),
+//                result -> {
+//                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+//                        Intent data = result.getData();
+//                        int success = data.getIntExtra("rateSuccess", 0);
+//                        int fail = data.getIntExtra("rateFail", 0);
+//
+//                        rateSuccess += success;
+//                        rateFail += fail;
+//
+//                        recruitmentRate = (float) rateSuccess / (rateSuccess + rateFail);
+//                        recruitingRateTextView.setText(String.format(Locale.getDefault(), "%.2f%%", recruitmentRate * 100));
+//                    }
+//                }
+//        );
 
     }
 
@@ -105,7 +130,6 @@ public class DashboardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        //return inflater.inflate(R.layout.fragment_dashboard, container, false);
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
         //Card View TextView
@@ -123,25 +147,42 @@ public class DashboardFragment extends Fragment {
         applicantsRecyclerView = view.findViewById(R.id.aplicants_Recycler_View);
         applicantsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        dashboardAdapter = new DashboardApplicantAdapter(new ArrayList<>());
+        dashboardAdapter = new DashboardApplicantAdapter(this.getContext(), new ArrayList<>());
         applicantsRecyclerView.setAdapter(dashboardAdapter);
 
-        fetchDashboardData(1);
+        fetchDashboardData(RecruiterId);
 
-        applicantCardView.setOnClickListener(view1 -> fetchListApplicants(1));
-        jobCardView.setOnClickListener(view1 -> fetchListJobs(1));
-        resumeCardView.setOnClickListener(view1 -> fetchListResumes(1));
+        applicantCardView.setOnClickListener(view1 -> fetchListApplicants(RecruiterId));
+        //jobCardView.setOnClickListener(view1 -> fetchListJobs(RecruiterId));
+        jobCardView.setOnClickListener(view1 -> fetchListAccepted(RecruiterId));
+        //resumeCardView.setOnClickListener(view1 -> fetchListResumes(RecruiterId));
+        resumeCardView.setOnClickListener(view1 -> fetchListRejected(RecruiterId));
 
         return view;
     }
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            recruitmentRate = data.getIntExtra("recruitment_rate", 0);
+        Log.d("RecruitmentRate", "onActivityResult called"); // Kiểm tra xem có vào đây không
+        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
+            int success = data.getIntExtra("rateSuccess", 0);
+            int fail = data.getIntExtra("rateFail", 0);
+
+            totalAccepted += success;
+            totalRejected += fail;
+
+            calculateAndDisplayRate();
         }
     }
 
+    private void calculateAndDisplayRate() {
+        if (totalAccepted + totalRejected > 0) { // Kiểm tra tránh chia cho 0
+            float rate = (float) totalAccepted / (totalAccepted + totalRejected);
+            recruitingRateTextView.setText(String.format(Locale.getDefault(), "%.2f%%", rate * 100)); // Cập nhật tỷ lệ vào TextView
+        } else {
+            recruitingRateTextView.setText("0%"); // Nếu không có ứng viên nào
+        }
+    }
 
     private void fetchListApplicants(int recruiterId) {
         apiDashboardService.getListApplicants(recruiterId)
@@ -171,7 +212,71 @@ public class DashboardFragment extends Fragment {
                     }
                 });
 
+
     }
+
+    private void fetchListAccepted(int recruiterId) {
+        apiDashboardService.getAcceptedApplicants(recruiterId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Applicant>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+
+                    @Override
+                    public void onNext(List<Applicant> applicants) {
+                        Intent intent = new Intent(getContext(), NumberApplicantActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("applicantList", new ArrayList<>(applicants));
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e("DashboardFragment", "Error fetching applicant list", e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
+
+
+    }
+
+    private void fetchListRejected(int recruiterId) {
+        apiDashboardService.getRejectedApplicants(recruiterId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Applicant>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+
+                    @Override
+                    public void onNext(List<Applicant> applicants) {
+                        Intent intent = new Intent(getContext(), NumberApplicantActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("applicantList", new ArrayList<>(applicants));
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e("DashboardFragment", "Error fetching applicant list", e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
+
+
+    }
+
     private  void  fetchListJobs(int recruiterId) {
         apiDashboardService.getListJobs(recruiterId)
                 .subscribeOn(Schedulers.io())
@@ -235,97 +340,70 @@ public class DashboardFragment extends Fragment {
                 });
     };
 
+    @SuppressLint("CheckResult")
     private void fetchDashboardData(int recruiterId) {
-        apiDashboardService.getApplicantCount(recruiterId)
+
+        //------------------Applicant------------------------//
+        apiDashboardService.getListApplicants(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Integer>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(Integer applicantCount) {
-                        applicantCountTextView.setText(String.valueOf(applicantCount));
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e("API_ERROR", "Error fetching applicant count", e);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                    }
+                .subscribe(applicants -> {
+                    int applicantCount = applicants.size(); // Đếm số lượng item trong danh sách
+                    applicantCountTextView.setText(String.valueOf(applicantCount)); // Hiển thị số lượng ứng viên lên TextView
+                }, throwable -> {
+                    // Xử lý lỗi nếu có
+                    Log.e("API Error", "Error fetching applicants", throwable);
                 });
-        apiDashboardService.getJobCount(recruiterId)
+//        //------------------Job------------------------//
+//        apiDashboardService.getListJobs(recruiterId)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(jobs -> {
+//                    int jobsCount = jobs.size(); // Đếm số lượng item trong danh sách
+//                    jobCountTextView.setText(String.valueOf(jobsCount)); // Hiển thị số lượng ứng viên lên TextView
+//                }, throwable -> {
+//                    // Xử lý lỗi nếu có
+//                    Log.e("API Error", "Error fetching applicants", throwable);
+//                });
+//
+//        //------------------Resume------------------------//
+//        apiDashboardService.getListResume(recruiterId)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(resumes -> {
+//                    int resumesCount = resumes.size(); // Đếm số lượng item trong danh sách
+//                    resumeCountTextView.setText(String.valueOf(resumesCount)); // Hiển thị số lượng ứng viên lên TextView
+//                }, throwable -> {
+//                    // Xử lý lỗi nếu có
+//                    Log.e("API Error", "Error fetching applicants", throwable);
+//                });
+
+        //------------------Rate------------------------//
+        apiDashboardService.getAcceptedApplicants(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Integer>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                    }
-
-                    @Override
-                    public void onNext(Integer jobCount) {
-                        jobCountTextView.setText(String.valueOf(jobCount));
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e("API_ERROR", "Error fetching job count", e);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                    }
+                .subscribe(accepted -> {
+                    totalAccepted = accepted.size(); // Đếm số lượng item trong danh sách
+                    jobCountTextView.setText(String.valueOf(totalAccepted));
+                    calculateAndDisplayRate();
+                }, throwable -> {
+                    // Xử lý lỗi nếu có
+                    Log.e("API Error", "Error fetching applicants", throwable);
                 });
-        apiDashboardService.getApplicationRatio(recruiterId)
+
+        apiDashboardService.getRejectedApplicants(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<String>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                    }
-
-                    @Override
-                    public void onNext(String ratio) {
-                        recruitingRateTextView.setText(ratio);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e("API_ERROR", "Error fetching recruiting rate", e);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                    }
+                .subscribe(rejected -> {
+                    totalRejected = rejected.size(); // Đếm số lượng item trong danh sách
+                    resumeCountTextView.setText(String.valueOf(totalRejected));
+                    calculateAndDisplayRate();
+                }, throwable -> {
+                    // Xử lý lỗi nếu có
+                    Log.e("API Error", "Error fetching applicants", throwable);
                 });
-        apiDashboardService.getResumeCount(recruiterId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<String>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                    }
 
-
-                    @Override
-                    public void onNext(String resumeCount) {
-                        resumeCountTextView.setText(resumeCount);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e("API_ERROR", "Error fetching suggested applicant count", e);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                    }
-                });
+        //------------------Suggest------------------------//
         apiDashboardService.getListSuggestedApplicants(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

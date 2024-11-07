@@ -13,10 +13,10 @@ public class CV implements Serializable {
     private String job_Applying;//
     private String introduction;
     private String image;
-    private int iD_Applicant;
+    private String experience;
 
 
-    public CV(int id, String applicant_Name, String email, String phone_Number, String education, String skills, String certificate, String job_Applying, String introduction, String image, int iD_Applicant) {
+    public CV(int id, String applicant_Name, String email, String phone_Number, String education, String skills, String certificate, String job_Applying, String introduction, String image, String experience) {
         this.id = id;
         this.applicant_Name = applicant_Name;
         this.email = email;
@@ -27,7 +27,7 @@ public class CV implements Serializable {
         this.job_Applying = job_Applying;
         this.introduction = introduction;
         this.image = image;
-        this.iD_Applicant = iD_Applicant;
+        this.experience = experience;
     }
 
     public int getId() {
@@ -110,12 +110,12 @@ public class CV implements Serializable {
         this.image = image;
     }
 
-    public int getiD_Applicant() {
-        return iD_Applicant;
+    public String getExperience() {
+        return experience;
     }
 
-    public void setiD_Applicant(int iD_Applicant) {
-        this.iD_Applicant = iD_Applicant;
+    public void setExperience(String experience) {
+        this.experience = experience;
     }
 }
 

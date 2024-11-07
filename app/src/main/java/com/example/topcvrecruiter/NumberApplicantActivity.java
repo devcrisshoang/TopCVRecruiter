@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.topcvrecruiter.Adapter.DashboardApplicantAdapter;
+import com.example.topcvrecruiter.Fragment.DashboardFragment;
 import com.example.topcvrecruiter.model.Applicant;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class NumberApplicantActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     DashboardApplicantAdapter applicantAdapter;
     private ImageButton backButton;
-
+    private DashboardFragment dashboardFragment;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,13 +31,12 @@ public class NumberApplicantActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         if (bundle == null) { return; }
 
-        int applicantCount = getIntent().getIntExtra("applicant_count", 0);
         List<Applicant> applicantList = (List<Applicant>) getIntent().getSerializableExtra("applicantList");
 
         recyclerView = findViewById(R.id.number_applicant_Recycler_View);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        applicantAdapter = new DashboardApplicantAdapter(applicantList);
+        applicantAdapter = new DashboardApplicantAdapter(this, applicantList);
         recyclerView.setAdapter(applicantAdapter);
     }
 
