@@ -33,18 +33,11 @@
             android:name=".VerifyPhoneActivity"
             android:exported="false" />
         <activity
-            android:name=".JobDetailActivity"
-            android:exported="false" />
-        <activity
             android:name=".InformationActivity"
             android:exported="false" />
 
         <activity
             android:name=".SignUpActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".JobDetailsActivity"
             android:exported="false" />
         <activity
             android:name=".JobActivity"
