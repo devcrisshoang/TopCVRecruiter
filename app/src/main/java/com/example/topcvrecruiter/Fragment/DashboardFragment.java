@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.topcvrecruiter.API.ApiDashboardService;
-
 
 import com.example.topcvrecruiter.Adapter.DashboardApplicantAdapter;
 import com.example.topcvrecruiter.NumberApplicantActivity;
@@ -40,16 +38,8 @@ import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link DashboardFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class DashboardFragment extends Fragment {
     private static final int REQUEST_CODE = 1;
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final int RecruiterId = 5;
@@ -61,7 +51,6 @@ public class DashboardFragment extends Fragment {
 
     private RecyclerView applicantsRecyclerView;
     private DashboardApplicantAdapter dashboardAdapter;
-    private ApiDashboardService apiDashboardService;
 
     private CardView applicantCardView;
     private CardView jobCardView;
@@ -81,15 +70,6 @@ public class DashboardFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DashboardFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static DashboardFragment newInstance(String param1, String param2) {
         DashboardFragment fragment = new DashboardFragment();
         Bundle args = new Bundle();
@@ -106,24 +86,6 @@ public class DashboardFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-//        apiDashboardService = ApiDashboardService.apiDashboardService;
-//        applicantDetailLauncher = registerForActivityResult(
-//                new ActivityResultContracts.StartActivityForResult(),
-//                result -> {
-//                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-//                        Intent data = result.getData();
-//                        int success = data.getIntExtra("rateSuccess", 0);
-//                        int fail = data.getIntExtra("rateFail", 0);
-//
-//                        rateSuccess += success;
-//                        rateFail += fail;
-//
-//                        recruitmentRate = (float) rateSuccess / (rateSuccess + rateFail);
-//                        recruitingRateTextView.setText(String.format(Locale.getDefault(), "%.2f%%", recruitmentRate * 100));
-//                    }
-//                }
-//        );
-
     }
 
     @Override
@@ -185,7 +147,7 @@ public class DashboardFragment extends Fragment {
     }
 
     private void fetchListApplicants(int recruiterId) {
-        apiDashboardService.getListApplicants(recruiterId)
+        ApiDashboardService.apiDashboardService.getListApplicants(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Applicant>>() {
@@ -216,7 +178,7 @@ public class DashboardFragment extends Fragment {
     }
 
     private void fetchListAccepted(int recruiterId) {
-        apiDashboardService.getAcceptedApplicants(recruiterId)
+        ApiDashboardService.apiDashboardService.getAcceptedApplicants(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Applicant>>() {
@@ -247,7 +209,7 @@ public class DashboardFragment extends Fragment {
     }
 
     private void fetchListRejected(int recruiterId) {
-        apiDashboardService.getRejectedApplicants(recruiterId)
+        ApiDashboardService.apiDashboardService.getRejectedApplicants(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Applicant>>() {
@@ -278,7 +240,7 @@ public class DashboardFragment extends Fragment {
     }
 
     private  void  fetchListJobs(int recruiterId) {
-        apiDashboardService.getListJobs(recruiterId)
+        ApiDashboardService.apiDashboardService.getListJobs(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Job>>() {
@@ -309,7 +271,7 @@ public class DashboardFragment extends Fragment {
                     });
     };
     private  void  fetchListResumes(int recruiterId){
-        apiDashboardService.getListResume(recruiterId)
+        ApiDashboardService.apiDashboardService.getListResume(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<CV>>() {
@@ -342,9 +304,8 @@ public class DashboardFragment extends Fragment {
 
     @SuppressLint("CheckResult")
     private void fetchDashboardData(int recruiterId) {
-
         //------------------Applicant------------------------//
-        apiDashboardService.getListApplicants(recruiterId)
+        ApiDashboardService.apiDashboardService.getListApplicants(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(applicants -> {
@@ -354,32 +315,9 @@ public class DashboardFragment extends Fragment {
                     // Xử lý lỗi nếu có
                     Log.e("API Error", "Error fetching applicants", throwable);
                 });
-//        //------------------Job------------------------//
-//        apiDashboardService.getListJobs(recruiterId)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(jobs -> {
-//                    int jobsCount = jobs.size(); // Đếm số lượng item trong danh sách
-//                    jobCountTextView.setText(String.valueOf(jobsCount)); // Hiển thị số lượng ứng viên lên TextView
-//                }, throwable -> {
-//                    // Xử lý lỗi nếu có
-//                    Log.e("API Error", "Error fetching applicants", throwable);
-//                });
-//
-//        //------------------Resume------------------------//
-//        apiDashboardService.getListResume(recruiterId)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(resumes -> {
-//                    int resumesCount = resumes.size(); // Đếm số lượng item trong danh sách
-//                    resumeCountTextView.setText(String.valueOf(resumesCount)); // Hiển thị số lượng ứng viên lên TextView
-//                }, throwable -> {
-//                    // Xử lý lỗi nếu có
-//                    Log.e("API Error", "Error fetching applicants", throwable);
-//                });
 
         //------------------Rate------------------------//
-        apiDashboardService.getAcceptedApplicants(recruiterId)
+        ApiDashboardService.apiDashboardService.getAcceptedApplicants(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(accepted -> {
@@ -391,7 +329,7 @@ public class DashboardFragment extends Fragment {
                     Log.e("API Error", "Error fetching applicants", throwable);
                 });
 
-        apiDashboardService.getRejectedApplicants(recruiterId)
+        ApiDashboardService.apiDashboardService.getRejectedApplicants(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(rejected -> {
@@ -404,7 +342,7 @@ public class DashboardFragment extends Fragment {
                 });
 
         //------------------Suggest------------------------//
-        apiDashboardService.getListSuggestedApplicants(recruiterId)
+        ApiDashboardService.apiDashboardService.getListSuggestedApplicants(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Applicant>>() {

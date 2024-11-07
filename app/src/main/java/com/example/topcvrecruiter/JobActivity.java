@@ -29,7 +29,7 @@ public class JobActivity extends AppCompatActivity {
         continue_button = findViewById(R.id.continue_button);
         back_button = findViewById(R.id.back_button);
         continue_button.setOnClickListener(view -> {
-            Intent intent = new Intent(this, JobDetailsActivity.class);
+            Intent intent = new Intent(this, JobDetailActivity.class);
             startActivity(intent);
         });
         back_button.setOnClickListener(view -> {
