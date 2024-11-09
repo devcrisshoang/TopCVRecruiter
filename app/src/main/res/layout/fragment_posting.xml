@@ -42,6 +42,15 @@
     </androidx.recyclerview.widget.RecyclerView>
 
     <Button
+        android:id="@+id/view_all_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/grey"
+        android:layout_margin="5dp"
+        android:text="View All">
+
+    </Button>
+    <Button
         android:id="@+id/post_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

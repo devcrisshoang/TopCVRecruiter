@@ -13,6 +13,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.topcvrecruiter.API.ApiPostingService;
 import com.example.topcvrecruiter.model.Article;
+import com.example.topcvrecruiter.utils.NotificationUtils;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -99,6 +101,11 @@ public class ArticleDetailActivity extends AppCompatActivity {
                                     .load(Uri.parse(imagePath))  // Tải ảnh từ đường dẫn file URI
                                     .into(articleImage);
                             articleImage.setTag(imagePath);  // Lưu đường dẫn ảnh vào tag của ImageView
+                        }else {
+                            // Nếu không có ảnh (null hoặc rỗng), hiển thị ảnh mặc định
+                            Glide.with(ArticleDetailActivity.this)
+                                    .load(R.drawable.fpt_ic)  // Thay "account_ic" bằng ID ảnh mặc định của bạn
+                                    .into(articleImage);
                         }
 
                         // Định dạng thời gian
@@ -168,6 +175,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
                     public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {
                         if (response.isSuccessful()) {
                             Toast.makeText(ArticleDetailActivity.this, "Article deleted successfully", Toast.LENGTH_SHORT).show();
+                            NotificationUtils.showNotification(ArticleDetailActivity.this, "You just deleted an article !");
                             finish();  // Đóng activity sau khi xóa
                         } else {
                             Toast.makeText(ArticleDetailActivity.this, "Failed to delete article", Toast.LENGTH_SHORT).show();

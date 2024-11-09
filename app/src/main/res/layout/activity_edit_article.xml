@@ -7,21 +7,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#FAFAFA">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linear_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Edit Article"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="#333333"
-        android:layout_gravity="center"
-        />
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageButton
+            android:id="@+id/post_edit_back_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitCenter"
+            android:background="@drawable/icon_rounded_corner"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/back_ic" />
+
+
+    </LinearLayout>
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="344dp"
         android:layout_height="129dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:background="@drawable/rounded_corner">
 
         <androidx.constraintlayout.widget.ConstraintLayout

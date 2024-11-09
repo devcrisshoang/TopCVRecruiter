@@ -1,6 +1,11 @@
 package com.example.topcvrecruiter;
 
+import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,15 +14,17 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.topcvrecruiter.API.ApiJobService;
 import com.example.topcvrecruiter.model.Job;
 import com.example.topcvrecruiter.model.JobDetails;
+import com.example.topcvrecruiter.utils.NotificationUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -29,17 +36,12 @@ import retrofit2.Response;
 public class JobDetailsActivity extends AppCompatActivity {
     private Button post_button;
     private ImageButton back_button;
-    private EditText benefit,numberOfPeople,genderRequire, workingTime, workingMethod, workingPosition,skillRequire, jobDescription;
+    private EditText benefit, numberOfPeople, genderRequire, workingTime, workingMethod, workingPosition, skillRequire, jobDescription;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_job_details);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
         post_button = findViewById(R.id.post_button);
         back_button = findViewById(R.id.back_button);
@@ -61,19 +63,25 @@ public class JobDetailsActivity extends AppCompatActivity {
         String address = getIntent().getStringExtra("address");
         String salary = getIntent().getStringExtra("salary");
 
+        // Kiểm tra quyền gửi thông báo trên Android 13 trở lên
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+            }
+        }
 
-        post_button.setOnClickListener(view -> postJobAndDetailsToApi(image,jobName,companyName, experience, address,salary));
+        post_button.setOnClickListener(view -> postJobAndDetailsToApi(image, jobName, companyName, experience, address, salary));
         back_button.setOnClickListener(view -> finish());
     }
 
-
-    private void postJobAndDetailsToApi( String image, String jobName, String companyName,String experience, String address,  String salary ) {
+    private void postJobAndDetailsToApi(String image, String jobName, String companyName, String experience, String address, String salary) {
         // Lấy thời gian hiện tại và định dạng
         LocalDateTime currentTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
         String formattedDateTime = currentTime.format(formatter);
+
         // Tạo đối tượng Job
-        Job job = new Job(image,jobName,companyName, experience, address, salary,formattedDateTime, 1);
+        Job job = new Job(image, jobName, companyName, experience, address, salary, formattedDateTime, 1);
 
         // Gọi API để post Job
         ApiJobService.apiService.postJob(job).enqueue(new Callback<Job>() {
@@ -94,7 +102,7 @@ public class JobDetailsActivity extends AppCompatActivity {
                     String numberOfPeople = ((EditText) findViewById(R.id.et_numberpeople)).getText().toString().trim();
 
                     // Tạo đối tượng JobDetails
-                    JobDetails jobDetails = new JobDetails(jobDescription, skillRequire, benefit, genderRequire, workingTime, workingMethod, workingPosition,numberOfPeople,jobId);
+                    JobDetails jobDetails = new JobDetails(jobDescription, skillRequire, benefit, genderRequire, workingTime, workingMethod, workingPosition, numberOfPeople, jobId);
 
                     // Gọi API để post JobDetails
                     ApiJobService.apiService.postJobDetails(jobDetails).enqueue(new Callback<JobDetails>() {
@@ -102,6 +110,9 @@ public class JobDetailsActivity extends AppCompatActivity {
                         public void onResponse(Call<JobDetails> call, Response<JobDetails> response) {
                             if (response.isSuccessful()) {
                                 Toast.makeText(JobDetailsActivity.this, "Job posted successfully!", Toast.LENGTH_SHORT).show();
+
+                                // Hiển thị thông báo khi job được đăng thành công
+                                NotificationUtils.showNotification(JobDetailsActivity.this, "You just posted a job posting !");
 
                                 // Chuyển về MainActivity
                                 Intent intent = new Intent(JobDetailsActivity.this, MainActivity.class);
@@ -131,4 +142,19 @@ public class JobDetailsActivity extends AppCompatActivity {
         });
     }
 
+
+    // Xử lý kết quả yêu cầu quyền gửi thông báo
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Đã cấp quyền
+                Toast.makeText(this, "Permission granted to post notifications", Toast.LENGTH_SHORT).show();
+            } else {
+                // Không cấp quyền
+                Toast.makeText(this, "Permission denied to post notifications", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 }

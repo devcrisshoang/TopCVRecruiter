@@ -47,6 +47,7 @@ public interface ApiPostingService {
     @GET("api/Article")
     Call<List<Article>> getArticles();
 
+
     @GET("api/Article/{id}")
     Single<Article> getArticleById(@Path("id") int articleId);
 

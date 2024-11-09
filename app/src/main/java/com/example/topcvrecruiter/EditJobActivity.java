@@ -5,13 +5,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
@@ -20,42 +23,26 @@ import com.example.topcvrecruiter.model.Job;
 import com.example.topcvrecruiter.model.JobDetails;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 
-import android.content.DialogInterface;
-import androidx.appcompat.app.AlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import com.example.topcvrecruiter.model.Job;
 
 public class EditJobActivity extends AppCompatActivity {
-    private EditText jobName;
-    private EditText workLocation;
-    private EditText experienceRequire;
-    private EditText workMethod;
-    private EditText genderRequire;
-    private EditText workPosition;
-    private EditText applyDate;
-    private EditText jobDescription;
-    private EditText skillRequire;
-    private EditText benefit;
-    private EditText workingTime;
-    private EditText Salary;
-    private EditText numberofpeople;
-    private EditText companyName;
+    private EditText jobName, workLocation, experienceRequire, workMethod, genderRequire, workPosition, applyDate, jobDescription, skillRequire, benefit, workingTime, Salary, numberofpeople, companyName;
     private Button saveButton;
-    private int jobId;
-    private int jobDetailsId;
-    private ImageView avatar;
-    private ImageView change_avatar;
+    private int jobId, jobDetailsId;
+    private ImageView avatar, change_avatar;
     private ActivityResultLauncher<Intent> imagePickerLauncherAvatar;
     private Uri uri;
+    private String currentImagePath;  // To store the current image path (original one)
+    private ImageButton backButton;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_job);
 
-        // Ánh xạ các view
+        // Bind views
         jobName = findViewById(R.id.job_name);
         Salary = findViewById(R.id.et_salary);
         companyName = findViewById(R.id.et_companyName);
@@ -72,10 +59,11 @@ public class EditJobActivity extends AppCompatActivity {
         numberofpeople = findViewById(R.id.et_numberpeople);
 
         saveButton = findViewById(R.id.save_button);
+        backButton = findViewById(R.id.job_edit_back_button);
         avatar = findViewById(R.id.avatar);
         change_avatar = findViewById(R.id.change_avatar);
 
-        // Nhận dữ liệu từ Intent
+        // Get data from Intent
         jobId = getIntent().getIntExtra("jobId", -1);
         jobDetailsId = getIntent().getIntExtra("jobDetailsId", -1);
         jobName.setText(getIntent().getStringExtra("jobName"));
@@ -93,63 +81,65 @@ public class EditJobActivity extends AppCompatActivity {
         workingTime.setText(getIntent().getStringExtra("workingTime"));
         numberofpeople.setText(getIntent().getStringExtra("numberOfPeople"));
 
-        // Nhận đường dẫn ảnh từ Intent
-        String imagePath = getIntent().getStringExtra("imagePath");
-
-        if (imagePath != null && !imagePath.isEmpty()) {
-            // Sử dụng Glide để tải và hiển thị ảnh vào ImageView
+        // Get image path from Intent
+        currentImagePath = getIntent().getStringExtra("imagePath");
+        if (currentImagePath != null && !currentImagePath.isEmpty()) {
             Glide.with(this)
-                    .load(Uri.parse(imagePath)) // Nếu đường dẫn ảnh là URI
+                    .load(Uri.parse(currentImagePath))  // Use Glide to load the image from the URI
                     .into(avatar);
         }
 
-        // Thiết lập sự kiện cho nút save
+        // Set save button listener
         saveButton.setOnClickListener(v -> showConfirmationDialog());
 
+        ImageButton backButton = findViewById(R.id.job_edit_back_button);
 
-
-        change_avatar.setOnClickListener(view13 -> {
+        // Đặt sự kiện click cho nút back
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Xử lý sự kiện quay lại khi nhấn nút back
+                onBackPressed();  // gọi phương thức quay lại
+            }
+        });
+        // Set change avatar listener
+        change_avatar.setOnClickListener(view -> {
             ImagePicker.with(this)
-                    .crop()                // Cắt ảnh (tùy chọn)
-                    .compress(1024)        // Nén ảnh (tùy chọn)
-                    .maxResultSize(1080, 1080)  // Giới hạn kích thước ảnh (tùy chọn)
+                    .crop()                // Crop image (optional)
+                    .compress(1024)        // Compress image (optional)
+                    .maxResultSize(1080, 1080)  // Limit the image size (optional)
                     .createIntent(intent -> {
-                        imagePickerLauncherAvatar.launch(intent);  // Sử dụng launcher thay vì onActivityResult
+                        imagePickerLauncherAvatar.launch(intent);  // Launch the image picker
                         return null;
                     });
         });
 
+        // Initialize image picker result launcher
         imagePickerLauncherAvatar = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                         uri = result.getData().getData();
-                        avatar.setImageURI(uri);
+                        avatar.setImageURI(uri);  // Display the selected image in ImageView
                     } else {
                         Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
                     }
                 }
         );
     }
+
     private void showConfirmationDialog() {
         // Create a confirmation dialog
         new AlertDialog.Builder(EditJobActivity.this)
                 .setTitle("Confirmation")
                 .setMessage("Are you sure you want to update this job?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // If the user clicks "Yes", call the updateJob method to update the job
-                        updateJob();
-                    }
-                })
+                .setPositiveButton("Yes", (dialog, which) -> updateJob())
                 .setNegativeButton("No", null) // If the user clicks "No", just close the dialog
                 .show();
     }
 
-
     private void updateJob() {
-        // Lấy các giá trị từ EditText
+        // Get values from EditTexts
         String name = jobName.getText().toString();
         String salary = Salary.getText().toString();
         String company = companyName.getText().toString();
@@ -164,28 +154,28 @@ public class EditJobActivity extends AppCompatActivity {
         String benefitText = benefit.getText().toString();
         String time = workingTime.getText().toString();
         String numberPeople = numberofpeople.getText().toString();
-        String image = (uri != null) ? uri.toString() : "";  // Hoặc URL mặc định
 
+        // If no image selected, use the current image path
+        String image = (uri != null) ? uri.toString() : currentImagePath;
 
-        // Tạo đối tượng Job và JobDetails với dữ liệu đã cập nhật
-        Job updatedJob = new Job(image, name, company, experience, location, salary, date, 1);
+        // Create Job and JobDetails objects with updated data
+        Job updatedJob = new Job(image, name, company, experience, location, salary, date, 1); // Assuming recruiterId is 1
         JobDetails updatedJobDetails = new JobDetails(description, skill, benefitText, gender, time, method, position, numberPeople, jobId);
 
-        // Gọi API để cập nhật Job
+        // Call API to update Job
         ApiJobService.apiService.updateJob(jobId, updatedJob).enqueue(new Callback<Job>() {
             @Override
             public void onResponse(Call<Job> call, Response<Job> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(EditJobActivity.this, "Updated Job Success!", Toast.LENGTH_SHORT).show();
 
-                    // Gọi API để cập nhật JobDetails
+                    // Call API to update JobDetails
                     ApiJobService.apiService.putJobDetails(jobDetailsId, updatedJobDetails).enqueue(new Callback<JobDetails>() {
                         @Override
                         public void onResponse(Call<JobDetails> call, Response<JobDetails> response) {
                             if (response.isSuccessful()) {
-
-                                setResult(RESULT_OK);  // Trả kết quả cho Activity gọi
-                                finish();  // Kết thúc Activity
+                                setResult(RESULT_OK);  // Return result to calling activity
+                                finish();  // Close the activity
                             } else {
                                 Toast.makeText(EditJobActivity.this, "Error Update JobDetails", Toast.LENGTH_SHORT).show();
                             }

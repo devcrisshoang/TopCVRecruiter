@@ -254,6 +254,10 @@ public class JobDetailActivity extends AppCompatActivity {
                     .load(Uri.parse(imagePath))  // Tải ảnh từ đường dẫn file URI
                     .into(companyLogo);
             companyLogo.setTag(imagePath);
+        }else {
+            Glide.with(JobDetailActivity.this)
+                    .load(R.drawable.google_ic)  // Thay "account_ic" bằng ID ảnh mặc định của bạn
+                    .into(companyLogo);
         }
     }
 

@@ -1,8 +1,13 @@
 package com.example.topcvrecruiter;
 
-import android.app.Activity;
+import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,14 +15,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
-
-import androidx.activity.EdgeToEdge;
+import com.example.topcvrecruiter.utils.NotificationUtils;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.topcvrecruiter.API.ApiPostingService;
 import com.example.topcvrecruiter.model.Article;
@@ -25,12 +29,13 @@ import com.github.dhaval2404.imagepicker.ImagePicker;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
 public class ArticleActivity extends AppCompatActivity {
+
     private ImageButton back_button;
     private EditText editTextTitle;
     private EditText editTextContent;
@@ -43,13 +48,7 @@ public class ArticleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_article);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
         back_button = findViewById(R.id.back_button);
         back_button.setOnClickListener(view -> finish());
@@ -75,7 +74,7 @@ public class ArticleActivity extends AppCompatActivity {
         imagePickerLauncherAvatar = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         uri = result.getData().getData();
                         avatar.setImageURI(uri);
                     } else {
@@ -87,23 +86,31 @@ public class ArticleActivity extends AppCompatActivity {
         addButton.setOnClickListener(v -> {
             String title = editTextTitle.getText().toString();
             String content = editTextContent.getText().toString();
-            String image = uri.toString();
+            String image = (uri != null) ? uri.toString() : "";
 
             // Kiểm tra xem title và content có dữ liệu hay không
             if (!title.isEmpty() && !content.isEmpty()) {
                 postArticle(title, content, image);
+
             } else {
                 Toast.makeText(ArticleActivity.this, "Insert Information", Toast.LENGTH_SHORT).show();
-
             }
-            finish();
         });
 
+        // Kiểm tra quyền gửi thông báo nếu chạy trên Android 13 trở lên
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+            }
+        }
     }
 
-    //Post
-    private void postArticle(String title, String content,String image) {
-
+    // Post
+    private void postArticle(String title, String content, String image) {
+        // Nếu không có ảnh, có thể sử dụng ảnh mặc định hoặc để trống
+        if (image.isEmpty()) {
+            image = "";  // Hoặc để trống "" nếu không cần ảnh
+        }
 
         // Lấy thời gian hiện tại
         LocalDateTime currentTime = LocalDateTime.now();
@@ -114,17 +121,44 @@ public class ArticleActivity extends AppCompatActivity {
         // Chuyển đổi thời gian thành chuỗi theo định dạng đã chọn
         String formattedDateTime = currentTime.format(formatter);
 
-        Article article = new Article(title, content, formattedDateTime,image,1); // Thay đổi giá trị mặc định của iD_Recruiter tại đây
+        Article article = new Article(title, content, formattedDateTime, image, 1); // Thay đổi giá trị mặc định của iD_Recruiter tại đây
         ApiPostingService.apiService.postArticle(article).enqueue(new Callback<Article>() {
-
             @Override
             public void onResponse(Call<Article> call, Response<Article> response) {
-                Toast.makeText(ArticleActivity.this, "Post Article Successfully!", Toast.LENGTH_SHORT).show();
+                if (response.isSuccessful()) {
+                    // Sử dụng NotificationUtils để hiển thị thông báo
+                    NotificationUtils.showNotification(ArticleActivity.this, "You just posted an article !");
+                    // Hiển thị Toast
+                    Toast.makeText(ArticleActivity.this, "Post Article Successfully!", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    // Thông báo lỗi nếu không thành công
+                    Toast.makeText(ArticleActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
+                }
             }
+
             @Override
             public void onFailure(Call<Article> call, Throwable t) {
+                // Hiển thị lỗi nếu API thất bại
                 Toast.makeText(ArticleActivity.this, "Error!", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+
+
+    // Xử lý kết quả yêu cầu quyền gửi thông báo
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Đã cấp quyền
+                Toast.makeText(this, "Permission granted to post notifications", Toast.LENGTH_SHORT).show();
+            } else {
+                // Không cấp quyền
+                Toast.makeText(this, "Permission denied to post notifications", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
