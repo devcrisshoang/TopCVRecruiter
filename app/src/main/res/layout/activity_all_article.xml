@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+    <!-- Nút quay về -->
+    <ImageButton
+        android:id="@+id/article_all_back_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/icon_rounded_corner"
+        android:scaleType="fitCenter"
+        android:src="@drawable/back_ic" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcvArticle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/article_all_back_button">
+    </androidx.recyclerview.widget.RecyclerView>
+
+
+</RelativeLayout>

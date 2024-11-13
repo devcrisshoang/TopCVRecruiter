@@ -4,6 +4,8 @@
     <uses-permission android:name="android.permission.INTERNET">
 
     </uses-permission>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:usesCleartextTraffic="true"
         android:allowBackup="true"
@@ -18,19 +20,25 @@
         tools:targetApi="31">
 
         <activity
-            android:name=".ApplicantDetailActivity"
+            android:name=".ArticleDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".NumberApplicantActivity"
+            android:name=".AllArticleActivity"
             android:exported="false" />
         <activity
-            android:name=".NumberJobOfRecruiterActivity"
+            android:name=".AllJobActivity"
             android:exported="false" />
         <activity
-            android:name=".NumberResumeActivity"
+            android:name=".EditArticleActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EditJobActivity"
             android:exported="false" />
         <activity
             android:name=".VerifyPhoneActivity"
+            android:exported="false" />
+        <activity
+            android:name=".JobDetailActivity"
             android:exported="false" />
         <activity
             android:name=".InformationActivity"
@@ -38,6 +46,10 @@
 
         <activity
             android:name=".SignUpActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".JobDetailsActivity"
             android:exported="false" />
         <activity
             android:name=".JobActivity"

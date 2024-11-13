@@ -67,11 +67,11 @@
 
                     <ImageView
                         android:id="@+id/company_logo"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
                         android:layout_margin="10dp"
                         android:layout_gravity="center"
-                        android:background="@drawable/icon_rounded_corner"
+
                         android:padding="10dp"
                         android:textAlignment="center"
                         android:src="@drawable/google_ic" />
@@ -550,21 +550,7 @@
                         android:text="abc">
 
                     </TextView>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Working location:"
-                        android:textStyle="bold"
-                        android:textSize="18sp">
 
-                    </TextView>
-                    <TextView
-                        android:id="@+id/working_place"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="abc">
-
-                    </TextView>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -578,8 +564,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="abc">
-
                     </TextView>
+
+
+
+
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

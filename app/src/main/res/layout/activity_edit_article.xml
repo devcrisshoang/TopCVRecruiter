@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ArticleActivity">
+    android:padding="24dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#FAFAFA">
+
     <LinearLayout
+        android:id="@+id/linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
         <ImageButton
-            android:id="@+id/back_button"
+            android:id="@+id/post_edit_back_button"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:scaleType="fitCenter"
@@ -21,35 +26,14 @@
             android:layout_marginTop="5dp"
             android:src="@drawable/back_ic" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="Posting Article"
-            android:textColor="@color/green_color"
-            android:textSize="20sp"
-            android:textStyle="bold" />
 
-        <ImageButton
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:scaleType="fitCenter"
-            android:visibility="invisible"
-            android:background="@drawable/icon_rounded_corner"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="5dp"
-            android:src="@drawable/back_ic" />
     </LinearLayout>
-
-    <!-- Đưa FrameLayout lên đầu và căn giữa -->
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="344dp"
         android:layout_height="129dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:background="@drawable/rounded_corner">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -83,55 +67,34 @@
                 app:tint="@android:color/black" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
-
-    <!-- Thanh tiêu đề với nút Back -->
-
-
-    <!-- Các trường tiêu đề và nội dung -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Title:"
-        android:textSize="15dp"
-        android:layout_margin="5dp"
-        android:textStyle="bold" />
-
     <EditText
-        android:id="@+id/editTextTitle"
+        android:id="@+id/article_name_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:hint="Article Name"
+        android:padding="12dp"
         android:background="@drawable/edit_text_rounded_corner"
-        android:hint="Title here"
-        android:padding="10sp"
-        android:textSize="20sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Content of Article:"
-        android:textSize="15dp"
-        android:layout_margin="5dp"
-        android:textStyle="bold" />
+        android:layout_marginBottom="12dp"
+        android:textSize="16sp"
+        android:gravity="start|top" />
 
     <EditText
-        android:id="@+id/editTextContent"
+        android:id="@+id/content_edit"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_margin="5dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:hint="Content"
+        android:padding="12dp"
         android:background="@drawable/edit_text_rounded_corner"
-        android:gravity="top"
-        android:hint="Title here"
-        android:padding="10sp"
-        android:textSize="20sp" />
+        android:layout_marginBottom="24dp"
+        android:textSize="16sp"
+        android:minLines="6"
+        android:gravity="start|top" />
 
     <Button
-        android:id="@+id/add_new_article_button"
-        android:layout_margin="5dp"
+        android:id="@+id/save_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         android:backgroundTint="@color/green_color"
-        android:text="Add new article" />
-
+        android:text="Save" />
 </LinearLayout>

@@ -2,7 +2,9 @@ package com.example.topcvrecruiter.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Article {
+import java.io.Serializable;
+
+public class Article implements Serializable {
     @SerializedName("id")
     private int id;
 
@@ -18,6 +20,24 @@ public class Article {
     @SerializedName("iD_Recruiter")
     private int iD_Recruiter;
 
+    @SerializedName("image")
+    private String image;
+
+    public Article(String article_Name, String content, String create_Time, String image, int iD_Recruiter) {
+        this.article_Name = article_Name;
+        this.content = content;
+        this.create_Time = create_Time;
+        this.image = image;
+        this.iD_Recruiter = iD_Recruiter;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
     // Getter và Setter
 
 
@@ -61,10 +81,4 @@ public class Article {
         this.iD_Recruiter = iD_Recruiter;
     }
 
-    public Article(String article_Name, String content, String create_Time, int iD_Recruiter) {
-        this.article_Name = article_Name;
-        this.content = content;
-        this.create_Time = create_Time;
-        this.iD_Recruiter = iD_Recruiter;
-    }
 }
