@@ -1,6 +1,6 @@
 package com.example.topcvrecruiter.API;
 
-import com.example.topcvrecruiter.model.Article;
+import com.example.topcvrecruiter.Model.Article;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 

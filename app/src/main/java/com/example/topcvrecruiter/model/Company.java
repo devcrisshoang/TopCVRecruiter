@@ -1,4 +1,4 @@
-package com.example.topcvrecruiter.model;
+package com.example.topcvrecruiter.Model;
 public class Company {
     private String name;
     private String industry;

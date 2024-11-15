@@ -11,8 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.topcvrecruiter.JobDetailActivity;
 import com.example.topcvrecruiter.R;
-import com.example.topcvrecruiter.model.Article;
-import com.example.topcvrecruiter.model.Job;
+import com.example.topcvrecruiter.Model.Job;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

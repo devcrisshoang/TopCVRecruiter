@@ -1,4 +1,4 @@
-package com.example.topcvrecruiter.model;
+package com.example.topcvrecruiter.Model;
 
 public class User {
     private int id;

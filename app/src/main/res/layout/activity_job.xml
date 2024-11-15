@@ -171,7 +171,8 @@
                 android:layout_marginTop="5dp"
                 android:background="@drawable/edit_text_rounded_corner"
                 android:hint="VND"
-                android:padding="10sp" />
+                android:padding="10sp"
+                android:inputType="number"/>
 
         </LinearLayout>
 

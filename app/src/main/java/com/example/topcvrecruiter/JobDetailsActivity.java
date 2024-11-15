@@ -1,30 +1,24 @@
 package com.example.topcvrecruiter;
 
 import android.Manifest;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.topcvrecruiter.API.ApiJobService;
-import com.example.topcvrecruiter.model.Job;
-import com.example.topcvrecruiter.model.JobDetails;
-import com.example.topcvrecruiter.utils.NotificationUtils;
+import com.example.topcvrecruiter.Model.Job;
+import com.example.topcvrecruiter.Model.JobDetails;
+import com.example.topcvrecruiter.Utils.NotificationUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -61,7 +55,7 @@ public class JobDetailsActivity extends AppCompatActivity {
         String companyName = getIntent().getStringExtra("companyName");
         String experience = getIntent().getStringExtra("experience");
         String address = getIntent().getStringExtra("address");
-        String salary = getIntent().getStringExtra("salary");
+        int salary = getIntent().getIntExtra("salary",-1);
 
         // Kiểm tra quyền gửi thông báo trên Android 13 trở lên
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -74,7 +68,7 @@ public class JobDetailsActivity extends AppCompatActivity {
         back_button.setOnClickListener(view -> finish());
     }
 
-    private void postJobAndDetailsToApi(String image, String jobName, String companyName, String experience, String address, String salary) {
+    private void postJobAndDetailsToApi(String image, String jobName, String companyName, String experience, String address, int salary) {
         // Lấy thời gian hiện tại và định dạng
         LocalDateTime currentTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");

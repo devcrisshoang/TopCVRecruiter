@@ -14,8 +14,7 @@ import com.example.topcvrecruiter.API.ApiJobService;
 import com.example.topcvrecruiter.API.ApiPostingService;
 import com.example.topcvrecruiter.adapter.AllArticleAdapter;
 import com.example.topcvrecruiter.adapter.AllJobAdapter;
-import com.example.topcvrecruiter.model.Article;
-import com.example.topcvrecruiter.model.Job;
+import com.example.topcvrecruiter.Model.Job;
 
 import java.util.ArrayList;
 import java.util.List;

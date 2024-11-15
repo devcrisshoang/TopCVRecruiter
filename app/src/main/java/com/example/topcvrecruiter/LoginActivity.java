@@ -16,7 +16,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.topcvrecruiter.API.ApiUserService;
-import com.example.topcvrecruiter.model.User;
+import com.example.topcvrecruiter.Model.User;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;

@@ -15,7 +15,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.topcvrecruiter.API.ApiUserService;
-import com.example.topcvrecruiter.model.User;
+import com.example.topcvrecruiter.Model.User;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
