@@ -1,5 +1,11 @@
 package com.example.topcvrecruiter.Adapter;
 
+<<<<<<< HEAD
+=======
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
+>>>>>>> 41175bbb84f343715df47431a30c60fff44712ba
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,9 +14,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.topcvrecruiter.ArticleDetailActivity;
 import com.example.topcvrecruiter.R;
 import com.example.topcvrecruiter.model.Article;
-import com.example.topcvrecruiter.model.Job;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,14 +25,12 @@ import java.util.Locale;
 
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHolder> {
     private List<Article> articles;
-    private List<Job> jobs;
+    private Context context;
 
-    public ArticleAdapter(List<Article> articles) {
+    public ArticleAdapter(Context context, List<Article> articles) {
+        this.context = context;
         this.articles = articles;
     }
-
-//
-
 
 
     @NonNull
@@ -42,7 +46,16 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         holder.articleName.setText(article.getArticle_Name());
         holder.content.setText(article.getContent());
 
-        // Chuyển đổi chuỗi thời gian sang định dạng ngày tháng năm
+        // Thiết lập sự kiện nhấn vào mỗi item
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ArticleDetailActivity.class);
+            intent.putExtra("article_id", article.getId()); // Chuyển article_id
+            Log.d("ArticleAdapter", "Article ID: " + article.getId()); // Log article_id
+            context.startActivity(intent);
+        });
+
+
+        // Định dạng thời gian
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault());
         SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
 
@@ -52,8 +65,8 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             long currentTimeInMillis = System.currentTimeMillis();
 
             long timeDifference = currentTimeInMillis - createTimeInMillis;
-            long minutesDifference = timeDifference / (60 * 1000); // Chuyển đổi sang phút
-            long hoursDifference = timeDifference / (60 * 60 * 1000); // Chuyển đổi sang giờ
+            long minutesDifference = timeDifference / (60 * 1000);
+            long hoursDifference = timeDifference / (60 * 60 * 1000);
 
             if (minutesDifference < 60) {
                 holder.createTime.setText(minutesDifference + " minutes ago");
@@ -85,15 +98,14 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         TextView content;
         TextView createTime;
 
-
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             articleName = itemView.findViewById(R.id.name);
             content = itemView.findViewById(R.id.content);
             createTime = itemView.findViewById(R.id.time);
-
         }
     }
+
     public void updateData(List<Article> newArticles) {
         articles.clear();
         articles.addAll(newArticles);

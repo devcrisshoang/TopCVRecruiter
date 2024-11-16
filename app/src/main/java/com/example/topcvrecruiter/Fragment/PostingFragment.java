@@ -1,34 +1,33 @@
 package com.example.topcvrecruiter.Fragment;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
-
+import com.example.topcvrecruiter.API.ApiJobService;
 import com.example.topcvrecruiter.API.ApiPostingService;
-
-import com.example.topcvrecruiter.Adapter.ArticleAdapter;
+import com.example.topcvrecruiter.AllArticleActivity;
+import com.example.topcvrecruiter.AllJobActivity;
 import com.example.topcvrecruiter.ArticleActivity;
 import com.example.topcvrecruiter.JobActivity;
 import com.example.topcvrecruiter.R;
-
+import com.example.topcvrecruiter.adapter.ArticleAdapter;
+import com.example.topcvrecruiter.adapter.JobAdapter;
 import com.example.topcvrecruiter.model.Article;
-
+import com.example.topcvrecruiter.model.Job;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,111 +35,216 @@ import retrofit2.Response;
 public class PostingFragment extends Fragment {
     private Button post_button;
     private RecyclerView recyclerView;
-    private ArticleAdapter adapter;
+    private ArticleAdapter articleAdapter;
+    private JobAdapter jobAdapter;
     private List<Article> articleList;
-    private Button articleButton;
-
+    private Button articleButton, jobButton;
+    private List<Job> jobList;
+    private Button viewAll;
+    private boolean isArticleTabSelected = true;  // Biến để kiểm tra tab hiện tại
 
     @Nullable
     @Override
-
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_posting, container, false);
 
         post_button = view.findViewById(R.id.post_button);
         recyclerView = view.findViewById(R.id.recycler_view_post);
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL));
-
-        post_button.setOnClickListener(view1 -> {
-            showPostTypeDialog();
-        });
-
-
-
         articleButton = view.findViewById(R.id.article);
+        jobButton = view.findViewById(R.id.job);
+        viewAll = view.findViewById(R.id.view_all_button);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext())); // Đặt LayoutManager cho RecyclerView
+
+        // Khi bấm nút "Post", mở Dialog chọn loại bài đăng
+        post_button.setOnClickListener(view1 -> showPostTypeDialog());
+
+        // Khi chọn Tab "Article"
         articleButton.setOnClickListener(v -> {
-            // Reload the Fragment
-            getParentFragmentManager().beginTransaction().detach(this).attach(this).commit();
+            isArticleTabSelected = true;
+            loadArticles();  // Tải bài viết
         });
 
+        // Khi chọn Tab "Job"
+        jobButton.setOnClickListener(v -> {
+            isArticleTabSelected = false;
+            loadJobs();  // Tải công việc
+        });
 
-        loadArticles(); // Gọi hàm để tải dữ liệu từ API
+        // Khi bấm "View All"
+        viewAll.setOnClickListener(v -> {
+            if (isArticleTabSelected) {
+                // Nếu đang ở Tab Article thì mở AllArticleActivity
+                startActivity(new Intent(getActivity(), AllArticleActivity.class));
+            } else {
+                // Nếu đang ở Tab Job thì mở AllJobActivity
+                startActivity(new Intent(getActivity(), AllJobActivity.class));
+            }
+        });
+
+        loadArticles();  // Mặc định sẽ tải bài viết khi mở fragment lần đầu
         return view;
-
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Kiểm tra và xóa các bài tuyển dụng đã hết hạn khi Fragment bắt đầu
+        checkAndDeleteExpiredJobs();
+    }
 
+    // Tải 10 bài viết đầu tiên
     private void loadArticles() {
-        // Khởi tạo Retrofit service
-        ApiPostingService apiService = ApiPostingService.retrofit.create(ApiPostingService.class);
+        if (getContext() != null) { // Kiểm tra context
+            articleButton.setTextColor(getResources().getColor(R.color.green_color));
+            jobButton.setTextColor(getResources().getColor(R.color.black));
+            ApiPostingService apiService = ApiPostingService.retrofit.create(ApiPostingService.class);
+            Call<List<Article>> call = apiService.getArticles();
+            call.enqueue(new Callback<List<Article>>() {
+                @Override
+                public void onResponse(Call<List<Article>> call, Response<List<Article>> response) {
+                    if (response.isSuccessful()) {
+                        articleList = response.body();
+                        if (articleList != null) {
+                            // Lấy 10 bài viết đầu tiên
+                            List<Article> limitedArticles = articleList.size() > 10 ? articleList.subList(0, 10) : articleList;
 
-        Call<List<Article>> call = apiService.getArticles(); // Gọi API để lấy danh sách bài viết
-        call.enqueue(new Callback<List<Article>>() {
+                            if (!(recyclerView.getAdapter() instanceof ArticleAdapter) || articleAdapter == null) {
+                                articleAdapter = new ArticleAdapter(getContext(), limitedArticles);
+                                recyclerView.setAdapter(articleAdapter);
+                            } else {
+                                articleAdapter.updateData(limitedArticles);
+                            }
+                        }
+                    } else {
+                        showToast("Failed to load articles");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<Article>> call, Throwable t) {
+                    showToast("Error loading articles: " + t.getMessage());
+                }
+            });
+        }
+    }
+
+    // Tải 10 công việc đầu tiên
+    private void loadJobs() {
+        if (getContext() != null) { // Kiểm tra context
+            jobButton.setTextColor(getResources().getColor(R.color.green_color));
+            articleButton.setTextColor(getResources().getColor(R.color.black));
+            ApiJobService apiService = ApiJobService.retrofit.create(ApiJobService.class);
+            Call<List<Job>> call = apiService.getJobs();
+            call.enqueue(new Callback<List<Job>>() {
+                @Override
+                public void onResponse(Call<List<Job>> call, Response<List<Job>> response) {
+                    if (response.isSuccessful()) {
+                        jobList = response.body();
+                        if (jobList != null) {
+                            // Lấy 10 công việc đầu tiên
+                            List<Job> limitedJobs = jobList.size() > 10 ? jobList.subList(0, 10) : jobList;
+
+                            if (!(recyclerView.getAdapter() instanceof JobAdapter) || jobAdapter == null) {
+                                jobAdapter = new JobAdapter(getContext(), limitedJobs);
+                                recyclerView.setAdapter(jobAdapter);
+                            } else {
+                                jobAdapter.updateData(limitedJobs);
+                            }
+                        }
+                    } else {
+                        showToast("Failed to load jobs");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<Job>> call, Throwable t) {
+                    showToast("Error loading jobs: " + t.getMessage());
+                }
+            });
+        }
+    }
+
+    // Kiểm tra và xóa các bài tuyển dụng đã hết hạn
+    private void checkAndDeleteExpiredJobs() {
+        ApiJobService.apiService.getJobs().enqueue(new Callback<List<Job>>() {
             @Override
-            public void onResponse(Call<List<Article>> call, Response<List<Article>> response) {
-                if (response.isSuccessful()) {
-                    articleList = response.body();
-                    if (articleList != null) {
-                        if (adapter == null) {
-                            adapter = new ArticleAdapter(articleList);
-                            recyclerView.setAdapter(adapter);
-                        } else {
-                            adapter.updateData(articleList);
+            public void onResponse(Call<List<Job>> call, Response<List<Job>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    for (Job job : response.body()) {
+                        // Lấy thời gian tạo của bài đăng và tính toán xem đã quá 30 ngày chưa
+                        String createTimeString = job.getCreate_Time(); // Định dạng: yyyy-MM-dd'T'HH:mm:ss.SSS
+                        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+                        try {
+                            LocalDateTime createTime = LocalDateTime.parse(createTimeString, formatter);
+
+                            // Tính toán thời gian đã trôi qua từ lúc tạo
+                            Duration duration = Duration.between(createTime, LocalDateTime.now());
+                            long daysPassed = duration.toDays();
+
+                            // Nếu bài đăng đã được 30 ngày, xóa bài đăng
+                            if (daysPassed >= 30) {
+                                deleteJob(job.getId());
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace(); // In lỗi nếu có vấn đề khi phân tích chuỗi thời gian
                         }
                     }
                 } else {
-                    Toast.makeText(requireContext(), "Failed to load articles", Toast.LENGTH_SHORT).show();
+                    showToast("Error fetching job list");
                 }
             }
 
-
             @Override
-            public void onFailure(Call<List<Article>> call, Throwable t) {
-                Toast.makeText(requireContext(), "Error loading articles: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<List<Job>> call, Throwable t) {
+                showToast("Error checking for expired jobs: " + t.getMessage());
             }
         });
-
     }
 
 
-
-    //
-    private void showPostTypeDialog() {
-        // Create AlertDialog to ask user if they want to post Article or Job
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Choose Post Type");
-
-        // Define options for the dialog (Article and Job)
-        String[] options = {"Article", "Job"};
-
-        builder.setItems(options, new DialogInterface.OnClickListener() {
+    // Hàm gọi API để xóa bài tuyển dụng
+    private void deleteJob(int jobId) {
+        ApiJobService.apiService.deleteJobById(jobId).enqueue(new Callback<Void>() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (which == 0) {
-                    // If user chooses Article, navigate to ArticleActivity
-                    Intent intent = new Intent(getActivity(), ArticleActivity.class);
-                    startActivity(intent);
-                } else if (which == 1) {
-                    // If user chooses Job, navigate to JobActivity
-                    Intent intent = new Intent(getActivity(), JobActivity.class);
-                    startActivity(intent);
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    showToast("Job " + jobId + " deleted successfully");
+                } else {
+                    showToast("Failed to delete job " + jobId);
                 }
             }
-        });
 
-        // Add "Cancel" button if the user doesn't want to choose
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();  // Close the dialog if the user cancels
+            public void onFailure(Call<Void> call, Throwable t) {
+                showToast("Error deleting job: " + t.getMessage());
             }
         });
+    }
 
-        // Show the dialog
-        builder.create().show();
+    // Hiển thị toast
+    private void showToast(String message) {
+        if (getContext() != null) {
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Hiển thị Dialog để chọn loại bài đăng (Article hoặc Job)
+    private void showPostTypeDialog() {
+        if (getContext() != null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Choose Post Type");
+            String[] options = {"Article", "Job"};
+
+            builder.setItems(options, (dialog, which) -> {
+                if (which == 0) {
+                    startActivity(new Intent(getActivity(), ArticleActivity.class));
+                } else if (which == 1) {
+                    startActivity(new Intent(getActivity(), JobActivity.class));
+                }
+            });
+
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+            builder.create().show();
+        }
     }
 }
-
-
-
