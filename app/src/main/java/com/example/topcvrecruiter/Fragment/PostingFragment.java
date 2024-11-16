@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.example.topcvrecruiter.API.ApiPostingService;
 
-import com.example.topcvrecruiter.adapter.ArticleAdapter;
+import com.example.topcvrecruiter.Adapter.ArticleAdapter;
 import com.example.topcvrecruiter.ArticleActivity;
 import com.example.topcvrecruiter.JobActivity;
 import com.example.topcvrecruiter.R;

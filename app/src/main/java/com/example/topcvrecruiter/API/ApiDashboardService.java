@@ -1,6 +1,6 @@
 package com.example.topcvrecruiter.API;
 
-import com.example.topcvrecruiter.model.Applicant;
+import com.example.topcvrecruiter.model.ApplicantJob;
 import com.example.topcvrecruiter.model.CV;
 import com.example.topcvrecruiter.model.Job;
 
@@ -9,12 +9,16 @@ import java.util.concurrent.TimeUnit;
 
 
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface ApiDashboardService {
@@ -36,31 +40,30 @@ public interface ApiDashboardService {
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())  // Sử dụng RxJava3
             .build()
             .create(ApiDashboardService.class);
-    //--------------------APPLICANT-------------------------//
-    @GET("api/Recruiter/{id}/ApplicantsForJobToList")
-    Observable<List<Applicant>> getListApplicants(@Path("id") int recruiterId);
-
     //--------------------JOB-------------------------//
-    @GET("api/Recruiter/{id}/JobsOfRecruiterToList")
+    @GET("api/Job/ByRecruiter/{id}")
     Observable<List<Job>> getListJobs(@Path("id") int recruiterId);
-
-    //--------------------RESUME-------------------------//
-    @GET("api/Recruiter/{id}/ResumesForJobsToList")
-    Observable<List<CV>> getListResume(@Path("id") int recruiterId);
-
-    //--------------------RATE-------------------------//
-
-    //--------------------SUCCESS/FAILED-------------------------//
+    //--------------------APPLICANT of JOB-------------------------//
+    @GET("api/Recruiter/recruiter/{idRecruiter}/job/{idJob}/applicants")
+    Observable<List<ApplicantJob>> getListApplicantsForJob(@Path("idRecruiter") int recruiterId, @Path("idJob") int jobId);
+    //--------------------RATE ACCEPT-------------------------//
     @GET("api/Recruiter/{id}/AcceptedApplicants")
-    Observable<List<Applicant>> getAcceptedApplicants(@Path("id") int recruiterId);
+    Observable<List<ApplicantJob>> getAcceptedApplicants(@Path("id") int recruiterId);
+    //--------------------RATE REJECT-------------------------//
     @GET("api/Recruiter/{id}/RejectedApplicants")
-    Observable<List<Applicant>> getRejectedApplicants(@Path("id") int recruiterId);
-
-
+    Observable<List<ApplicantJob>> getRejectedApplicants(@Path("id") int recruiterId);
+    //--------------------Suggest-------------------------//
     @GET("api/Recruiter/{id}/SuggestedApplicants")
-    Observable<List<Applicant>> getListSuggestedApplicants(@Path("id") int recruiterId);
-
+    Observable<List<ApplicantJob>> getListSuggestedApplicants(@Path("id") int recruiterId);
+    //--------------------RESUME-------------------------//
     @GET("api/Recruiter/{idRecruiter}/applicant/{idApplicant}/cv")
     Observable<CV> getCvForApplicant(@Path("idApplicant") int applicantId, @Path("idRecruiter") int recruiterId);
+    //----------------------PUT RATE -----------------------------//
+    @PUT("api/Recruiter/{recruiterId}/applicants/{applicantId}/acceptance")
+    Single<Response<Void>> updateAcceptanceStatus(
+            @Path("recruiterId") int recruiterId,
+            @Path("applicantId") int applicantId,
+            @Body Boolean isAccepted
+    );
 
 }

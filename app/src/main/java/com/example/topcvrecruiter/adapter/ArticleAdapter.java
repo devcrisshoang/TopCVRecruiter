@@ -1,6 +1,5 @@
-package com.example.topcvrecruiter.adapter;
+package com.example.topcvrecruiter.Adapter;
 
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
