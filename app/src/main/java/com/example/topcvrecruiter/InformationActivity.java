@@ -2,73 +2,109 @@ package com.example.topcvrecruiter;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioGroup;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.topcvrecruiter.API.ApiRecruiterService;
+import com.example.topcvrecruiter.Model.Recruiter;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class InformationActivity extends AppCompatActivity {
 
-    // Các biến thành viên
-    private EditText editTextName, editTextPhone;
+    private EditText nameEditText;
+    private EditText phoneEditText;
     private Button submitButton;
-    private RadioGroup radioGroupRole;
+    private EditText editTextEmail;
 
+    private int id_User; // Biến lưu ID người dùng
+    private String username; // Biến lưu tên người dùng
+
+    private ImageButton back_button;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_information);
 
-        // Khởi tạo các view
-        editTextName = findViewById(R.id.editTextName);
-        editTextPhone = findViewById(R.id.editTextPhone);
+        nameEditText = findViewById(R.id.editTextName);
+        phoneEditText = findViewById(R.id.editTextPhone);
         submitButton = findViewById(R.id.Submit);
+        editTextEmail = findViewById(R.id.editTextEmail);
+        back_button = findViewById(R.id.back_button);
 
-        // Nút submit
-        submitButton.setOnClickListener(v -> {
-            String name = editTextName.getText().toString().trim();
-            String phone = editTextPhone.getText().toString().trim();
+        // Nhận dữ liệu từ Intent
+        Intent intent = getIntent();
+        username = intent.getStringExtra("username"); // Tên tài khoản
+        id_User = intent.getIntExtra("user_id", -1); // Nhận ID người dùng
 
-            if (TextUtils.isEmpty(name)) {
-                Toast.makeText(InformationActivity.this, "Vui lòng nhập tên của bạn", Toast.LENGTH_SHORT).show();
-                return;
-            }
+        // Điền dữ liệu vào EditText nếu cần
+        if (username != null) {
+            nameEditText.setText(username);
+        }
 
-            if (TextUtils.isEmpty(phone)) {
-                Toast.makeText(InformationActivity.this, "Vui lòng nhập số điện thoại", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            // Định dạng số điện thoại
-            String formattedPhone = formatPhoneNumber(phone);
-            if (formattedPhone == null) {
-                Toast.makeText(InformationActivity.this, "Số điện thoại không hợp lệ", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            // Điều hướng sang VerifyPhoneActivity
-            Intent intent = new Intent(InformationActivity.this, VerifyPhoneActivity.class);
-            intent.putExtra("phone", formattedPhone); // Truyền số điện thoại đã định dạng
-            startActivity(intent);
-            finish(); // Đóng Activity hiện tại
-        });
+        submitButton.setOnClickListener(v -> submitApplicant());
+        back_button.setOnClickListener(view -> finish());
     }
 
-    private String formatPhoneNumber(String rawPhoneNumber) {
-        // Kiểm tra và định dạng số điện thoại
-        if (rawPhoneNumber != null) {
-            rawPhoneNumber = rawPhoneNumber.trim();
-            if (rawPhoneNumber.startsWith("0")) {
-                return "+84" + rawPhoneNumber.substring(1); // Chuyển đổi từ 0 sang +84
-            } else if (rawPhoneNumber.startsWith("+84")) {
-                return rawPhoneNumber; // Nếu đã có mã quốc gia
-            }
+    private void submitApplicant() {
+        String name = nameEditText.getText().toString().trim();
+        String phone = phoneEditText.getText().toString().trim();
+        String email = editTextEmail.getText().toString().trim();
+
+        if (name.isEmpty() || phone.isEmpty()) {
+            Toast.makeText(this, "Vui lòng nhập cả tên và số điện thoại.", Toast.LENGTH_SHORT).show();
+            return;
         }
-        return null; // Trả về null nếu không hợp lệ
+
+        Log.d("Applicant Info", "Name: " + name + ", Phone: " + phone);
+
+        // Gửi thông tin đến server và chuyển Activity khi thành công
+        sendApplicantData(name, phone, email);
+    }
+
+    private void sendApplicantData(String name, String phone, String email) {
+        if (id_User <= 0) {
+            Toast.makeText(this, "ID người dùng không hợp lệ", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Recruiter recruiter = new Recruiter();
+        recruiter.setRecruiterName(name);
+        recruiter.setPhoneNumber(phone);
+        recruiter.setEmailAddress(email);
+        recruiter.setFrontImage("");
+        recruiter.setBackImage("");
+        recruiter.setIs_Registered(false);
+        recruiter.setIs_Confirm(false);
+        recruiter.setIdUser(id_User);
+        recruiter.setIdCompany(0);
+        ApiRecruiterService.ApiRecruiterService.createRecruiter(recruiter)
+                .subscribeOn(Schedulers.io())  // Chạy trên luồng nền
+                .observeOn(AndroidSchedulers.mainThread())  // Quan sát kết quả trên luồng chính
+                .subscribe(
+                        response -> {
+                            // Xử lý khi thành công
+                            Toast.makeText(this, "Recruiter đã được tạo thành công!", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(this, VerifyImageActivity.class);
+                            intent.putExtra("user_id", id_User);
+                            intent.putExtra("name", name);
+                            intent.putExtra("phone", phone);
+                            intent.putExtra("email", email);
+                            startActivity(intent);
+                            finish();
+                        },
+                        throwable -> {
+                            // Xử lý khi có lỗi
+                            Toast.makeText(this, "Có lỗi xảy ra: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                );
+        finish();
     }
 }

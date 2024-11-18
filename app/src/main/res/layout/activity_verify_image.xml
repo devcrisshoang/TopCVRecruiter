@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".VerifyImageActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/back_ic"
+            android:scaleType="fitCenter"
+            android:background="@color/white">
+
+        </ImageButton>
+
+        <TextView
+            android:id="@+id/image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Verify your identify card"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_margin="10dp"
+            android:layout_gravity="center">
+
+        </TextView>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="1">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select front photo"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:layout_marginLeft="10dp">
+
+        </TextView>
+
+        <ImageView
+            android:id="@+id/front_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:src="@drawable/viettel_ic"
+            android:scaleType="fitCenter"
+            android:layout_margin="10dp">
+
+        </ImageView>
+        <Button
+            android:id="@+id/select_front_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select front photo"
+            android:layout_gravity="center">
+
+        </Button>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select back photo"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:layout_marginLeft="10dp">
+
+        </TextView>
+
+        <ImageView
+            android:id="@+id/back_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:src="@drawable/vnu"
+            android:scaleType="fitCenter"
+            android:layout_margin="10dp">
+
+        </ImageView>
+
+        <Button
+            android:id="@+id/select_back_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select back photo"
+            android:layout_gravity="center">
+
+        </Button>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/apply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_gravity="center"
+        android:text="Apply">
+
+    </Button>
+
+</LinearLayout>

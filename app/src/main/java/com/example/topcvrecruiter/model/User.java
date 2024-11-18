@@ -4,16 +4,40 @@ public class User {
     private int id;
     private String username;
     private String password;
-    private int iD_SortOfUser;
-    private int image_Background;
-    private int avatar;
+    private String imageBackground;
+    private String avatar;
+    private String uid;
+    private boolean isApplicant;
+    private boolean isRecruiter;
 
-    public User(String username, String password, int iD_SortOfUser, int image_Background, int avatar) {
+    public boolean isApplicant() {
+        return isApplicant;
+    }
+
+    public void setApplicant(boolean applicant) {
+        isApplicant = applicant;
+    }
+
+    public boolean isRecruiter() {
+        return isRecruiter;
+    }
+
+    public void setRecruiter(boolean recruiter) {
+        isRecruiter = recruiter;
+    }
+
+    public User(String username, String password, String imageBackground, String avatar, String uid, boolean isApplicant, boolean isRecruiter) {
         this.username = username;
         this.password = password;
-        this.iD_SortOfUser = iD_SortOfUser;
-        this.image_Background = image_Background;
+        this.imageBackground = imageBackground;
         this.avatar = avatar;
+        this.uid = uid;
+        this.isApplicant = isApplicant;
+        this.isRecruiter = isRecruiter;
+    }
+
+    public User() {
+
     }
 
     // Getters và setters
@@ -41,27 +65,28 @@ public class User {
         this.password = password;
     }
 
-    public int getID_SortOfUser() {
-        return iD_SortOfUser;
+    public String getImageBackground() {
+        return imageBackground;
     }
 
-    public void setID_SortOfUser(int iD_SortOfUser) {
-        this.iD_SortOfUser = iD_SortOfUser;
+    public void setImageBackground(String imageBackground) {
+        this.imageBackground = imageBackground;
     }
 
-    public int getImage_Background() {
-        return image_Background;
-    }
-
-    public void setImage_Background(int image_Background) {
-        this.image_Background = image_Background;
-    }
-
-    public int getAvatar() {
+    public String getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(int avatar) {
+    public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
 }

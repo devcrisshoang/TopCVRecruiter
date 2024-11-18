@@ -3,6 +3,7 @@ package com.example.topcvrecruiter;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -15,6 +16,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.topcvrecruiter.API.ApiRecruiterService;
 import com.example.topcvrecruiter.API.ApiUserService;
 import com.example.topcvrecruiter.Model.User;
 import com.facebook.AccessToken;
@@ -106,13 +108,12 @@ public class LoginActivity extends AppCompatActivity {
         String username = usernameInput.getText().toString().trim();
         String password = passwordInput.getText().toString().trim();
 
-        // Kiểm tra thông tin nhập vào
         if (username.isEmpty() || password.isEmpty()) {
             Toast.makeText(LoginActivity.this, "Vui lòng nhập tên đăng nhập và mật khẩu", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Gọi API để lấy tất cả người dùng
+        // Lấy tất cả người dùng
         ApiUserService.apiUserService.getAllUser()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -120,22 +121,66 @@ public class LoginActivity extends AppCompatActivity {
                     boolean isValidUser = false;
 
                     for (User user : users) {
-                        // Kiểm tra tên đăng nhập và mật khẩu
-                        if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                        if (user.getUsername().equals(username)) {
                             isValidUser = true;
-                            // Chuyển đến MainActivity
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                            finish();
-                            break;
+
+                            if (!user.getPassword().equals(password)) {
+                                Toast.makeText(LoginActivity.this, "Tên đăng nhập hoặc mật khẩu không đúng.", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            int userId = user.getId();
+
+                            if(user.isRecruiter() == true){
+                                ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(userId)
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(response -> {
+                                            if (response.isIs_Registered() == true) {
+                                                // Nếu tồn tại Applicant, chuyển đến MainActivity
+                                                navigateToMainActivity(userId, response.getRecruiterName(), response.getPhoneNumber());
+                                            } else if(response.isIs_Registered() == false || response == null){
+                                                // Nếu không tồn tại Applicant, chuyển đến InformationActivity
+                                                navigateToInformationActivity(userId);
+                                            } else {
+                                                Toast.makeText(this, "This account is invalid", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }, throwable -> {
+                                            Log.e("API Error", "Error fetching applicant: " + throwable.getMessage());
+                                            Toast.makeText(LoginActivity.this, "Không tìm thấy Applicant, chuyển đến trang Information.", Toast.LENGTH_SHORT).show();
+                                            navigateToInformationActivity(userId);
+                                        });
+                                return;
+                            }
+                            else {
+                                Toast.makeText(LoginActivity.this, "This account is not exist", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
 
                     if (!isValidUser) {
-                        Toast.makeText(LoginActivity.this, "Tên đăng nhập hoặc mật khẩu không đúng", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Tên đăng nhập không tồn tại", Toast.LENGTH_SHORT).show();
                     }
                 }, throwable -> {
                     Toast.makeText(LoginActivity.this, "Lỗi kết nối đến server: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    private void navigateToInformationActivity(int id_User) {
+        Intent intent = new Intent(LoginActivity.this, InformationActivity.class);
+        intent.putExtra("user_id", id_User);
+        startActivity(intent);
+        finish();
+    }
+
+    private void navigateToMainActivity(int id_User, String recruiterName, String phoneNumber) {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        intent.putExtra("user_id", id_User);
+        intent.putExtra("applicantName", recruiterName);
+        intent.putExtra("phoneNumber", phoneNumber);
+        startActivity(intent);
+        // Tạo NewsFeedFragment và truyền Bundle vào
+        finish();
     }
 
     private void loginWithFacebook() {

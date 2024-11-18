@@ -1,4 +1,4 @@
-package com.example.topcvrecruiter;
+package com.example.topcvrecruiter.Utils;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;

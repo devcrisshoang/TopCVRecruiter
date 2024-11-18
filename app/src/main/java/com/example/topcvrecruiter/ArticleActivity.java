@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
-import com.example.topcvrecruiter.Utils.NotificationUtils;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +19,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.topcvrecruiter.API.ApiPostingService;
 import com.example.topcvrecruiter.Model.Article;
+import com.example.topcvrecruiter.Utils.NotificationUtils;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 
 import java.time.LocalDateTime;

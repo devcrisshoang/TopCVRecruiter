@@ -1,56 +1,89 @@
 package com.example.topcvrecruiter.Model;
+
+import com.google.gson.annotations.SerializedName;
+
 public class Company {
+    @SerializedName("id")
+    private int id;
+    @SerializedName("company_Name")
     private String name;
-    private String industry;
-    private String badge;
-    private int logo;
-    private boolean isChecked;
+    @SerializedName("company_Address")
+    private String address;
+    @SerializedName("hotline")
+    private String hotline;
+    @SerializedName("field")
+    private String field;
+    @SerializedName("image")
+    private String image;
+    @SerializedName("green_Badge")
+    private boolean green_Badge;
+    public Company() {
 
-    public void setName(String name) {
+    }
+
+    public Company(String name, String address, String hotline, String field, String image, boolean green_Badge) {
         this.name = name;
+        this.address = address;
+        this.hotline = hotline;
+        this.field = field;
+        this.image = image;
+        this.green_Badge = green_Badge;
     }
 
-    public void setIndustry(String industry) {
-        this.industry = industry;
+    public int getId() {
+        return id;
     }
 
-    public void setBadge(String badge) {
-        this.badge = badge;
-    }
-
-    public void setLogo(int logo) {
-        this.logo = logo;
-    }
-
-    public boolean isChecked() {
-        return isChecked;
-    }
-
-    public void setChecked(boolean checked) {
-        isChecked = checked;
-    }
-
-    public Company(String name, String industry, String badge, int logo) {
-        this.name = name;
-        this.industry = industry;
-        this.badge = badge;
-        this.logo = logo;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getIndustry() {
-        return industry;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getBadge() {
-        return badge;
+    public String getAddress() {
+        return address;
     }
 
-    public int getLogo() {
-        return logo;
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getHotline() {
+        return hotline;
+    }
+
+    public void setHotline(String hotline) {
+        this.hotline = hotline;
+    }
+
+    public String getField() {
+        return field;
+    }
+
+    public void setField(String field) {
+        this.field = field;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public boolean isGreen_Badge() {
+        return green_Badge;
+    }
+
+    public void setGreen_Badge(boolean green_Badge) {
+        this.green_Badge = green_Badge;
     }
 }
 
