@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.topcvrecruiter.Adapter.DasboardJobAdapter;
-import com.example.topcvrecruiter.model.Job;
+import com.example.topcvrecruiter.Model.Job;
 
 import java.util.List;
 

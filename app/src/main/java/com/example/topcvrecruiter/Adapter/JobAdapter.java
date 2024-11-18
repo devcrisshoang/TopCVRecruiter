@@ -9,8 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.topcvrecruiter.R;
-import com.example.topcvrecruiter.model.Job;
-import com.example.topcvrecruiter.model.JobDetails;
+import com.example.topcvrecruiter.Model.Job;
 import com.example.topcvrecruiter.JobDetailActivity;
 
 import java.text.SimpleDateFormat;

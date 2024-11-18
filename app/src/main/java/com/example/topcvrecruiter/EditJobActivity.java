@@ -19,8 +19,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.topcvrecruiter.API.ApiJobService;
-import com.example.topcvrecruiter.model.Job;
-import com.example.topcvrecruiter.model.JobDetails;
+import com.example.topcvrecruiter.Model.Job;
+import com.example.topcvrecruiter.Model.JobDetails;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 
 import retrofit2.Call;
@@ -141,7 +141,7 @@ public class EditJobActivity extends AppCompatActivity {
     private void updateJob() {
         // Get values from EditTexts
         String name = jobName.getText().toString();
-        String salary = Salary.getText().toString();
+        int salary = Integer.parseInt(Salary.getText().toString());
         String company = companyName.getText().toString();
         String location = workLocation.getText().toString();
         String experience = experienceRequire.getText().toString();

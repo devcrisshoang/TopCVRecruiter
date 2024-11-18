@@ -12,10 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.topcvrecruiter.API.ApiDashboardService;
+import com.example.topcvrecruiter.Model.Job;
 import com.example.topcvrecruiter.NumberApplicantActivity;
 import com.example.topcvrecruiter.R;
 import com.example.topcvrecruiter.model.ApplicantJob;
-import com.example.topcvrecruiter.model.Job;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,8 +1,8 @@
 package com.example.topcvrecruiter.API;
 
-import com.example.topcvrecruiter.Model.User;
+import com.example.topcvrecruiter.Model.Company;
+import com.example.topcvrecruiter.Model.CompanyInformationDetails;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.rxjava3.core.Completable;
@@ -18,8 +18,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
-public interface ApiUserService {
-
+public interface ApiCompanyDetailService {
     // Logging interceptor để theo dõi request và response
     HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -33,27 +32,20 @@ public interface ApiUserService {
             .build();
 
     // Sử dụng Retrofit để tạo API service
-    ApiUserService apiUserService = new Retrofit.Builder()
-            .baseUrl("https://10.0.2.2:7200/")  // Địa chỉ máy chủ
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+    ApiCompanyDetailService ApiCompanyDetailService = new Retrofit.Builder()
+            .baseUrl("https://10.0.2.2:7200/")  // Thay địa chỉ bằng IP của máy bạn hoặc server thật
+            .client(okHttpClient)  // Áp dụng OkHttpClient bỏ qua SSL
+            .addConverterFactory(GsonConverterFactory.create())  // Chuyển đổi JSON sang đối tượng Java
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())  // Sử dụng RxJava3
             .build()
-            .create(ApiUserService.class);
+            .create(ApiCompanyDetailService.class);
 
-    @POST("api/User")
-    Observable<User> createUser(@Body User user);
+    @GET("api/Company/recruiter/{id}")
+    Observable <CompanyInformationDetails> getCompanyInformationDetailsByCompanyId(@Path("id") int id);
 
-    // Thêm phương thức GET để lấy tất cả tên đăng nhập
-    @GET("api/User/usernames") // Địa chỉ cần sửa lại cho phù hợp với endpoint trên server
-    Observable<List<String>> getAllUsernames();
-    // Thêm phương thức GET để lấy tất cả user
-    @GET("api/User")
-    Observable<List<User>> getAllUser();
-    @GET("api/User/{id}")
-    Observable<User> getUserById(@Path("id") int id);
-
-    @PUT("api/User/{id}")
-    Completable updateUserById(@Path("id") int id, @Body User user);
+    @POST("api/CompanyInformationDetails")
+    Observable<CompanyInformationDetails> createCompanyDetail(@Body CompanyInformationDetails CompanyInformationDetails);
 
 }
+
+
