@@ -1,4 +1,4 @@
-package com.example.topcvrecruiter.model;
+package com.example.topcvrecruiter.Model;
 
 import com.google.gson.annotations.SerializedName;
 

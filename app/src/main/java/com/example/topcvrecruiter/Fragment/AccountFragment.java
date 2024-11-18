@@ -31,8 +31,8 @@ import com.example.topcvrecruiter.TermOfServiceActivity;
 import com.example.topcvrecruiter.API.ApiUserService;
 import com.example.topcvrecruiter.API.ApiRecruiterService;
 import com.example.topcvrecruiter.API.ApiCompanyService;
-import com.example.topcvrecruiter.model.Company;
-import com.example.topcvrecruiter.model.User;
+import com.example.topcvrecruiter.Model.Company;
+import com.example.topcvrecruiter.Model.User;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -224,7 +224,7 @@ public class AccountFragment extends Fragment {
                                 username = user.getUsername();
                                 password = user.getPassword();
                                 currentAvatarUrl = user.getAvatar();
-                                currentBackgroundUrl = user.getImage_Background();
+                                currentBackgroundUrl = user.getImageBackground();
                                 setUserImages(currentAvatarUrl, currentBackgroundUrl);
                             } else {
                                 Toast.makeText(getContext(), "User not found", Toast.LENGTH_SHORT).show();
@@ -252,7 +252,7 @@ public class AccountFragment extends Fragment {
         user.setUsername(username);
         user.setPassword(password);
         user.setAvatar(avatarUrl);
-        user.setImage_Background(backgroundUrl);
+        user.setImageBackground(backgroundUrl);
 
         ApiUserService.apiUserService.updateUserById(id_User, user)
                 .subscribeOn(Schedulers.io())
@@ -284,7 +284,7 @@ public class AccountFragment extends Fragment {
         user.setUsername(username);
         user.setPassword(password);
         user.setAvatar(avatarUrl);
-        user.setImage_Background(backgroundUrl);
+        user.setImageBackground(backgroundUrl);
 
         ApiUserService.apiUserService.updateUserById(id_User, user)
                 .subscribeOn(Schedulers.io())
@@ -327,14 +327,14 @@ public class AccountFragment extends Fragment {
 
     // Hàm để gọi API lấy thông tin của Recruiter
     private void getRecruiterById(int recruiterId) {
-        ApiRecruiterService.apiRecruiterService.getRecruiterById(recruiterId)
+        ApiRecruiterService.ApiRecruiterService.getRecruiterById(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         recruiter -> {
                             if (recruiter != null) {
-                                recruiter_name.setText(recruiter.getRecruiter_Name());
-                                email_address.setText(recruiter.getEmail_Address());
+                                recruiter_name.setText(recruiter.getRecruiterName());
+                                email_address.setText(recruiter.getEmailAddress());
                             } else {
                                 Toast.makeText(getContext(), "Recruiter not found", Toast.LENGTH_SHORT).show();
                             }
@@ -346,13 +346,13 @@ public class AccountFragment extends Fragment {
                 );
     }
     private void getCompanyByRecruiterId(int recruiterId) {
-        ApiCompanyService.apiCompanyService.getCompanyByRecruiterId(recruiterId)
+        ApiCompanyService.ApiCompanyService.getCompanyByRecruiterId(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         company -> {
                             if (company != null) {
-                                ac_company_name.setText(company.getCompany_Name());
+                                ac_company_name.setText(company.getName());
                                 ac_field.setText(company.getField());
                                 // Lưu lại companyId để sử dụng trong việc cập nhật
                                 companyId = company.getId(); // Giả sử bạn đã thêm trường "id" trong model Company
@@ -377,39 +377,8 @@ public class AccountFragment extends Fragment {
         // Tạo đối tượng Company với thông tin đã thay đổi
         Company company = new Company(companyName, "", "", field, "", false);  // Chỉ truyền những trường thay đổi
 
-        // Gọi API để cập nhật thông tin công ty
-        ApiCompanyService.apiCompanyService.updateCompanyById(companyId, company)
-                .subscribeOn(Schedulers.io())  // Chạy trên thread nền
-                .observeOn(AndroidSchedulers.mainThread())  // Quay lại thread UI
-                .subscribe(
-                        // onNext - hành động thành công (lambda không tham số)
-                        response -> {
-                            if (response.isSuccessful()) {
-                                Log.d("AccountFragment", "Company updated successfully");
-                                if (getContext() != null) {
-                                    Toast.makeText(getContext(), "Company updated successfully", Toast.LENGTH_SHORT).show();
-                                }
-                            } else {
-                                Log.e("AccountFragment", "Error: " + response.message());
-                                if (getContext() != null) {
-                                    Toast.makeText(getContext(), "Update company fail", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        },
-                        // onError - xử lý lỗi (lambda nhận một tham số Throwable)
-                        throwable -> {
-                            Log.e("AccountFragment", "Error updating company: " + throwable.getMessage());
-                            if (getContext() != null) {
-                                Toast.makeText(getContext(), "Update fail", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                );
+        // Gọi API để cập nhật thông tin công tys
     }
-
-
-
-
-
 
     @Override
     public void onDestroy() {

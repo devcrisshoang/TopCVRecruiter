@@ -13,8 +13,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.topcvrecruiter.API.ApiUserService;
-import com.example.topcvrecruiter.model.User;
-import com.google.gson.JsonObject;
+import com.example.topcvrecruiter.Model.User;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -116,11 +115,9 @@ public class ChangePasswordActivity extends AppCompatActivity {
                             updatedUser.setId(userId);  // Giữ nguyên ID
                             updatedUser.setUsername(user.getUsername());  // Giữ nguyên username
                             updatedUser.setPassword(newPasswordText);  // Cập nhật mật khẩu mới
-                            updatedUser.setImage_Background(user.getImage_Background());  // Giữ nguyên ảnh nền
+                            updatedUser.setImageBackground(user.getImageBackground());  // Giữ nguyên ảnh nền
                             updatedUser.setAvatar(user.getAvatar());  // Giữ nguyên avatar
                             updatedUser.setUid(user.getUid());  // Giữ nguyên UID
-                            updatedUser.setApplicant(user.getApplicant());  // Giữ nguyên trạng thái applicant
-
 
                             // Gửi yêu cầu PUT để thay đổi mật khẩu, giữ nguyên username
                             ApiUserService.apiUserService.updateUserById(userId, updatedUser)

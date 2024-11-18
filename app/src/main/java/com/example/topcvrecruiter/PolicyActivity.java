@@ -15,7 +15,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.topcvrecruiter.API.ApiUserService;
-import com.example.topcvrecruiter.model.User;
+import com.example.topcvrecruiter.Model.User;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -26,21 +26,15 @@ public class PolicyActivity extends AppCompatActivity {
     private ScrollView scrollView;
     private View linearLayoutAgreement;
     private CheckBox agreeCheckBox;
-    private ApiUserService apiUserService;
 
     private boolean isAgreementVisible = false;
+    private String username;
+    private String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_policy);
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
         Register_Button = findViewById(R.id.Register_Button);
         iconNumber2 = findViewById(R.id.iconNumber2);
@@ -50,42 +44,11 @@ public class PolicyActivity extends AppCompatActivity {
 
         // Nhận username và password từ Intent
         Intent intent = getIntent();
-        String username = intent.getStringExtra("username");
-        String password = intent.getStringExtra("password");
-
+        username = intent.getStringExtra("username");
+        password = intent.getStringExtra("password");
         if (intent.getBooleanExtra("isSignUpButtonClicked", false)) {
             iconNumber2.setColorFilter(getResources().getColor(R.color.green_color), android.graphics.PorterDuff.Mode.SRC_IN);
         }
-
-        // Tạo đối tượng User mới
-        User newUser = new User(username, password, "","" , ""); // Giả định các giá trị khác
-
-        // Gọi API POST để tạo người dùng
-        apiUserService = ApiUserService.apiUserService;
-        apiUserService.createUser(newUser)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(user -> {
-                    // Xử lý khi tạo người dùng thành công
-                    Toast.makeText(PolicyActivity.this, "User created successfully!", Toast.LENGTH_SHORT).show();
-                }, throwable -> {
-                    // Xử lý lỗi khi tạo người dùng
-                    Toast.makeText(PolicyActivity.this, "Failed to create user: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
-                });
-
-        // Kiểm tra và hiển thị debug thông tin username và password
-        Toast.makeText(this, "Username: " + username + ", Password: " + password, Toast.LENGTH_SHORT).show();
-
-        Register_Button.setOnClickListener(view -> {
-            if (!agreeCheckBox.isChecked()){
-                Toast.makeText(PolicyActivity.this, "You have not agreed to our policy.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            // Chuyển đến màn hình đăng nhập sau khi đăng ký thành công
-            startActivity(new Intent(PolicyActivity.this, LoginActivity.class));
-            finish();
-        });
-
         // Lắng nghe sự kiện cuộn của ScrollView
         scrollView.setOnScrollChangeListener((v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
             if (scrollY > oldScrollY && !isAgreementVisible) {
@@ -96,5 +59,36 @@ public class PolicyActivity extends AppCompatActivity {
                 isAgreementVisible = false;
             }
         });
+
+        Register_Button.setOnClickListener(view -> {
+            // Kiểm tra người dùng có đồng ý chính sách không
+            if (!agreeCheckBox.isChecked()) {
+                Toast.makeText(PolicyActivity.this, "Bạn chưa đồng ý với chính sách của chúng tôi.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Nếu đồng ý, tiến hành tạo tài khoản
+            createUserAndRedirect();
+        });
+    }
+
+    private void createUserAndRedirect() {
+        // Create a new User object
+        User newUser = new User(username, password, "", "", null,false,true);
+        // Call API to create User
+        ApiUserService.apiUserService.createUser(newUser)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(user -> {
+                    Toast.makeText(PolicyActivity.this, "User created successfully!", Toast.LENGTH_SHORT).show();
+                    // Save username and password in Intent
+                    Intent intent = new Intent(PolicyActivity.this, LoginActivity.class);
+                    intent.putExtra("username", username);
+                    intent.putExtra("password", password);
+                    startActivity(intent);
+                    finish();
+                }, throwable -> {
+                    Toast.makeText(PolicyActivity.this, "Failed to create user: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 }

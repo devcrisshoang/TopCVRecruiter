@@ -23,7 +23,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.topcvrecruiter.API.ApiJobService;
-import com.example.topcvrecruiter.model.Job;
+import com.example.topcvrecruiter.Model.Job;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 
 import java.time.LocalDateTime;
@@ -94,7 +94,7 @@ public class JobActivity extends AppCompatActivity {
             String experience = etExperience.getText().toString().trim();
             String address = etAddress.getText().toString().trim();
             String companyName = etCompany.getText().toString().trim();
-            String salary = etSalary.getText().toString().trim();
+            int salary = Integer.parseInt(etSalary.getText().toString().trim());
             String image = (uri != null) ? uri.toString() : "";
 
             // Tạo một Intent để chuyển sang JobDetailsActivity

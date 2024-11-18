@@ -1,30 +1,25 @@
 package com.example.topcvrecruiter;
 
 import android.Manifest;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
-import com.example.topcvrecruiter.utils.NotificationUtils;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.topcvrecruiter.API.ApiPostingService;
-import com.example.topcvrecruiter.model.Article;
+import com.example.topcvrecruiter.Model.Article;
+import com.example.topcvrecruiter.Utils.NotificationUtils;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 
 import java.time.LocalDateTime;

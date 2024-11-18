@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.topcvrecruiter.Adapter.DashboardResumeAdapter;
-import com.example.topcvrecruiter.model.CV;
+import com.example.topcvrecruiter.Model.CV;
 
 import java.util.List;
 

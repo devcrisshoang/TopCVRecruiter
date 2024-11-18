@@ -1,23 +1,27 @@
 package com.example.topcvrecruiter.API;
 
-import com.example.topcvrecruiter.model.Company;
-import java.util.List;
+import com.example.topcvrecruiter.Model.Company;
+
 import java.util.concurrent.TimeUnit;
+
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.Single;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface ApiCompanyService {
+    // Logging interceptor để theo dõi request và response
     HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
+
+    // Sử dụng OkHttpClient an toàn bỏ qua SSL
     OkHttpClient okHttpClient = UnsafeOkHttpClient.getUnsafeOkHttpClient()
             .newBuilder()
             .addInterceptor(loggingInterceptor)
@@ -26,25 +30,24 @@ public interface ApiCompanyService {
             .retryOnConnectionFailure(true)
             .build();
 
-
-    Retrofit retrofit = new Retrofit.Builder()
-            .client(okHttpClient)
-            .baseUrl("https://10.0.2.2:7200/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-            .build();
-    ApiCompanyService apiCompanyService = retrofit.create(ApiCompanyService.class);
-
-    @GET("api/Company")
-    Observable<List<Company>> getAllCompany();
+    // Sử dụng Retrofit để tạo API service
+    ApiCompanyService ApiCompanyService = new Retrofit.Builder()
+            .baseUrl("https://10.0.2.2:7200/")  // Thay địa chỉ bằng IP của máy bạn hoặc server thật
+            .client(okHttpClient)  // Áp dụng OkHttpClient bỏ qua SSL
+            .addConverterFactory(GsonConverterFactory.create())  // Chuyển đổi JSON sang đối tượng Java
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())  // Sử dụng RxJava3
+            .build()
+            .create(ApiCompanyService.class);
 
     @GET("api/Company/recruiter/{id}")
-    Observable<Company> getCompanyByRecruiterId(@Path("id") int recruiterId);
+    Observable <Company> getCompanyByRecruiterId(@Path("id") int id);
+
+    @POST("api/Company/{id}")
+    Observable<Company> createCompany(@Path("id") int id,@Body Company Company);
 
     @PUT("api/Company/{id}")
-    Observable<Response<Void>> updateCompanyById(@Path("id") int companyId, @Body Company company);
-
-
-
+    Completable updateCompanyById(@Path("id") int id, @Body Company Company);
 
 }
+
+

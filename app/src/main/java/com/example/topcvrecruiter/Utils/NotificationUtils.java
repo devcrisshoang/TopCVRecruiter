@@ -1,4 +1,4 @@
-package com.example.topcvrecruiter.utils;
+package com.example.topcvrecruiter.Utils;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;

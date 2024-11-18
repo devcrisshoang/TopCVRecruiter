@@ -9,29 +9,29 @@
     android:padding="16dp"
     tools:context=".InformationActivity">
 
-    <ImageButton
-        android:id="@+id/back_button"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:src="@drawable/back_ic"
-        android:scaleType="fitCenter"
-        android:background="@color/white">
-
-    </ImageButton>
-
     <!-- Header Section -->
     <LinearLayout
         android:id="@+id/linearLayoutHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/back_ic"
+            android:scaleType="fitCenter"
+            android:background="@color/white">
+
+        </ImageButton>
 
         <TextView
             android:id="@+id/textViewTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Enter your information"
+            android:text="Enter your company information"
             android:textSize="24sp"
             android:textStyle="bold"
             android:layout_gravity="center_horizontal"
@@ -50,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:text="Enter your name:"
+            android:text="Enter your company website:"
             android:textSize="15sp"
             android:textStyle="bold" />
 
@@ -64,13 +64,13 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/editTextName"
+                android:id="@+id/editTextWebsite"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:backgroundTint="@color/white"
-                android:hint="Name"
+                android:hint="Website"
                 android:inputType="textPersonName"
                 android:paddingLeft="10dp"
                 tools:ignore="TouchTargetSizeCheck" />
@@ -81,7 +81,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:text="Enter your phone number:"
+            android:text="Enter your taxID:"
             android:textSize="15sp"
             android:textStyle="bold"
             android:layout_marginTop="20dp" />
@@ -96,25 +96,17 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/editTextPhone"
+                android:id="@+id/editTextTaxID"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:backgroundTint="@color/white"
-                android:hint="Phone number"
+                android:hint="taxID"
                 android:inputType="phone"
                 android:paddingLeft="10dp"
                 tools:ignore="TouchTargetSizeCheck" />
         </LinearLayout>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:text="Enter your email:"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:layout_marginTop="20dp" />
 
         <!-- Phone Input Section -->
         <LinearLayout
@@ -122,19 +114,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:background="@drawable/edit_text_rounded_corner"
-            android:orientation="vertical">
+            android:orientation="vertical"/>
 
-            <EditText
-                android:id="@+id/editTextEmail"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:backgroundTint="@color/white"
-                android:hint="Email"
-                android:paddingLeft="10dp"
-                tools:ignore="TouchTargetSizeCheck" />
-        </LinearLayout>
+        <!-- Phone Input Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edit_text_rounded_corner"
+            android:orientation="vertical"/>
 
     </LinearLayout>
 
@@ -146,13 +134,13 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal">
         <Button
-            android:id="@+id/Submit"
+            android:id="@+id/finish"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20sp"
             android:background="@drawable/button_rounded_corner"
             app:backgroundTint="@null"
-            android:text="Next"
+            android:text="Finish"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
