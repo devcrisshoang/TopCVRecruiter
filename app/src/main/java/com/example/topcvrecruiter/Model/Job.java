@@ -24,7 +24,7 @@ public class Job implements Serializable {
     private String working_Address;
 
     @SerializedName("salary")
-    private String salary;
+    private int salary;
 
     @SerializedName("create_Time")
     private String create_Time;
@@ -56,11 +56,11 @@ public class Job implements Serializable {
         this.company_Name = company_Name;
     }
 
-    public String getSalary() {
+    public int getSalary() {
         return salary;
     }
 
-    public void setSalary(String salary) {
+    public void setSalary(int salary) {
         this.salary = salary;
     }
 
@@ -128,7 +128,7 @@ public class Job implements Serializable {
         this.iD_Recruiter = iD_Recruiter;
     }
 
-    public Job(String image_Id, String job_Name, String company_Name, String working_Experience_Require, String working_Address, String salary, String application_Date, int iD_Recruiter) {
+    public Job(String image_Id, String job_Name, String company_Name, String working_Experience_Require, String working_Address, int salary, String application_Date, int iD_Recruiter) {
         this.image_Id = image_Id;
         this.job_Name = job_Name;
         this.company_Name = company_Name;

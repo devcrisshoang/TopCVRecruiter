@@ -53,6 +53,7 @@ public class DasboardJobAdapter extends RecyclerView.Adapter<DasboardJobAdapter.
 
         holder.jobNameTextView.setText(job.getJob_Name());
         holder.createTimeTextView.setText(job.getCreate_Time());
+        holder.companyNameTextView.setText(job.getCompany_Name());
         holder.numberJobTextView.setText(String.valueOf(applicantOfJob));
 
         // Xử lý sự kiện click vào item
@@ -102,11 +103,13 @@ public class DasboardJobAdapter extends RecyclerView.Adapter<DasboardJobAdapter.
 
         private TextView jobNameTextView;
         private TextView createTimeTextView;
+        private TextView companyNameTextView;
         private TextView numberJobTextView;
         public DashboardViewHolder(@NonNull View itemView) {
             super(itemView);
             jobNameTextView = itemView.findViewById(R.id.ActionOfRecruiterTextView);
-            createTimeTextView = itemView.findViewById(R.id.ActionDetailsOfRecruiterTextView);
+            createTimeTextView = itemView.findViewById(R.id.ActionDetailsOfEmailRecruiterTextView);
+            companyNameTextView = itemView.findViewById(R.id.ActionDetailsOfRecruiterTextView);
             numberJobTextView = itemView.findViewById(R.id.TimeOfNotification);
         }
     }
