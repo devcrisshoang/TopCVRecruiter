@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.topcvrecruiter.API.ApiPostingService;
-import com.example.topcvrecruiter.adapter.AllArticleAdapter;
+import com.example.topcvrecruiter.Adapter.AllArticleAdapter;
 import com.example.topcvrecruiter.model.Article;
 
 import java.util.ArrayList;

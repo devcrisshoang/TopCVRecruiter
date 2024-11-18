@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.topcvrecruiter.API.ApiJobService;
 import com.example.topcvrecruiter.API.ApiPostingService;
-import com.example.topcvrecruiter.adapter.AllArticleAdapter;
+import com.example.topcvrecruiter.Adapter.AllArticleAdapter;
 import com.example.topcvrecruiter.adapter.AllJobAdapter;
 import com.example.topcvrecruiter.model.Article;
 import com.example.topcvrecruiter.model.Job;
