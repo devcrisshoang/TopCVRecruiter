@@ -48,5 +48,8 @@ public interface ApiRecruiterService {
     @PUT("api/Recruiter/{id}")
     Completable updateRecruiterById(@Path("id") int id, @Body Recruiter recruiter);
 
+    // API endpoint lấy nhà tuyển dụng theo ID
+    @GET("api/Recruiter/{id}")
+    Observable<Recruiter> getRecruiterById(@Path("id") int id);
 }
 

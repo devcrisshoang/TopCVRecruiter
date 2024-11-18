@@ -4,12 +4,15 @@ public class User {
     private int id;
     private String username;
     private String password;
-<<<<<<< HEAD
     private String imageBackground;
     private String avatar;
     private String uid;
     private boolean isApplicant;
     private boolean isRecruiter;
+
+    public User() {
+
+    }
 
     public boolean isApplicant() {
         return isApplicant;
@@ -35,26 +38,8 @@ public class User {
         this.uid = uid;
         this.isApplicant = isApplicant;
         this.isRecruiter = isRecruiter;
-=======
-    private String image_Background;
-    private String avatar;
-    private String uid; // Thêm uid
-    private Applicant applicant;  // Sửa lại thành Applicant thay vì List<Applicant>
-
-    public User(String username, String password, String image_Background, String avatar, String uid) {
-        this.username = username;
-        this.password = password;
-        this.image_Background = image_Background;
-        this.avatar = avatar;
-        this.uid = uid;
->>>>>>> a608556aa8aa7930c56924018cfa3066b5d3328a
     }
 
-    public User() {
-
-    }
-
-    // Getters và setters
     public int getId() {
         return id;
     }
@@ -79,21 +64,12 @@ public class User {
         this.password = password;
     }
 
-<<<<<<< HEAD
     public String getImageBackground() {
         return imageBackground;
     }
 
     public void setImageBackground(String imageBackground) {
         this.imageBackground = imageBackground;
-=======
-    public String getImage_Background() {
-        return image_Background;
-    }
-
-    public void setImage_Background(String image_Background) {
-        this.image_Background = image_Background;
->>>>>>> a608556aa8aa7930c56924018cfa3066b5d3328a
     }
 
     public String getAvatar() {
@@ -111,15 +87,4 @@ public class User {
     public void setUid(String uid) {
         this.uid = uid;
     }
-
-<<<<<<< HEAD
-=======
-    public Applicant getApplicant() {
-        return applicant;
-    }
-
-    public void setApplicant(Applicant applicant) {
-        this.applicant = applicant;
-    }
->>>>>>> a608556aa8aa7930c56924018cfa3066b5d3328a
 }
