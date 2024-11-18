@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.topcvrecruiter.API.ApiJobService;
 import com.example.topcvrecruiter.Utils.PaginationScrollListener;
-import com.example.topcvrecruiter.adapter.AllJobAdapter;
+import com.example.topcvrecruiter.Adapter.AllJobAdapter;
 import com.example.topcvrecruiter.Model.Job;
 
 import java.util.ArrayList;
