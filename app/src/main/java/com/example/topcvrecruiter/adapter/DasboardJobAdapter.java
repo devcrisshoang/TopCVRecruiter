@@ -28,6 +28,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class DasboardJobAdapter extends RecyclerView.Adapter<DasboardJobAdapter.DashboardViewHolder>{
     private List<Job> listJob;
     private ActivityResultLauncher<Intent> applicantDetailLauncher;
+    private int applicantOfJob;
     public DasboardJobAdapter(ActivityResultLauncher<Intent> applicantDetailLauncher, List<Job> listJob) {
         this.applicantDetailLauncher = applicantDetailLauncher;
         this.listJob = listJob;
@@ -36,6 +37,7 @@ public class DasboardJobAdapter extends RecyclerView.Adapter<DasboardJobAdapter.
         this.listJob = listJob;
         notifyDataSetChanged();
     }
+
 
     @NonNull
     @Override
@@ -51,11 +53,12 @@ public class DasboardJobAdapter extends RecyclerView.Adapter<DasboardJobAdapter.
 
         holder.jobNameTextView.setText(job.getJob_Name());
         holder.createTimeTextView.setText(job.getCreate_Time());
+        holder.numberJobTextView.setText(String.valueOf(applicantOfJob));
 
         // Xử lý sự kiện click vào item
         holder.itemView.setOnClickListener(v -> {
-            int recruiterId = 5; // Lấy recruiterId từ đâu đó trong adapter hoặc từ nguồn dữ liệu.
             int jobId = job.getId(); // Lấy ID của công việc hiện tại
+            int recruiterId = job.getiD_Recruiter();
 
             // Gọi API để lấy danh sách ứng viên cho công việc này
             ApiDashboardService.apiDashboardService.getListApplicantsForJob(recruiterId, jobId)
@@ -70,6 +73,7 @@ public class DasboardJobAdapter extends RecyclerView.Adapter<DasboardJobAdapter.
                         @Override
                         public void onNext(List<ApplicantJob> applicantList) {
                             // Tạo intent để chuyển sang NumberApplicantActivity
+                            applicantOfJob = applicantList.size();
                             Intent intent = new Intent(holder.itemView.getContext(), NumberApplicantActivity.class);
                             intent.putExtra("applicantList", new ArrayList<>(applicantList));
                             applicantDetailLauncher.launch(intent);
@@ -98,11 +102,12 @@ public class DasboardJobAdapter extends RecyclerView.Adapter<DasboardJobAdapter.
 
         private TextView jobNameTextView;
         private TextView createTimeTextView;
+        private TextView numberJobTextView;
         public DashboardViewHolder(@NonNull View itemView) {
             super(itemView);
             jobNameTextView = itemView.findViewById(R.id.ActionOfRecruiterTextView);
             createTimeTextView = itemView.findViewById(R.id.ActionDetailsOfRecruiterTextView);
-
+            numberJobTextView = itemView.findViewById(R.id.TimeOfNotification);
         }
     }
 

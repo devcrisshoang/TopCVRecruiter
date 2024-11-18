@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import com.example.topcvrecruiter.API.ApiDashboardService;
 
-
 import com.example.topcvrecruiter.Adapter.DashboardApplicantAdapter;
 import com.example.topcvrecruiter.Adapter.PaginationScrollListener;
 import com.example.topcvrecruiter.NumberApplicantActivity;
@@ -42,7 +41,6 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class DashboardFragment extends Fragment {
-
     private int recruiterId = 5;
 
     private TextView jobCountTextView;
@@ -274,8 +272,8 @@ public class DashboardFragment extends Fragment {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(jobs -> {
-                    int jobsCount = jobs.size(); // Đếm số lượng item trong danh sách
-                    jobCountTextView.setText(String.valueOf(jobsCount)); // Hiển thị số lượng ứng viên lên TextView
+                    int jobCount = jobs.size(); // Đếm số lượng item trong danh sách
+                    jobCountTextView.setText(String.valueOf(jobCount)); // Hiển thị số lượng ứng viên lên TextView
                 }, throwable -> {
                     // Xử lý lỗi nếu có
                     Log.e("API Error", "Error fetching applicants", throwable);

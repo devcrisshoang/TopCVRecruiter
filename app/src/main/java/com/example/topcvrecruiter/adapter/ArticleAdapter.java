@@ -1,11 +1,9 @@
 package com.example.topcvrecruiter.Adapter;
 
-<<<<<<< HEAD
-=======
+
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
->>>>>>> 41175bbb84f343715df47431a30c60fff44712ba
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
