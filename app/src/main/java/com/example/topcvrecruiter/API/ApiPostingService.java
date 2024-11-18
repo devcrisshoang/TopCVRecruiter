@@ -1,6 +1,6 @@
 package com.example.topcvrecruiter.API;
 
-import com.example.topcvrecruiter.model.Article;
+import com.example.topcvrecruiter.Model.Article;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -42,11 +42,8 @@ public interface ApiPostingService {
 
     ApiPostingService apiService = retrofit.create(ApiPostingService.class);
 
-
-
     @GET("api/Article")
     Call<List<Article>> getArticles();
-
 
     @GET("api/Article/{id}")
     Single<Article> getArticleById(@Path("id") int articleId);

@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.topcvrecruiter.API.ApiDashboardService;
-import com.example.topcvrecruiter.model.CV;
+import com.example.topcvrecruiter.Model.CV;
 
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;

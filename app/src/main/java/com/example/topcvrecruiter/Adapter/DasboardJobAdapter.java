@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.topcvrecruiter.R;
-import com.example.topcvrecruiter.model.Job;
+import com.example.topcvrecruiter.Model.Job;
 
 import java.util.List;
 

@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.topcvrecruiter.ApplicantDetailActivity;
 import com.example.topcvrecruiter.R;
-import com.example.topcvrecruiter.model.Applicant;
+import com.example.topcvrecruiter.Model.Applicant;
 
 import java.util.List;
 

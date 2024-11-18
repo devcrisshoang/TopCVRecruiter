@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.topcvrecruiter.ArticleDetailActivity;
 import com.example.topcvrecruiter.R;
-import com.example.topcvrecruiter.model.Article;
+import com.example.topcvrecruiter.Model.Article;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

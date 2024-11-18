@@ -24,8 +24,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.topcvrecruiter.API.ApiJobService;
-import com.example.topcvrecruiter.model.Job;
-import com.example.topcvrecruiter.model.JobDetails;
+import com.example.topcvrecruiter.Model.Job;
+import com.example.topcvrecruiter.Model.JobDetails;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;

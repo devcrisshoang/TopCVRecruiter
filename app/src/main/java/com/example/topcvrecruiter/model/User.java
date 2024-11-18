@@ -1,27 +1,45 @@
-package com.example.topcvrecruiter.model;
+package com.example.topcvrecruiter.Model;
 
 public class User {
     private int id;
     private String username;
     private String password;
-    private String image_Background;
+    private String imageBackground;
     private String avatar;
-    private String uid; // Thêm uid
-    private Applicant applicant;  // Sửa lại thành Applicant thay vì List<Applicant>
-
-    public User(String username, String password, String image_Background, String avatar, String uid) {
-        this.username = username;
-        this.password = password;
-        this.image_Background = image_Background;
-        this.avatar = avatar;
-        this.uid = uid;
-    }
+    private String uid;
+    private boolean isApplicant;
+    private boolean isRecruiter;
 
     public User() {
 
     }
 
-    // Getters và setters
+    public boolean isApplicant() {
+        return isApplicant;
+    }
+
+    public void setApplicant(boolean applicant) {
+        isApplicant = applicant;
+    }
+
+    public boolean isRecruiter() {
+        return isRecruiter;
+    }
+
+    public void setRecruiter(boolean recruiter) {
+        isRecruiter = recruiter;
+    }
+
+    public User(String username, String password, String imageBackground, String avatar, String uid, boolean isApplicant, boolean isRecruiter) {
+        this.username = username;
+        this.password = password;
+        this.imageBackground = imageBackground;
+        this.avatar = avatar;
+        this.uid = uid;
+        this.isApplicant = isApplicant;
+        this.isRecruiter = isRecruiter;
+    }
+
     public int getId() {
         return id;
     }
@@ -46,12 +64,12 @@ public class User {
         this.password = password;
     }
 
-    public String getImage_Background() {
-        return image_Background;
+    public String getImageBackground() {
+        return imageBackground;
     }
 
-    public void setImage_Background(String image_Background) {
-        this.image_Background = image_Background;
+    public void setImageBackground(String imageBackground) {
+        this.imageBackground = imageBackground;
     }
 
     public String getAvatar() {
@@ -68,13 +86,5 @@ public class User {
 
     public void setUid(String uid) {
         this.uid = uid;
-    }
-
-    public Applicant getApplicant() {
-        return applicant;
-    }
-
-    public void setApplicant(Applicant applicant) {
-        this.applicant = applicant;
     }
 }

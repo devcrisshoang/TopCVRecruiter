@@ -17,7 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.topcvrecruiter.API.ApiPostingService;
-import com.example.topcvrecruiter.model.Article;
+import com.example.topcvrecruiter.Model.Article;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

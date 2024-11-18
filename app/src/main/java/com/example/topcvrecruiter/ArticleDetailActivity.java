@@ -12,8 +12,8 @@ import android.net.Uri;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.topcvrecruiter.API.ApiPostingService;
-import com.example.topcvrecruiter.model.Article;
-import com.example.topcvrecruiter.utils.NotificationUtils;
+import com.example.topcvrecruiter.Model.Article;
+import com.example.topcvrecruiter.Utils.NotificationUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
