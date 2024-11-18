@@ -17,6 +17,7 @@ public class Company {
     private String image;
     @SerializedName("green_Badge")
     private boolean green_Badge;
+    
     public Company() {
 
     }
