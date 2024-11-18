@@ -5,6 +5,7 @@ import com.example.topcvrecruiter.model.User;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -14,6 +15,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Path;
 
 public interface ApiUserService {
 
@@ -47,4 +50,10 @@ public interface ApiUserService {
     // Thêm phương thức GET để lấy tất cả user
     @GET("api/User")
     Observable<List<User>> getAllUser();
+    @GET("api/User/{id}")
+    Observable<User> getUserById(@Path("id") int id);
+
+    @PUT("api/User/{id}")
+    Completable updateUserById(@Path("id") int id, @Body User user);
+
 }

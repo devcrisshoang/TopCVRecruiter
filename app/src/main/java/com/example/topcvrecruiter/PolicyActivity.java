@@ -58,7 +58,7 @@ public class PolicyActivity extends AppCompatActivity {
         }
 
         // Tạo đối tượng User mới
-        User newUser = new User(username, password, 0, 0, 0); // Giả định các giá trị khác
+        User newUser = new User(username, password, "","" , ""); // Giả định các giá trị khác
 
         // Gọi API POST để tạo người dùng
         apiUserService = ApiUserService.apiUserService;
