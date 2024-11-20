@@ -30,12 +30,15 @@ import retrofit2.Response;
 public class JobDetailsActivity extends AppCompatActivity {
     private Button post_button;
     private ImageButton back_button;
+    private int recruiter_id;
     private EditText benefit, numberOfPeople, genderRequire, workingTime, workingMethod, workingPosition, skillRequire, jobDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_details);
+
+        recruiter_id = getIntent().getIntExtra("recruiter_id",0);
 
         post_button = findViewById(R.id.post_button);
         back_button = findViewById(R.id.back_button);
@@ -75,7 +78,7 @@ public class JobDetailsActivity extends AppCompatActivity {
         String formattedDateTime = currentTime.format(formatter);
 
         // Tạo đối tượng Job
-        Job job = new Job(image, jobName, companyName, experience, address, salary, formattedDateTime, 1);
+        Job job = new Job(image, jobName, companyName, experience, address, salary, formattedDateTime, recruiter_id);
 
         // Gọi API để post Job
         ApiJobService.apiService.postJob(job).enqueue(new Callback<Job>() {

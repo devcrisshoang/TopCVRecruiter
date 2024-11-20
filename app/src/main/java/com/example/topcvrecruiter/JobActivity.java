@@ -42,7 +42,8 @@ public class JobActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> imagePickerLauncherAvatar;
     private Uri uri;
 
-    @SuppressLint("MissingInflatedId")
+    private int recruiter_id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +54,9 @@ public class JobActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        recruiter_id = getIntent().getIntExtra("recruiter_id",0);
+        Log.e("JobActivity","ID: " + recruiter_id);
 
         // Ánh xạ các thành phần giao diện
         continue_button = findViewById(R.id.continue_button);
@@ -105,6 +109,7 @@ public class JobActivity extends AppCompatActivity {
             intent.putExtra("experience", experience);
             intent.putExtra("address", address);
             intent.putExtra("salary", salary);
+            intent.putExtra("recruiter_id",recruiter_id);
 
 
             // Chuyển sang JobDetailsActivity

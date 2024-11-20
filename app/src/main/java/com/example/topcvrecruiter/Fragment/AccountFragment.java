@@ -84,9 +84,10 @@ public class AccountFragment extends Fragment {
         getUserById(id_User);
         // Gọi hàm lấy thông tin Recruiter với ID cứng
         getRecruiterById(id_User);  // Giả sử ID người tuyển dụng là 1
+        //Log.e("AccountFragment","ID: " + id_Recruiter);
         // Khởi tạo ActivityResultLauncher cho việc chọn ảnh
         initImagePicker();
-        getCompanyByRecruiterId(id_Recruiter);
+
         // Khởi tạo sự kiện cho các nút
         initListeners();
 
@@ -171,6 +172,7 @@ public class AccountFragment extends Fragment {
             });
         });
     }
+
     private void showEditDialog(String title, String currentValue, OnSaveListener onSaveListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Chỉnh sửa " + title);
@@ -190,6 +192,7 @@ public class AccountFragment extends Fragment {
     public interface OnSaveListener {
         void onSave(String newValue);
     }
+
     private void initImagePicker() {
         imagePickerLauncherBackground = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -327,8 +330,6 @@ public class AccountFragment extends Fragment {
         }
     }
 
-
-
     // Hàm để gọi API lấy thông tin của Recruiter
     private void getRecruiterById(int userId) {
         ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(userId)
@@ -340,6 +341,7 @@ public class AccountFragment extends Fragment {
                                 id_Recruiter = recruiter.getId();
                                 recruiter_name.setText(recruiter.getRecruiterName());
                                 email_address.setText(recruiter.getEmailAddress());
+                                getCompanyByRecruiterId(id_Recruiter);
                             } else {
                                 Toast.makeText(getContext(), "Recruiter not found", Toast.LENGTH_SHORT).show();
                             }
@@ -350,6 +352,7 @@ public class AccountFragment extends Fragment {
                         }
                 );
     }
+
     private void getCompanyByRecruiterId(int recruiterId) {
         ApiCompanyService.ApiCompanyService.getCompanyByRecruiterId(recruiterId)
                 .subscribeOn(Schedulers.io())

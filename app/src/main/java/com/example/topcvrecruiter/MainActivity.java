@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,11 +21,15 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.topcvrecruiter.API.ApiRecruiterService;
 import com.example.topcvrecruiter.Fragment.AccountFragment;
 import com.example.topcvrecruiter.Fragment.DashboardFragment;
 import com.example.topcvrecruiter.Fragment.MessengerFragment;
 import com.example.topcvrecruiter.Fragment.NotificationFragment;
 import com.example.topcvrecruiter.Fragment.PostingFragment;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
     private LinearLayout layout_header;
@@ -37,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private int currentFragment = FRAGMENT_HOME;
     private String recruiterName;
     private int id_User;      // Lưu trữ ID ứng viên
+    private int id_Recruiter;
     private String phoneNumber;
     private ImageButton Dashboard, Posting, messengerButton, notificationButton, accountButton;
     private TextView Dashboard_textview,Posting_Textview,Messenger_Textview,Notification_Textview,Account_Textview;
@@ -51,9 +57,31 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
         setWidget();
+        getRecruiterById(id_User);
+        //Log.e("MainActivity","ID: " + id_Recruiter);
         openNewsFeedFragment(id_User);
         setDefaultColorButton();
         setClick();
+    }
+
+    private void getRecruiterById(int userId) {
+        ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(userId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        recruiter -> {
+                            if (recruiter != null) {
+                                id_Recruiter = recruiter.getId();
+
+                            } else {
+                                Toast.makeText(this, "Recruiter not found", Toast.LENGTH_SHORT).show();
+                            }
+                        },
+                        throwable -> {
+                            Log.e("AccountFragment", "Error fetching recruiter: " + throwable.getMessage());
+                            Toast.makeText(this, "Failed to load recruiter", Toast.LENGTH_SHORT).show();
+                        }
+                );
     }
 
     private void setDefaultColorButton(){
