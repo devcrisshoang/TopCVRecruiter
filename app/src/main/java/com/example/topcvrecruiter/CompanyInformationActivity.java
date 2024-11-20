@@ -114,13 +114,13 @@ public class CompanyInformationActivity extends AppCompatActivity {
 
         Company company = new Company();
         company.setName(editTextName.getText().toString());
-        company.setName(editTextAddress.getText().toString());
-        company.setName(editTextHotline.getText().toString());
-        company.setName(editTextField.getText().toString());
+        company.setAddress(editTextAddress.getText().toString());
+        company.setHotline(editTextHotline.getText().toString());
+        company.setField(editTextField.getText().toString());
         company.setImage(ImageUri.toString());
         company.setGreen_Badge(false);
 
-        ApiCompanyService.ApiCompanyService.createCompany(recruiter_id,company)
+        ApiCompanyService.ApiCompanyService.createCompanyForRecruiter(id,company)
                 .subscribeOn(Schedulers.io())  // Chạy trên luồng nền
                 .observeOn(AndroidSchedulers.mainThread())  // Quan sát kết quả trên luồng chính
                 .subscribe(
@@ -131,13 +131,13 @@ public class CompanyInformationActivity extends AppCompatActivity {
                             intent.putExtra("recruiter_id", recruiter_id);
                             intent.putExtra("user_id",user_id);
                             startActivity(intent);
-                            finish();
+                            //finish();
                         },
                         throwable -> {
                             // Xử lý khi có lỗi
                             Toast.makeText(this, "Có lỗi xảy ra: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                 );
-        finish();
+        //finish();
     }
 }

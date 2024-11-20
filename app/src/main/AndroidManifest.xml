@@ -18,6 +18,12 @@
         android:theme="@style/Theme.TopCVRecruiter"
         tools:targetApi="31">
 
+        <activity android:name=".NumberJobOfRecruiterActivity"
+            android:exported="false"/>
+        <activity android:name=".NumberApplicantActivity"
+            android:exported="false"/>
+        <activity android:name=".ApplicantDetailActivity"
+            android:exported="false"/>
         <activity
             android:name=".CompanyDetailActivity"
             android:exported="false" />
@@ -66,15 +72,16 @@
         <activity
             android:name=".ArticleActivity"
             android:exported="false" />
-
-        <!-- MainActivity sẽ là màn hình đầu tiên mở -->
-        <activity
-            android:name=".MainActivity"
+        <activity android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:exported="false">
         </activity>
 
         <activity
@@ -89,8 +96,6 @@
         <activity
             android:name=".TermOfServiceActivity"
             android:exported="false" />
-
-        <!-- Bỏ intent-filter cho LoginActivity để không mở nó đầu tiên -->
         <activity
             android:name=".LoginActivity"
             android:exported="false" />

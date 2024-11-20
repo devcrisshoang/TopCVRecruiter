@@ -1,11 +1,13 @@
 package com.example.topcvrecruiter;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.widget.ImageButton;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,7 +23,7 @@ public class NumberJobOfRecruiterActivity extends AppCompatActivity {
     DasboardJobAdapter jobAdapter;
     List<Job> jobsList;
     private ImageButton backButton;
-
+    private ActivityResultLauncher<Intent> applicantDetailLauncher;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,8 +45,17 @@ public class NumberJobOfRecruiterActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.number_job_of_recruiter_Recycler_View);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        jobAdapter = new DasboardJobAdapter(jobsList);
-        recyclerView.setAdapter(jobAdapter);
-    }
+        applicantDetailLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        Intent data = result.getData();
+                    }
+                }
+        );
 
+        jobAdapter = new DasboardJobAdapter(applicantDetailLauncher, jobsList);
+        recyclerView.setAdapter(jobAdapter);
+
+    }
 }
