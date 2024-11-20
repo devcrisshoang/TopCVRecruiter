@@ -54,7 +54,8 @@ public class AccountFragment extends Fragment {
     private ActivityResultLauncher<Intent> imagePickerLauncherAvatar;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    private int id_User = 1;  // Cố định ID người dùng là 1
+    private int id_User;
+    private int id_Recruiter;
     private String username;
     private String password;
     private String currentAvatarUrl;
@@ -75,14 +76,18 @@ public class AccountFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_account, container, false);
         setWidget(view);
-
+        if (getArguments() != null) {
+            id_User = getArguments().getInt("user_id", -1);
+            Log.e("ID","ID: "+id_User);
+        }
         // Gọi hàm lấy thông tin người dùng với id cố định
         getUserById(id_User);
         // Gọi hàm lấy thông tin Recruiter với ID cứng
-        getRecruiterById(1);  // Giả sử ID người tuyển dụng là 1
+        getRecruiterById(id_User);  // Giả sử ID người tuyển dụng là 1
+        //Log.e("AccountFragment","ID: " + id_Recruiter);
         // Khởi tạo ActivityResultLauncher cho việc chọn ảnh
         initImagePicker();
-        getCompanyByRecruiterId(1);
+
         // Khởi tạo sự kiện cho các nút
         initListeners();
 
@@ -167,6 +172,7 @@ public class AccountFragment extends Fragment {
             });
         });
     }
+
     private void showEditDialog(String title, String currentValue, OnSaveListener onSaveListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Chỉnh sửa " + title);
@@ -186,6 +192,7 @@ public class AccountFragment extends Fragment {
     public interface OnSaveListener {
         void onSave(String newValue);
     }
+
     private void initImagePicker() {
         imagePickerLauncherBackground = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -323,18 +330,18 @@ public class AccountFragment extends Fragment {
         }
     }
 
-
-
     // Hàm để gọi API lấy thông tin của Recruiter
-    private void getRecruiterById(int recruiterId) {
-        ApiRecruiterService.ApiRecruiterService.getRecruiterById(recruiterId)
+    private void getRecruiterById(int userId) {
+        ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(userId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         recruiter -> {
                             if (recruiter != null) {
+                                id_Recruiter = recruiter.getId();
                                 recruiter_name.setText(recruiter.getRecruiterName());
                                 email_address.setText(recruiter.getEmailAddress());
+                                getCompanyByRecruiterId(id_Recruiter);
                             } else {
                                 Toast.makeText(getContext(), "Recruiter not found", Toast.LENGTH_SHORT).show();
                             }
@@ -345,6 +352,7 @@ public class AccountFragment extends Fragment {
                         }
                 );
     }
+
     private void getCompanyByRecruiterId(int recruiterId) {
         ApiCompanyService.ApiCompanyService.getCompanyByRecruiterId(recruiterId)
                 .subscribeOn(Schedulers.io())

@@ -241,7 +241,7 @@ public class JobDetailActivity extends AppCompatActivity {
     private void displayJobData(Job job) {
         jobName.setText(job.getJob_Name());
         companyName.setText(job.getCompany_Name());
-        salary.setText(job.getSalary());
+        salary.setText(String.valueOf(job.getSalary()));
         workLocation.setText(job.getWorking_Address());
         experienceRequire.setText(job.getWorking_Experience_Require());
         experience.setText(job.getWorking_Experience_Require());

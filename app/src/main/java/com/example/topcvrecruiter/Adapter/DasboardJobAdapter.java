@@ -17,7 +17,6 @@ import com.example.topcvrecruiter.NumberApplicantActivity;
 import com.example.topcvrecruiter.R;
 import com.example.topcvrecruiter.Model.ApplicantJob;
 
-
 import java.util.ArrayList;
 import java.util.List;
 

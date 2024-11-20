@@ -98,13 +98,13 @@ public class InformationActivity extends AppCompatActivity {
                             intent.putExtra("phone", phone);
                             intent.putExtra("email", email);
                             startActivity(intent);
-                            finish();
+                            //finish();
                         },
                         throwable -> {
                             // Xử lý khi có lỗi
                             Toast.makeText(this, "Có lỗi xảy ra: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                 );
-        finish();
+        //finish();
     }
 }

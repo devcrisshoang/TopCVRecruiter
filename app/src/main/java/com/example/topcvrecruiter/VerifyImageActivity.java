@@ -63,25 +63,23 @@ public class VerifyImageActivity extends AppCompatActivity {
         email = getIntent().getStringExtra("email");
         getRecruiterId(user_id);
         Log.e("RecruiterID", "Recruiter ID: " + recruiter_id);
-
-
         select_front_image.setOnClickListener(view -> {
             selectFrontImage();
         });
         select_back_image.setOnClickListener(view -> {
             selectBackImage();
         });
-        initImagePicker();
         back_button.setOnClickListener(view -> finish());
         apply.setOnClickListener(view -> {
             updateRecruiter();
         });
+        initImagePicker();
     }
 
     private void updateRecruiter(){
 
         Recruiter recruiter = new Recruiter();
-        recruiter.setId(recruiter_id);
+        //recruiter.setId(recruiter_id);
         recruiter.setRecruiterName(name);
         recruiter.setEmailAddress(email);
         recruiter.setPhoneNumber(phone);
@@ -90,7 +88,9 @@ public class VerifyImageActivity extends AppCompatActivity {
         recruiter.setIs_Registered(true);
         recruiter.setIs_Confirm(false);
         recruiter.setFrontImage(frontImageUri.toString());
+        Log.e("VerifyImageActivity","Path: "+ frontImageUri);
         recruiter.setBackImage(backImageUri.toString());
+        Log.e("VerifyImageActivity","Path: "+ backImageUri);
 
         ApiRecruiterService.ApiRecruiterService.updateRecruiterById(recruiter_id, recruiter)
                 .subscribeOn(Schedulers.io())

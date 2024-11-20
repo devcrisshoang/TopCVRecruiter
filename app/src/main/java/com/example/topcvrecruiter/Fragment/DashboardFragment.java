@@ -22,13 +22,14 @@ import android.widget.Toast;
 
 import com.example.topcvrecruiter.API.ApiDashboardService;
 
+import com.example.topcvrecruiter.API.ApiRecruiterService;
 import com.example.topcvrecruiter.Adapter.DashboardApplicantAdapter;
 import com.example.topcvrecruiter.Adapter.PaginationScrollListener;
 import com.example.topcvrecruiter.Model.Job;
 import com.example.topcvrecruiter.NumberApplicantActivity;
 import com.example.topcvrecruiter.NumberJobOfRecruiterActivity;
 import com.example.topcvrecruiter.R;
-import com.example.topcvrecruiter.model.ApplicantJob;
+import com.example.topcvrecruiter.Model.ApplicantJob;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,9 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class DashboardFragment extends Fragment {
-    private int recruiterId = 5;
+    private int recruiterId;
+    private int _recruiterId;
+    private int id_User;
 
     private TextView jobCountTextView;
     private TextView acceptedTextView;
@@ -68,13 +71,26 @@ public class DashboardFragment extends Fragment {
     private List<ApplicantJob> displayedList = new ArrayList<>();
     List<ApplicantJob> applicantList = new ArrayList<>();
 
+    LinearLayoutManager linearLayoutManager;
+
     public DashboardFragment() {
-        // Required empty public constructor
+
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
+        // Inflate the layout for this fragment
+        setWidget(view);
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            id_User = bundle.getInt("user_id", 0);  // 0 là giá trị mặc định
+            Log.e("NewsFeedFragment", "User ID received: " + id_User);
+        } else {
+            Log.e("NewsFeedFragment", "Bundle is null, user ID not received " + id_User);
+        }
+        getRecruiterById(id_User);
+        //Log.e("DashboardFragment","response1" + _recruiterId);
         apiDashboardService = ApiDashboardService.apiDashboardService;
 
         applicantDetailLauncher = registerForActivityResult(
@@ -82,48 +98,9 @@ public class DashboardFragment extends Fragment {
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                         Intent data = result.getData();
-                        int success = data.getIntExtra("rateSuccess", 0);
-                        int fail = data.getIntExtra("rateFail", 0);
-
-                        totalAccepted += success;
-                        totalRejected += fail;
-
-                        calculateAndDisplayRate();
                     }
                 }
         );
-
-    }
-    public void onResume() {
-        super.onResume();
-        fetchDashboardData(recruiterId); // Refresh data when fragment is back in focus
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
-
-        //Card View TextView
-        jobCountTextView = view.findViewById(R.id.electricity_amount);
-        acceptedTextView = view.findViewById(R.id.job_count);
-        rateSuccessTextView = view.findViewById(R.id.recruiting_rate);
-        rejectedTextView = view.findViewById(R.id.resume_amount);
-
-        //Card View onclick view
-        jobCountCardView = view.findViewById(R.id.applicant_cardView);
-        acceptedCardView = view.findViewById(R.id.job_cardView);
-        rejectedCardView = view.findViewById((R.id.resume_cardView));
-
-        applicantsRecyclerView = view.findViewById(R.id.aplicants_Recycler_View);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        applicantsRecyclerView.setLayoutManager(linearLayoutManager);
-
-        dashboardAdapter = new DashboardApplicantAdapter(applicantDetailLauncher);
-        applicantsRecyclerView.setAdapter(dashboardAdapter);
-
-        fetchDashboardData(recruiterId);
 
         //------------------
         if(applicantList.size() <= totalItemInPage){
@@ -135,10 +112,6 @@ public class DashboardFragment extends Fragment {
         else if(applicantList.size() % totalItemInPage != 0){
             totalPage = applicantList.size()/totalItemInPage +1;
         }
-        //-------------------
-        jobCountCardView.setOnClickListener(view1 -> fetchListJobs(recruiterId));
-        acceptedCardView.setOnClickListener(view1 -> fetchListAccepted(recruiterId));
-        rejectedCardView.setOnClickListener(view1 -> fetchListRejected(recruiterId));
 
         applicantsRecyclerView.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
             @Override
@@ -160,6 +133,51 @@ public class DashboardFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void getRecruiterById(int userId) {
+        ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(userId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        recruiter -> {
+                            if (recruiter.getId() != 0) {
+                                recruiterId = recruiter.getId();
+                                fetchDashboardData(recruiterId);
+                                jobCountCardView.setOnClickListener(view1 -> fetchListJobs(recruiterId));
+                                acceptedCardView.setOnClickListener(view1 -> fetchListAccepted(recruiterId));
+                                rejectedCardView.setOnClickListener(view1 -> fetchListRejected(recruiterId));
+                                Log.e("DashboardFragment","response" + recruiterId);
+                            } else {
+                                Toast.makeText(getContext(), "Recruiter not found", Toast.LENGTH_SHORT).show();
+                            }
+                        },
+                        throwable -> {
+                            Log.e("AccountFragment", "Error fetching recruiter: " + throwable.getMessage());
+                            Toast.makeText(getContext(), "Failed to load recruiter", Toast.LENGTH_SHORT).show();
+                        }
+
+                );
+    }
+
+    private void setWidget(View view){
+        //Card View TextView
+        jobCountTextView = view.findViewById(R.id.electricity_amount);
+        acceptedTextView = view.findViewById(R.id.job_count);
+        rateSuccessTextView = view.findViewById(R.id.recruiting_rate);
+        rejectedTextView = view.findViewById(R.id.resume_amount);
+
+        //Card View onclick view
+        jobCountCardView = view.findViewById(R.id.applicant_cardView);
+        acceptedCardView = view.findViewById(R.id.job_cardView);
+        rejectedCardView = view.findViewById((R.id.resume_cardView));
+
+        applicantsRecyclerView = view.findViewById(R.id.aplicants_Recycler_View);
+
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        applicantsRecyclerView.setLayoutManager(linearLayoutManager);
+        dashboardAdapter = new DashboardApplicantAdapter(applicantDetailLauncher);
+        applicantsRecyclerView.setAdapter(dashboardAdapter);
     }
 
     private void calculateAndDisplayRate() {
