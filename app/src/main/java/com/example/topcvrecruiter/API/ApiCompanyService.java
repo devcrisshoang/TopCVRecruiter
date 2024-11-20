@@ -42,8 +42,8 @@ public interface ApiCompanyService {
     @GET("api/Company/recruiter/{id}")
     Observable <Company> getCompanyByRecruiterId(@Path("id") int id);
 
-    @POST("api/Company/{id}")
-    Observable<Company> createCompany(@Path("id") int id,@Body Company Company);
+    @POST("api/Company/recruiter/{id}")
+    Observable<Company> createCompanyForRecruiter(@Path("id") int id, @Body Company company);
 
     @PUT("api/Company/{id}")
     Completable updateCompanyById(@Path("id") int id, @Body Company Company);

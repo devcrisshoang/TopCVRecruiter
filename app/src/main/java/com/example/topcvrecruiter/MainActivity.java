@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -34,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int FRAGMENT_ACCOUNT = 3;
     private static final int FRAGMENT_MESSENGER = 4;
     private int currentFragment = FRAGMENT_HOME;
+    private String recruiterName;
+    private int id_User;      // Lưu trữ ID ứng viên
+    private String phoneNumber;
     private ImageButton Dashboard, Posting, messengerButton, notificationButton, accountButton;
     private TextView Dashboard_textview,Posting_Textview,Messenger_Textview,Notification_Textview,Account_Textview;
     @Override
@@ -46,6 +50,108 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        setWidget();
+        openNewsFeedFragment(id_User);
+        setDefaultColorButton();
+        setClick();
+    }
+
+    private void setDefaultColorButton(){
+        // Thiết lập fragment mặc định và màu sắc ban đầu cho nút
+        setImageButtonColor(this, Dashboard, R.color.green_color);
+        setImageButtonColor(this, Posting, R.color.black);
+        setImageButtonColor(this, messengerButton, R.color.black);
+        setImageButtonColor(this, notificationButton, R.color.black);
+        setImageButtonColor(this, accountButton, R.color.black);
+    }
+
+    private void openNewsFeedFragment(int userId) {
+        DashboardFragment newsFeedFragment = new DashboardFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("user_id", userId);
+        newsFeedFragment.setArguments(bundle);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.news, newsFeedFragment)
+                .commit();
+    }
+
+    private void setClick(){
+        Dashboard.setOnClickListener(view -> selectFragment(FRAGMENT_HOME, new DashboardFragment(), layout_header, View.VISIBLE));
+        Posting.setOnClickListener(view -> selectFragment(FRAGMENT_PROFILE, new PostingFragment(), layout_header, View.GONE));
+        messengerButton.setOnClickListener(view -> selectFragment(FRAGMENT_MESSENGER, new MessengerFragment(), layout_header, View.GONE));
+        notificationButton.setOnClickListener(view -> selectFragment(FRAGMENT_NOTIFICATION, new NotificationFragment(), layout_header, View.GONE));
+        accountButton.setOnClickListener(view -> selectFragment(FRAGMENT_ACCOUNT, new AccountFragment(), layout_header, View.GONE));
+        search_edit_text.setOnClickListener(view -> {
+//            Intent searchIntent = new Intent(this, SearchActivity.class);
+//            startActivity(searchIntent);
+        });
+    }
+
+    private void selectFragment(int fragmentCode, Fragment fragment, LinearLayout layoutHeader, int headerVisibility) {
+        if (currentFragment != fragmentCode) {
+            // Kiểm tra fragment và truyền id_User vào bundle khi cần
+            if (fragment instanceof AccountFragment || fragment instanceof PostingFragment || fragment instanceof MessengerFragment || fragment instanceof NotificationFragment || fragment instanceof DashboardFragment) {
+                Bundle bundle = new Bundle();
+                bundle.putString("applicantName", recruiterName); // chỉ cần thiết cho AccountFragment
+                bundle.putInt("user_id", id_User); // truyền id_User cho tất cả các fragment
+                bundle.putString("phoneNumber", phoneNumber); // chỉ cần thiết cho AccountFragment
+                fragment.setArguments(bundle); // Đặt Bundle vào Fragment
+            }
+            replaceFragment(fragment); // Thay thế fragment hiện tại bằng fragment đã chọn
+            currentFragment = fragmentCode;
+            layoutHeader.setVisibility(headerVisibility);
+            resetButtonColors();
+            setImageButtonColor(this, getButtonForFragment(fragmentCode), R.color.green_color);
+            getTextViewForFragment(fragmentCode).setTextColor(getResources().getColor(R.color.green_color));
+        }
+    }
+
+    private ImageButton getButtonForFragment(int fragmentCode) {
+        switch (fragmentCode) {
+            case FRAGMENT_PROFILE:
+                return Posting;
+            case FRAGMENT_MESSENGER:
+                return messengerButton;
+            case FRAGMENT_NOTIFICATION:
+                return notificationButton;
+            case FRAGMENT_ACCOUNT:
+                return accountButton;
+            default:
+                return Dashboard;
+        }
+    }
+
+    private TextView getTextViewForFragment(int fragmentCode) {
+        switch (fragmentCode) {
+            case FRAGMENT_PROFILE:
+                return Posting_Textview;
+            case FRAGMENT_MESSENGER:
+                return Messenger_Textview;
+            case FRAGMENT_NOTIFICATION:
+                return Notification_Textview;
+            case FRAGMENT_ACCOUNT:
+                return Account_Textview;
+            default:
+                return Dashboard_textview;
+        }
+    }
+
+    private void resetButtonColors() {
+        setImageButtonColor(this, Dashboard, R.color.black);
+        setImageButtonColor(this, Posting, R.color.black);
+        setImageButtonColor(this, messengerButton, R.color.black);
+        setImageButtonColor(this, notificationButton, R.color.black);
+        setImageButtonColor(this, accountButton, R.color.black);
+
+        Dashboard_textview.setTextColor(getResources().getColor(R.color.black));
+        Posting_Textview.setTextColor(getResources().getColor(R.color.black));
+        Messenger_Textview.setTextColor(getResources().getColor(R.color.black));
+        Notification_Textview.setTextColor(getResources().getColor(R.color.black));
+        Account_Textview.setTextColor(getResources().getColor(R.color.black));
+    }
+
+    private void setWidget(){
         layout_header = findViewById(R.id.layout_header);
         search_edit_text = findViewById(R.id.search_edit_text);
         Dashboard = findViewById(R.id.Dashboard);
@@ -58,105 +164,13 @@ public class MainActivity extends AppCompatActivity {
         Messenger_Textview = findViewById(R.id.Messenger_Textview);
         Notification_Textview = findViewById(R.id.Notification_Textview);
         Account_Textview = findViewById(R.id.Account_Textview);
-        replaceFragment(new DashboardFragment());
-        setImageButtonColor(this,Dashboard, R.color.green_color);
-        setImageButtonColor(this,Posting, R.color.black);
-        setImageButtonColor(this,messengerButton, R.color.black);
-        setImageButtonColor(this,notificationButton, R.color.black);
-        setImageButtonColor(this,accountButton, R.color.black);
-
-        Dashboard.setOnClickListener(view -> {
-            setImageButtonColor(this,Dashboard, R.color.green_color);
-            setImageButtonColor(this,Posting, R.color.black);
-            setImageButtonColor(this,messengerButton, R.color.black);
-            setImageButtonColor(this,notificationButton, R.color.black);
-            setImageButtonColor(this,accountButton, R.color.black);
-            Dashboard_textview.setTextColor(getResources().getColor(R.color.green_color));
-            Posting_Textview.setTextColor(getResources().getColor(R.color.black));
-            Messenger_Textview.setTextColor(getResources().getColor(R.color.black));
-            Notification_Textview.setTextColor(getResources().getColor(R.color.black));
-            Account_Textview.setTextColor(getResources().getColor(R.color.black));
-
-            if(currentFragment != FRAGMENT_HOME){
-                replaceFragment(new DashboardFragment());
-                currentFragment = FRAGMENT_HOME;
-                layout_header.setVisibility(View.VISIBLE);
-            }
-        });
-        Posting.setOnClickListener(view -> {
-            setImageButtonColor(this,Posting, R.color.green_color);
-            setImageButtonColor(this,Dashboard, R.color.black);
-            setImageButtonColor(this,messengerButton, R.color.black);
-            setImageButtonColor(this,notificationButton, R.color.black);
-            setImageButtonColor(this,accountButton, R.color.black);
-            Dashboard_textview.setTextColor(getResources().getColor(R.color.black));
-            Posting_Textview.setTextColor(getResources().getColor(R.color.green_color));
-            Messenger_Textview.setTextColor(getResources().getColor(R.color.black));
-            Notification_Textview.setTextColor(getResources().getColor(R.color.black));
-            Account_Textview.setTextColor(getResources().getColor(R.color.black));
-            if(currentFragment != FRAGMENT_PROFILE){
-                replaceFragment(new PostingFragment());
-                currentFragment = FRAGMENT_PROFILE;
-                layout_header.setVisibility(View.GONE);
-
-            }
-        });
-        messengerButton.setOnClickListener(v -> {
-            setImageButtonColor(this,messengerButton, R.color.green_color);
-            setImageButtonColor(this,Dashboard, R.color.black);
-            setImageButtonColor(this,Posting, R.color.black);
-            setImageButtonColor(this,notificationButton, R.color.black);
-            setImageButtonColor(this,accountButton, R.color.black);
-            Dashboard_textview.setTextColor(getResources().getColor(R.color.black));
-            Posting_Textview.setTextColor(getResources().getColor(R.color.black));
-            Messenger_Textview.setTextColor(getResources().getColor(R.color.green_color));
-            Notification_Textview.setTextColor(getResources().getColor(R.color.black));
-            Account_Textview.setTextColor(getResources().getColor(R.color.black));
-            if(currentFragment != FRAGMENT_MESSENGER){
-                replaceFragment(new MessengerFragment());
-                currentFragment = FRAGMENT_MESSENGER;
-                layout_header.setVisibility(View.GONE);
-
-            }
-        });
-        notificationButton.setOnClickListener(v -> {
-            setImageButtonColor(this,notificationButton, R.color.green_color);
-            setImageButtonColor(this,Dashboard, R.color.black);
-            setImageButtonColor(this,Posting, R.color.black);
-            setImageButtonColor(this,messengerButton, R.color.black);
-            setImageButtonColor(this,accountButton, R.color.black);
-            Dashboard_textview.setTextColor(getResources().getColor(R.color.black));
-            Posting_Textview.setTextColor(getResources().getColor(R.color.black));
-            Messenger_Textview.setTextColor(getResources().getColor(R.color.black));
-            Notification_Textview.setTextColor(getResources().getColor(R.color.green_color));
-            Account_Textview.setTextColor(getResources().getColor(R.color.black));
-            if(currentFragment != FRAGMENT_NOTIFICATION){
-                replaceFragment(new NotificationFragment());
-                currentFragment = FRAGMENT_NOTIFICATION;
-                layout_header.setVisibility(View.GONE);
-            }
-        });
-        accountButton.setOnClickListener(v -> {
-            setImageButtonColor(this,accountButton, R.color.green_color);
-            setImageButtonColor(this,Dashboard, R.color.black);
-            setImageButtonColor(this,Posting, R.color.black);
-            setImageButtonColor(this,messengerButton, R.color.black);
-            setImageButtonColor(this,notificationButton, R.color.black);
-            Dashboard_textview.setTextColor(getResources().getColor(R.color.black));
-            Posting_Textview.setTextColor(getResources().getColor(R.color.black));
-            Messenger_Textview.setTextColor(getResources().getColor(R.color.black));
-            Notification_Textview.setTextColor(getResources().getColor(R.color.black));
-            Account_Textview.setTextColor(getResources().getColor(R.color.green_color));
-            if(currentFragment != FRAGMENT_ACCOUNT){
-                replaceFragment(new AccountFragment());
-                currentFragment = FRAGMENT_ACCOUNT;
-                layout_header.setVisibility(View.GONE);
-            }
-        });
-        search_edit_text.setOnClickListener(view -> {
-//            Intent intent = new Intent(this, SearchActivity.class);
-//            startActivity(intent);
-        });
+        Intent intent = getIntent();
+        recruiterName = intent.getStringExtra("recruiterName");
+        id_User = intent.getIntExtra("user_id", -1);  // Lấy userId từ Intent
+        if (id_User == -1) {
+            Log.e("Error", "userId không hợp lệ");
+        }
+        phoneNumber = intent.getStringExtra("phoneNumber");
     }
     public static void setImageButtonColor(Context context, ImageButton button, int colorResId) {
         int color = ContextCompat.getColor(context, colorResId); // Lấy màu từ resources

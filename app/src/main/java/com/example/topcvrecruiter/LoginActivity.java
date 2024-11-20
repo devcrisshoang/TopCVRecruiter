@@ -170,13 +170,13 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(LoginActivity.this, InformationActivity.class);
         intent.putExtra("user_id", id_User);
         startActivity(intent);
-        finish();
+        //finish();
     }
 
     private void navigateToMainActivity(int id_User, String recruiterName, String phoneNumber) {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         intent.putExtra("user_id", id_User);
-        intent.putExtra("applicantName", recruiterName);
+        intent.putExtra("recruiterName", recruiterName);
         intent.putExtra("phoneNumber", phoneNumber);
         startActivity(intent);
         // Tạo NewsFeedFragment và truyền Bundle vào
