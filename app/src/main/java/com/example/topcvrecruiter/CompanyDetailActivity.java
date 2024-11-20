@@ -20,6 +20,7 @@ import com.example.topcvrecruiter.API.ApiCompanyService;
 import com.example.topcvrecruiter.API.ApiRecruiterService;
 import com.example.topcvrecruiter.Model.Company;
 import com.example.topcvrecruiter.Model.CompanyInformationDetails;
+import com.example.topcvrecruiter.Model.Recruiter;
 import com.google.type.DateTime;
 
 import java.time.LocalDateTime;
@@ -39,6 +40,8 @@ public class CompanyDetailActivity extends AppCompatActivity {
 
     private Button finish;
 
+    private Recruiter _recruiter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,10 +58,12 @@ public class CompanyDetailActivity extends AppCompatActivity {
         editTextTaxID = findViewById(R.id.editTextTaxID);
         back_button = findViewById(R.id.back_button);
         finish = findViewById(R.id.finish);
+        _recruiter = new Recruiter();
         back_button.setOnClickListener(view -> {
             finish();
         });
         getCompanyId(recruiter_id);
+        getRecruiterById(recruiter_id);
         finish.setOnClickListener(view -> {
             createCompanyDetail(company_id);
         });
@@ -105,6 +110,43 @@ public class CompanyDetailActivity extends AppCompatActivity {
                             Toast.makeText(this, "Có lỗi xảy ra: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                 );
+
+        _recruiter.setIs_Registered(true);
+
+        ApiRecruiterService.ApiRecruiterService.updateRecruiterById(recruiter_id, _recruiter)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(() -> {
+                    // Xử lý thành công
+                    Log.d("VerifyImageActivity", "Updated successfully");
+                    Toast.makeText(this, "Updated successfully", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(this, CompanyInformationActivity.class);
+                    intent.putExtra("recruiter_id", recruiter_id);
+                    intent.putExtra("user_id",user_id);
+                    startActivity(intent);
+                }, throwable -> {
+                    // Xử lý lỗi
+                    Log.e("VerifyImageActivity", "Failed to update: " + throwable.getMessage());
+                    Toast.makeText(this, "Failed to update", Toast.LENGTH_SHORT).show();
+                });
         finish();
+    }
+    private void getRecruiterById(int recruiterId) {
+        ApiRecruiterService.ApiRecruiterService.getRecruiterById(recruiterId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        recruiter -> {
+                            if (recruiter != null) {
+                                _recruiter = recruiter;
+                            } else {
+                                Toast.makeText(this, "Recruiter not found", Toast.LENGTH_SHORT).show();
+                            }
+                        },
+                        throwable -> {
+                            Log.e("AccountFragment", "Error fetching recruiter: " + throwable.getMessage());
+                            Toast.makeText(this, "Failed to load recruiter", Toast.LENGTH_SHORT).show();
+                        }
+                );
     }
 }

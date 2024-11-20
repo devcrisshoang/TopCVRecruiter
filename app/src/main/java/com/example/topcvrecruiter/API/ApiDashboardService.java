@@ -2,7 +2,7 @@ package com.example.topcvrecruiter.API;
 
 import com.example.topcvrecruiter.Model.CV;
 import com.example.topcvrecruiter.Model.Job;
-import com.example.topcvrecruiter.model.ApplicantJob;
+import com.example.topcvrecruiter.Model.ApplicantJob;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;

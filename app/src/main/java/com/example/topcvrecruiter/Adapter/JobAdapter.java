@@ -1,4 +1,4 @@
-package com.example.topcvrecruiter.adapter;
+package com.example.topcvrecruiter.Adapter;
 
 import android.content.Context;
 import android.content.Intent;

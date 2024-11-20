@@ -8,6 +8,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,24 +17,30 @@ import android.widget.Button;
 import android.widget.Toast;
 import com.example.topcvrecruiter.API.ApiJobService;
 import com.example.topcvrecruiter.API.ApiPostingService;
+import com.example.topcvrecruiter.API.ApiRecruiterService;
 import com.example.topcvrecruiter.AllArticleActivity;
 import com.example.topcvrecruiter.AllJobActivity;
 import com.example.topcvrecruiter.ArticleActivity;
 import com.example.topcvrecruiter.JobActivity;
 import com.example.topcvrecruiter.R;
 import com.example.topcvrecruiter.Adapter.ArticleAdapter;
-import com.example.topcvrecruiter.adapter.JobAdapter;
+import com.example.topcvrecruiter.Adapter.JobAdapter;
 import com.example.topcvrecruiter.Model.Article;
 import com.example.topcvrecruiter.Model.Job;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PostingFragment extends Fragment {
+    private int id_user;
+    private int id_Recruiter;
     private Button post_button;
     private RecyclerView recyclerView;
     private ArticleAdapter articleAdapter;
@@ -48,15 +56,24 @@ public class PostingFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_posting, container, false);
 
+        if (getArguments() != null) {
+            id_user = getArguments().getInt("user_id", -1);
+            Log.e("ID","ID: "+ id_user);
+        }
+
+        getRecruiterById(id_user);
+        Log.e("PostingFragment","Id: " + id_Recruiter);
+
         post_button = view.findViewById(R.id.post_button);
         recyclerView = view.findViewById(R.id.recycler_view_post);
         articleButton = view.findViewById(R.id.article);
         jobButton = view.findViewById(R.id.job);
         viewAll = view.findViewById(R.id.view_all_button);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext())); // Đặt LayoutManager cho RecyclerView
 
         // Khi bấm nút "Post", mở Dialog chọn loại bài đăng
-        post_button.setOnClickListener(view1 -> showPostTypeDialog());
+
 
         // Khi chọn Tab "Article"
         articleButton.setOnClickListener(v -> {
@@ -83,6 +100,47 @@ public class PostingFragment extends Fragment {
 
         loadArticles();  // Mặc định sẽ tải bài viết khi mở fragment lần đầu
         return view;
+    }
+
+    private void getRecruiterById(int userId) {
+        ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(userId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        recruiter -> {
+                            if (recruiter != null) {
+                                id_Recruiter = recruiter.getId();
+                                post_button.setOnClickListener(view1 -> {
+                                    if (getContext() != null) {
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                        builder.setTitle("Choose Post Type");
+                                        String[] options = {"Article", "Job"};
+
+                                        builder.setItems(options, (dialog, which) -> {
+                                            if (which == 0) {
+                                                Intent intent = new Intent(getContext(), ArticleActivity.class);
+                                                intent.putExtra("recruiter_id",id_Recruiter);
+                                                startActivity(intent);
+                                            } else if (which == 1) {
+                                                Intent intent = new Intent(getContext(), JobActivity.class);
+                                                intent.putExtra("recruiter_id",id_Recruiter);
+                                                startActivity(intent);
+                                            }
+                                        });
+
+                                        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+                                        builder.create().show();
+                                    }
+                                });
+                            } else {
+                                Toast.makeText(getContext(), "Recruiter not found", Toast.LENGTH_SHORT).show();
+                            }
+                        },
+                        throwable -> {
+                            Log.e("AccountFragment", "Error fetching recruiter: " + throwable.getMessage());
+                            Toast.makeText(getContext(), "Failed to load recruiter", Toast.LENGTH_SHORT).show();
+                        }
+                );
     }
 
     @Override
@@ -228,23 +286,4 @@ public class PostingFragment extends Fragment {
         }
     }
 
-    // Hiển thị Dialog để chọn loại bài đăng (Article hoặc Job)
-    private void showPostTypeDialog() {
-        if (getContext() != null) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setTitle("Choose Post Type");
-            String[] options = {"Article", "Job"};
-
-            builder.setItems(options, (dialog, which) -> {
-                if (which == 0) {
-                    startActivity(new Intent(getActivity(), ArticleActivity.class));
-                } else if (which == 1) {
-                    startActivity(new Intent(getActivity(), JobActivity.class));
-                }
-            });
-
-            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-            builder.create().show();
-        }
-    }
 }
