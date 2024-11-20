@@ -3,6 +3,7 @@ package com.example.topcvrecruiter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -17,8 +18,10 @@ import com.example.topcvrecruiter.Model.CV;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.core.SingleObserver;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import retrofit2.Response;
 
 public class ApplicantDetailActivity extends AppCompatActivity {
     private TextView jobApplyingTextView;
@@ -34,6 +37,7 @@ public class ApplicantDetailActivity extends AppCompatActivity {
     private Button rejectButton;
     private ImageButton backButton;
 
+    private int recruiterId = 5;
     private int rateSuccess = 0;
     private int rateFail = 0;
 
@@ -61,9 +65,20 @@ public class ApplicantDetailActivity extends AppCompatActivity {
 
         // Get the applicant ID from the Intent
         int applicantId = getIntent().getIntExtra("applicant_id", -1);
+        boolean isAccepted = getIntent().getBooleanExtra("isAccepted", false);
+        boolean isRejected = getIntent().getBooleanExtra("isRejected", false);
+
 
         // Fetch the CV data
-        fetchCvForApplicant(applicantId, 5);
+        fetchCvForApplicant(applicantId, recruiterId);
+
+        if (isAccepted) {
+            acceptButton.setVisibility(View.GONE);
+            rejectButton.setVisibility(View.VISIBLE);
+        } else if(isRejected) {
+            acceptButton.setVisibility(View.VISIBLE);
+            rejectButton.setVisibility(View.GONE);
+        }
 
         // Set up the back button listener
         backButton.setOnClickListener(v -> {
@@ -72,13 +87,13 @@ public class ApplicantDetailActivity extends AppCompatActivity {
 
         // Set up the accept button
         acceptButton.setOnClickListener(v -> {
-            rateSuccess++; // Increase recruitment rate
+            updateAcceptanceStatus(recruiterId, applicantId, true);
             finishWithSuccessResult();
         });
 
         // Set up the reject button
         rejectButton.setOnClickListener(v -> {
-            rateFail++; // Decrease recruitment rate
+            updateAcceptanceStatus(recruiterId, applicantId, false);
             finishWithFailResult();
 
         });
@@ -97,6 +112,30 @@ public class ApplicantDetailActivity extends AppCompatActivity {
         resultIntent.putExtra("rateFail", rateFail);
         setResult(RESULT_OK, resultIntent); // RESULT_OK indicates a successful result
         finish(); // Close the activity
+    }
+
+    private void updateAcceptanceStatus(int recruiterId, int applicantId, boolean isAccepted) {
+        apiService.updateAcceptanceStatus(recruiterId, applicantId, isAccepted)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<Void>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) { }
+
+                    @Override
+                    public void onSuccess(Response<Void> response) {
+                        if (isAccepted) {
+                            rateSuccess++;
+                        } else {
+                            rateFail++;
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
     }
 
     private void fetchCvForApplicant(int applicantId, int recruiterId) {
@@ -129,6 +168,7 @@ public class ApplicantDetailActivity extends AppCompatActivity {
                             educationTextView.setText(cv.getEducation());
                             skillTextView.setText(cv.getSkills());
                             certificationTextView.setText(cv.getCertificate());
+                            experienceTextView.setText(cv.getExperience());
                         } else {
                             Log.e("ApplicantDetailActivity", "CV data is null");
                         }
