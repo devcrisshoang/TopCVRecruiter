@@ -2,7 +2,9 @@ package com.example.topcvrecruiter.Model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Job {
+import java.io.Serializable;
+
+public class Job implements Serializable {
     @SerializedName("id")
     private int id;
 

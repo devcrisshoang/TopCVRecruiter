@@ -6,27 +6,29 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.topcvrecruiter.API.ApiDashboardService;
 
 import com.example.topcvrecruiter.Adapter.DashboardApplicantAdapter;
+import com.example.topcvrecruiter.Adapter.PaginationScrollListener;
+import com.example.topcvrecruiter.Model.Job;
 import com.example.topcvrecruiter.NumberApplicantActivity;
 import com.example.topcvrecruiter.NumberJobOfRecruiterActivity;
-import com.example.topcvrecruiter.NumberResumeActivity;
 import com.example.topcvrecruiter.R;
-import com.example.topcvrecruiter.Model.Applicant;
-import com.example.topcvrecruiter.Model.CV;
-import com.example.topcvrecruiter.Model.Job;
+import com.example.topcvrecruiter.model.ApplicantJob;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,53 +41,62 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class DashboardFragment extends Fragment {
-    private static final int REQUEST_CODE = 1;
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    private static final int RecruiterId = 5;
+    private int recruiterId = 5;
 
-    private TextView applicantCountTextView;
     private TextView jobCountTextView;
-    private TextView recruitingRateTextView;
-    private TextView resumeCountTextView;
+    private TextView acceptedTextView;
+    private TextView rateSuccessTextView;
+    private TextView rejectedTextView;
 
     private RecyclerView applicantsRecyclerView;
     private DashboardApplicantAdapter dashboardAdapter;
-
-    private CardView applicantCardView;
-    private CardView jobCardView;
-    private CardView rateCardView;
-    private CardView resumeCardView;
-    private int totalAccepted = 0;
-    private int totalRejected = 0;
-    float rate;
+    private ApiDashboardService apiDashboardService;
     private ActivityResultLauncher<Intent> applicantDetailLauncher;
 
+    private CardView jobCountCardView;
+    private CardView acceptedCardView;
+    private CardView rejectedCardView;
+    private int totalAccepted = 0;
+    private int totalRejected = 0;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private boolean isLoading = false;//
+    private boolean isLastPage;//
+    private int totalPage;//
+    private int currentPage = 1;//
+    private int totalItemInPage = 10;//
+
+    private List<ApplicantJob> displayedList = new ArrayList<>();
+    List<ApplicantJob> applicantList = new ArrayList<>();
 
     public DashboardFragment() {
         // Required empty public constructor
     }
 
-    public static DashboardFragment newInstance(String param1, String param2) {
-        DashboardFragment fragment = new DashboardFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        apiDashboardService = ApiDashboardService.apiDashboardService;
+
+        applicantDetailLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        Intent data = result.getData();
+                        int success = data.getIntExtra("rateSuccess", 0);
+                        int fail = data.getIntExtra("rateFail", 0);
+
+                        totalAccepted += success;
+                        totalRejected += fail;
+
+                        calculateAndDisplayRate();
+                    }
+                }
+        );
+
+    }
+    public void onResume() {
+        super.onResume();
+        fetchDashboardData(recruiterId); // Refresh data when fragment is back in focus
     }
 
     @Override
@@ -95,152 +106,73 @@ public class DashboardFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
         //Card View TextView
-        applicantCountTextView = view.findViewById(R.id.electricity_amount);
-        jobCountTextView = view.findViewById(R.id.job_count);
-        recruitingRateTextView = view.findViewById(R.id.recruiting_rate);
-        resumeCountTextView = view.findViewById(R.id.resume_amount);
+        jobCountTextView = view.findViewById(R.id.electricity_amount);
+        acceptedTextView = view.findViewById(R.id.job_count);
+        rateSuccessTextView = view.findViewById(R.id.recruiting_rate);
+        rejectedTextView = view.findViewById(R.id.resume_amount);
 
         //Card View onclick view
-        applicantCardView = view.findViewById(R.id.applicant_cardView);
-        jobCardView = view.findViewById(R.id.job_cardView);
-        resumeCardView = view.findViewById((R.id.resume_cardView));
-        rateCardView = view.findViewById(R.id.rate_cardView);
+        jobCountCardView = view.findViewById(R.id.applicant_cardView);
+        acceptedCardView = view.findViewById(R.id.job_cardView);
+        rejectedCardView = view.findViewById((R.id.resume_cardView));
 
         applicantsRecyclerView = view.findViewById(R.id.aplicants_Recycler_View);
-        applicantsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        applicantsRecyclerView.setLayoutManager(linearLayoutManager);
 
-        dashboardAdapter = new DashboardApplicantAdapter(this.getContext(), new ArrayList<>());
+        dashboardAdapter = new DashboardApplicantAdapter(applicantDetailLauncher);
         applicantsRecyclerView.setAdapter(dashboardAdapter);
 
-        fetchDashboardData(RecruiterId);
+        fetchDashboardData(recruiterId);
 
-        applicantCardView.setOnClickListener(view1 -> fetchListApplicants(RecruiterId));
-        //jobCardView.setOnClickListener(view1 -> fetchListJobs(RecruiterId));
-        jobCardView.setOnClickListener(view1 -> fetchListAccepted(RecruiterId));
-        //resumeCardView.setOnClickListener(view1 -> fetchListResumes(RecruiterId));
-        resumeCardView.setOnClickListener(view1 -> fetchListRejected(RecruiterId));
+        //------------------
+        if(applicantList.size() <= totalItemInPage){
+            totalPage = 1;
+        }
+        else if(applicantList.size() % totalItemInPage == 0){
+            totalPage = applicantList.size()/totalItemInPage;
+        }
+        else if(applicantList.size() % totalItemInPage != 0){
+            totalPage = applicantList.size()/totalItemInPage +1;
+        }
+        //-------------------
+        jobCountCardView.setOnClickListener(view1 -> fetchListJobs(recruiterId));
+        acceptedCardView.setOnClickListener(view1 -> fetchListAccepted(recruiterId));
+        rejectedCardView.setOnClickListener(view1 -> fetchListRejected(recruiterId));
+
+        applicantsRecyclerView.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
+            @Override
+            public void loadMoreItem() {
+                isLoading = true;
+                currentPage += 1;
+                loadNextPage();
+            }
+
+            @Override
+            public boolean isLoading() {
+                return isLoading;
+            }
+
+            @Override
+            public boolean isLastPage() {
+                return isLastPage;
+            }
+        });
 
         return view;
-    }
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.d("RecruitmentRate", "onActivityResult called"); // Kiểm tra xem có vào đây không
-        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
-            int success = data.getIntExtra("rateSuccess", 0);
-            int fail = data.getIntExtra("rateFail", 0);
-
-            totalAccepted += success;
-            totalRejected += fail;
-
-            calculateAndDisplayRate();
-        }
     }
 
     private void calculateAndDisplayRate() {
         if (totalAccepted + totalRejected > 0) { // Kiểm tra tránh chia cho 0
             float rate = (float) totalAccepted / (totalAccepted + totalRejected);
-            recruitingRateTextView.setText(String.format(Locale.getDefault(), "%.2f%%", rate * 100)); // Cập nhật tỷ lệ vào TextView
+            rateSuccessTextView.setText(String.format(Locale.getDefault(), "%.2f%%", rate * 100)); // Cập nhật tỷ lệ vào TextView
         } else {
-            recruitingRateTextView.setText("0%"); // Nếu không có ứng viên nào
+            rateSuccessTextView.setText("0%"); // Nếu không có ứng viên nào
         }
     }
 
-    private void fetchListApplicants(int recruiterId) {
-        ApiDashboardService.apiDashboardService.getListApplicants(recruiterId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Applicant>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                    }
-
-                    @Override
-                    public void onNext(List<Applicant> applicants) {
-                        Intent intent = new Intent(getContext(), NumberApplicantActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("applicantList", new ArrayList<>(applicants));
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e("DashboardFragment", "Error fetching applicant list", e);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                    }
-                });
-
-
-    }
-
-    private void fetchListAccepted(int recruiterId) {
-        ApiDashboardService.apiDashboardService.getAcceptedApplicants(recruiterId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Applicant>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                    }
-
-                    @Override
-                    public void onNext(List<Applicant> applicants) {
-                        Intent intent = new Intent(getContext(), NumberApplicantActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("applicantList", new ArrayList<>(applicants));
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e("DashboardFragment", "Error fetching applicant list", e);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                    }
-                });
-
-
-    }
-
-    private void fetchListRejected(int recruiterId) {
-        ApiDashboardService.apiDashboardService.getRejectedApplicants(recruiterId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Applicant>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                    }
-
-                    @Override
-                    public void onNext(List<Applicant> applicants) {
-                        Intent intent = new Intent(getContext(), NumberApplicantActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("applicantList", new ArrayList<>(applicants));
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e("DashboardFragment", "Error fetching applicant list", e);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                    }
-                });
-
-
-    }
-
-    private  void  fetchListJobs(int recruiterId) {
-        ApiDashboardService.apiDashboardService.getListJobs(recruiterId)
+    private void fetchListJobs(int recruiterId) {
+        apiDashboardService.getListJobs(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Job>>() {
@@ -268,73 +200,105 @@ public class DashboardFragment extends Fragment {
 
                     }
 
-                    });
+                });
     };
-    private  void  fetchListResumes(int recruiterId){
-        ApiDashboardService.apiDashboardService.getListResume(recruiterId)
+
+    private void fetchListAccepted(int recruiterId) {
+        apiDashboardService.getAcceptedApplicants(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<CV>>() {
+                .subscribe(new Observer<List<ApplicantJob>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
                     }
 
                     @Override
-                    public void onNext(List<CV> resumes) {
-                        Intent intent = new Intent(getContext(), NumberResumeActivity.class);
+                    public void onNext(List<ApplicantJob> applicants) {
+                        Intent intent = new Intent(getContext(), NumberApplicantActivity.class);
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("resumeList", new ArrayList<>(resumes));
+                        bundle.putSerializable("applicantList", new ArrayList<>(applicants));
                         intent.putExtras(bundle);
                         startActivity(intent);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e("DashboardFragment", "Error fetching resumes list", e);
+                        Log.e("DashboardFragment", "Error fetching applicant list", e);
                     }
 
                     @Override
                     public void onComplete() {
+                    }
+                });
 
+
+    }
+
+    private void fetchListRejected(int recruiterId) {
+        apiDashboardService.getRejectedApplicants(recruiterId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<ApplicantJob>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
                     }
 
+                    @Override
+                    public void onNext(List<ApplicantJob> applicants) {
+                        Intent intent = new Intent(getContext(), NumberApplicantActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("applicantList", new ArrayList<>(applicants));
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e("DashboardFragment", "Error fetching applicant list", e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
                 });
-    };
+
+
+    }
 
     @SuppressLint("CheckResult")
     private void fetchDashboardData(int recruiterId) {
-        //------------------Applicant------------------------//
-        ApiDashboardService.apiDashboardService.getListApplicants(recruiterId)
+        //------------------Job------------------------//
+        apiDashboardService.getListJobs(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(applicants -> {
-                    int applicantCount = applicants.size(); // Đếm số lượng item trong danh sách
-                    applicantCountTextView.setText(String.valueOf(applicantCount)); // Hiển thị số lượng ứng viên lên TextView
+                .subscribe(jobs -> {
+                    int jobCount = jobs.size(); // Đếm số lượng item trong danh sách
+                    jobCountTextView.setText(String.valueOf(jobCount)); // Hiển thị số lượng ứng viên lên TextView
                 }, throwable -> {
                     // Xử lý lỗi nếu có
                     Log.e("API Error", "Error fetching applicants", throwable);
                 });
 
-        //------------------Rate------------------------//
-        ApiDashboardService.apiDashboardService.getAcceptedApplicants(recruiterId)
+
+        //------------------Accepted--------------------------//
+        apiDashboardService.getAcceptedApplicants(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(accepted -> {
                     totalAccepted = accepted.size(); // Đếm số lượng item trong danh sách
-                    jobCountTextView.setText(String.valueOf(totalAccepted));
+                    acceptedTextView.setText(String.valueOf(totalAccepted));
                     calculateAndDisplayRate();
                 }, throwable -> {
                     // Xử lý lỗi nếu có
                     Log.e("API Error", "Error fetching applicants", throwable);
                 });
-
-        ApiDashboardService.apiDashboardService.getRejectedApplicants(recruiterId)
+        //------------------Rejected--------------------------//
+        apiDashboardService.getRejectedApplicants(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(rejected -> {
                     totalRejected = rejected.size(); // Đếm số lượng item trong danh sách
-                    resumeCountTextView.setText(String.valueOf(totalRejected));
+                    rejectedTextView.setText(String.valueOf(totalRejected));
                     calculateAndDisplayRate();
                 }, throwable -> {
                     // Xử lý lỗi nếu có
@@ -342,18 +306,19 @@ public class DashboardFragment extends Fragment {
                 });
 
         //------------------Suggest------------------------//
-        ApiDashboardService.apiDashboardService.getListSuggestedApplicants(recruiterId)
+        apiDashboardService.getListSuggestedApplicants(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Applicant>>() {
+                .subscribe(new Observer<List<ApplicantJob>>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(@NonNull List<Applicant> applicants) {
-                        dashboardAdapter.setListApplicant(applicants);
+                    public void onNext(@NonNull List<ApplicantJob> applicants) {
+                        applicantList = applicants;
+                        setFirstData();
                     }
 
                     @Override
@@ -367,4 +332,49 @@ public class DashboardFragment extends Fragment {
                     }
                 });
     }
+
+    private void setFirstData(){
+
+        displayedList = getList();
+        dashboardAdapter.setListApplicant(displayedList);
+
+        if (currentPage < totalPage){
+            dashboardAdapter.addFooterLoading();
+        } else {
+            isLastPage = true;
+        }
+    }
+
+    private void loadNextPage(){
+        new Handler().postDelayed(() -> {
+            dashboardAdapter.removeFooterLoading();
+            List<ApplicantJob> nextPageList = getList();
+            displayedList.addAll(nextPageList);
+            dashboardAdapter.notifyDataSetChanged();
+
+            isLoading = false;
+
+            if (currentPage < totalPage) {
+                dashboardAdapter.addFooterLoading();
+            }
+            else {
+                isLastPage = true;
+            }
+        }, 2000);
+    }
+
+    private List<ApplicantJob> getList(){
+        //Toast.makeText(getContext(), "Load data page: " + currentPage, Toast.LENGTH_SHORT).show();
+        List<ApplicantJob> list = new ArrayList<>();
+
+        int start = (currentPage - 1) * totalItemInPage; // Tính chỉ số bắt đầu
+        int end = Math.min(start + totalItemInPage, applicantList.size()); // Tính chỉ số kết thúc
+
+        if (start < applicantList.size()) {
+            list.addAll(applicantList.subList(start, end)); // Thêm các phần tử từ workList vào danh sách
+        }
+
+        return list;
+    }
+
 }
