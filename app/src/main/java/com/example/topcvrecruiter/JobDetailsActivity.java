@@ -110,6 +110,10 @@ public class JobDetailsActivity extends AppCompatActivity {
 
                                 // Hiển thị thông báo khi job được đăng thành công
                                 NotificationUtils.showNotification(JobDetailsActivity.this, "You just posted a job posting !");
+
+                                // Chuyển về MainActivity
+                                Intent intent = new Intent(JobDetailsActivity.this, MainActivity.class);
+                                startActivity(intent);
                                 finish();
                             } else {
                                 Toast.makeText(JobDetailsActivity.this, "Failed to post job details!", Toast.LENGTH_SHORT).show();
