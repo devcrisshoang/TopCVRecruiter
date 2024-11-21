@@ -19,6 +19,7 @@ import com.example.topcvrecruiter.Model.ApplicantJob;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observer;
@@ -28,10 +29,13 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class DasboardJobAdapter extends RecyclerView.Adapter<DasboardJobAdapter.DashboardViewHolder>{
     private List<Job> listJob;
     private ActivityResultLauncher<Intent> applicantDetailLauncher;
-    private int applicantOfJob;
-    public DasboardJobAdapter(ActivityResultLauncher<Intent> applicantDetailLauncher, List<Job> listJob) {
+    private Map<Integer, Integer> applicantCounts;
+    int id_Recruiter;
+    public DasboardJobAdapter(ActivityResultLauncher<Intent> applicantDetailLauncher, List<Job> listJob, Map<Integer, Integer> applicantCounts, int id_Recruiter) {
         this.applicantDetailLauncher = applicantDetailLauncher;
         this.listJob = listJob;
+        this.applicantCounts = applicantCounts;
+        this.id_Recruiter = id_Recruiter;
     }
     public void setListJob(List<Job> listJob) {
         this.listJob = listJob;
@@ -54,7 +58,9 @@ public class DasboardJobAdapter extends RecyclerView.Adapter<DasboardJobAdapter.
         holder.jobNameTextView.setText(job.getJob_Name());
         holder.createTimeTextView.setText(job.getCreate_Time());
         holder.companyNameTextView.setText(job.getCompany_Name());
-        holder.numberJobTextView.setText(String.valueOf(applicantOfJob));
+
+        int applicantCount = applicantCounts.getOrDefault(job.getId(), 0);
+        holder.numberJobTextView.setText(String.valueOf(applicantCount));
 
         // Xử lý sự kiện click vào item
         holder.itemView.setOnClickListener(v -> {
@@ -73,10 +79,11 @@ public class DasboardJobAdapter extends RecyclerView.Adapter<DasboardJobAdapter.
 
                         @Override
                         public void onNext(List<ApplicantJob> applicantList) {
+
                             // Tạo intent để chuyển sang NumberApplicantActivity
-                            applicantOfJob = applicantList.size();
                             Intent intent = new Intent(holder.itemView.getContext(), NumberApplicantActivity.class);
                             intent.putExtra("applicantList", new ArrayList<>(applicantList));
+                            intent.putExtra("id_Recruiter", id_Recruiter);
                             applicantDetailLauncher.launch(intent);
                         }
 
