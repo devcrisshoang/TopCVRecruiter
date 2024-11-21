@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@drawable/edit_text_rounded_corner_green"
+    android:layout_margin="5sp">
+
+    <ImageView
+        android:id="@+id/company_logo"
+        android:layout_width="60sp"
+        android:layout_height="60sp"
+        android:layout_margin="10sp"
+        android:background="@drawable/icon_rounded_corner"
+        android:padding="10sp"
+        android:src="@drawable/google_ic" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:layout_gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/ActionDetailsOfRecruiterTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:text="The employer has just viewed your application information." />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/TimeOfNotification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:text="10:10 PM"/>
+</LinearLayout>

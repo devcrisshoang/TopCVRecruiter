@@ -72,6 +72,9 @@
         <activity
             android:name=".ArticleActivity"
             android:exported="false" />
+        <activity
+            android:name=".MessageActivity"
+            android:exported="false" />
         <activity android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>

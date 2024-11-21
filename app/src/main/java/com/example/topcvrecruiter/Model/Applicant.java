@@ -21,6 +21,10 @@ public class Applicant implements Serializable {
         this.working_Experience = working_Experience;
     }
 
+    public Applicant() {
+
+    }
+
     public int getId() {
         return id;
     }

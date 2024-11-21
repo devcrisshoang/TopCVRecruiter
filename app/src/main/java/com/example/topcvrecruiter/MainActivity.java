@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,15 +20,11 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.topcvrecruiter.API.ApiRecruiterService;
 import com.example.topcvrecruiter.Fragment.AccountFragment;
 import com.example.topcvrecruiter.Fragment.DashboardFragment;
 import com.example.topcvrecruiter.Fragment.MessengerFragment;
 import com.example.topcvrecruiter.Fragment.NotificationFragment;
 import com.example.topcvrecruiter.Fragment.PostingFragment;
-
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
     private LinearLayout layout_header;
@@ -46,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private String phoneNumber;
     private ImageButton Dashboard, Posting, messengerButton, notificationButton, accountButton;
     private TextView Dashboard_textview,Posting_Textview,Messenger_Textview,Notification_Textview,Account_Textview;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,31 +53,9 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
         setWidget();
-        getRecruiterById(id_User);
-        //Log.e("MainActivity","ID: " + id_Recruiter);
-        openNewsFeedFragment(id_User);
+        openDashboardFragment(id_User);
         setDefaultColorButton();
         setClick();
-    }
-
-    private void getRecruiterById(int userId) {
-        ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(userId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        recruiter -> {
-                            if (recruiter != null) {
-                                id_Recruiter = recruiter.getId();
-
-                            } else {
-                                Toast.makeText(this, "Recruiter not found", Toast.LENGTH_SHORT).show();
-                            }
-                        },
-                        throwable -> {
-                            Log.e("AccountFragment", "Error fetching recruiter: " + throwable.getMessage());
-                            Toast.makeText(this, "Failed to load recruiter", Toast.LENGTH_SHORT).show();
-                        }
-                );
     }
 
     private void setDefaultColorButton(){
@@ -93,10 +67,11 @@ public class MainActivity extends AppCompatActivity {
         setImageButtonColor(this, accountButton, R.color.black);
     }
 
-    private void openNewsFeedFragment(int userId) {
+    private void openDashboardFragment(int userId) {
         DashboardFragment newsFeedFragment = new DashboardFragment();
         Bundle bundle = new Bundle();
         bundle.putInt("user_id", userId);
+        bundle.putInt("id_Recruiter",id_Recruiter);
         newsFeedFragment.setArguments(bundle);
 
         getSupportFragmentManager().beginTransaction()
@@ -124,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 bundle.putString("applicantName", recruiterName); // chỉ cần thiết cho AccountFragment
                 bundle.putInt("user_id", id_User); // truyền id_User cho tất cả các fragment
                 bundle.putString("phoneNumber", phoneNumber); // chỉ cần thiết cho AccountFragment
+                bundle.putInt("id_Recruiter",id_Recruiter);
                 fragment.setArguments(bundle); // Đặt Bundle vào Fragment
             }
             replaceFragment(fragment); // Thay thế fragment hiện tại bằng fragment đã chọn
@@ -199,6 +175,8 @@ public class MainActivity extends AppCompatActivity {
             Log.e("Error", "userId không hợp lệ");
         }
         phoneNumber = intent.getStringExtra("phoneNumber");
+        id_Recruiter = intent.getIntExtra("id_Recruiter",0);
+        //Log.e("MainActivity","ID: " + id_Recruiter);
     }
     public static void setImageButtonColor(Context context, ImageButton button, int colorResId) {
         int color = ContextCompat.getColor(context, colorResId); // Lấy màu từ resources
