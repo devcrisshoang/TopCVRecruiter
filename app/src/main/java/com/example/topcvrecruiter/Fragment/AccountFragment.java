@@ -80,6 +80,10 @@ public class AccountFragment extends Fragment {
             id_User = getArguments().getInt("user_id", -1);
             Log.e("ID","ID: "+id_User);
         }
+
+        if (getArguments() != null) {
+            id_Recruiter = getArguments().getInt("id_Recruiter", 0);
+        }
         // Gọi hàm lấy thông tin người dùng với id cố định
         getUserById(id_User);
         // Gọi hàm lấy thông tin Recruiter với ID cứng
@@ -332,13 +336,13 @@ public class AccountFragment extends Fragment {
 
     // Hàm để gọi API lấy thông tin của Recruiter
     private void getRecruiterById(int userId) {
-        ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(userId)
+        ApiRecruiterService.ApiRecruiterService.getRecruiterById(id_Recruiter)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         recruiter -> {
                             if (recruiter != null) {
-                                id_Recruiter = recruiter.getId();
+                                //id_Recruiter = recruiter.getId();
                                 recruiter_name.setText(recruiter.getRecruiterName());
                                 email_address.setText(recruiter.getEmailAddress());
                                 getCompanyByRecruiterId(id_Recruiter);
@@ -385,7 +389,21 @@ public class AccountFragment extends Fragment {
         // Tạo đối tượng Company với thông tin đã thay đổi
         Company company = new Company(companyName, "", "", field, "", false);  // Chỉ truyền những trường thay đổi
 
-        // Gọi API để cập nhật thông tin công tys
+        // Gọi API để cập nhật thông tin công ty
+        ApiCompanyService.ApiCompanyService.updateCompanyById(companyId, company)
+                .subscribeOn(Schedulers.io())  // Chạy API request trên background thread
+                .observeOn(AndroidSchedulers.mainThread())  // Nhận kết quả trên main thread
+                .subscribe(
+                        () -> {
+                            // Khi cập nhật thành công
+                            Toast.makeText(getContext(), "Updated company information successfully", Toast.LENGTH_SHORT).show();
+                        },
+                        throwable -> {
+                            // Khi có lỗi xảy ra
+                            Log.e("AccountFragment", "Error updating company: " + throwable.getMessage());
+                            Toast.makeText(getContext(), "Error updating company", Toast.LENGTH_SHORT).show();
+                        }
+                );
     }
 
     @Override

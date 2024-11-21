@@ -33,10 +33,13 @@ public class AllArticleActivity extends AppCompatActivity {
     private boolean isLoading = false;
     private boolean isLastPage = false;
     private ImageButton backButton;
+    private int id_Recruiter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_article);
+
+        id_Recruiter = getIntent().getIntExtra("id_Recruiter",0);
 
         recyclerView = findViewById(R.id.rcvArticle);
         backButton = findViewById(R.id.article_all_back_button);
@@ -80,9 +83,10 @@ public class AllArticleActivity extends AppCompatActivity {
     }
 
     private void loadArticles() {
-        ApiPostingService apiService = ApiPostingService.retrofit.create(ApiPostingService.class);
-        Call<List<Article>> call = apiService.getArticles();  // Lấy toàn bộ dữ liệu từ API (không phân trang)
 
+        ApiPostingService apiService = ApiPostingService.retrofit.create(ApiPostingService.class);
+
+        Call<List<Article>> call = apiService.getArticlesByRecruiter(id_Recruiter);  // Lấy toàn bộ dữ liệu từ API (không phân trang)
         call.enqueue(new Callback<List<Article>>() {
             @Override
             public void onResponse(Call<List<Article>> call, Response<List<Article>> response) {

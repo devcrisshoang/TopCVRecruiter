@@ -39,11 +39,13 @@ public class ArticleActivity extends AppCompatActivity {
     private ImageView change_avatar;
     private ActivityResultLauncher<Intent> imagePickerLauncherAvatar;
     private Uri uri;
+    private int id_Recruiter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
+        id_Recruiter = getIntent().getIntExtra("id_Recruiter",0);
 
         back_button = findViewById(R.id.back_button);
         back_button.setOnClickListener(view -> finish());
@@ -116,7 +118,7 @@ public class ArticleActivity extends AppCompatActivity {
         // Chuyển đổi thời gian thành chuỗi theo định dạng đã chọn
         String formattedDateTime = currentTime.format(formatter);
 
-        Article article = new Article(title, content, formattedDateTime, image, 1); // Thay đổi giá trị mặc định của iD_Recruiter tại đây
+        Article article = new Article(title, content, formattedDateTime, image, id_Recruiter ); // Thay đổi giá trị mặc định của iD_Recruiter tại đây
         ApiPostingService.apiService.postArticle(article).enqueue(new Callback<Article>() {
             @Override
             public void onResponse(Call<Article> call, Response<Article> response) {
@@ -131,7 +133,6 @@ public class ArticleActivity extends AppCompatActivity {
                     Toast.makeText(ArticleActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override
             public void onFailure(Call<Article> call, Throwable t) {
                 // Hiển thị lỗi nếu API thất bại

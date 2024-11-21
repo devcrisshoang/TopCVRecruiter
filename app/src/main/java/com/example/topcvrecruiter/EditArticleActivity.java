@@ -36,6 +36,8 @@ public class EditArticleActivity extends AppCompatActivity {
     private Uri uri;  // Uri for selected image
     private String imagePath; // Store the original image path to prevent losing it
     private ImageButton backButton;
+
+    private int id_Recruiter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,8 +123,7 @@ public class EditArticleActivity extends AppCompatActivity {
                         Article updatedArticle = new Article(
                                 articleNameEdit.getText().toString(),
                                 contentEdit.getText().toString(),
-                                formattedDateTime, image,
-                                1);  // Assuming '1' is the recruiter ID
+                                formattedDateTime, image,id_Recruiter);
 
                         // Call the API to update the article
                         updateArticle(articleId, updatedArticle);

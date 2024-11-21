@@ -69,7 +69,6 @@ public interface ApiJobService {
     @PUT("api/JobDetails/{id}")
     Call<JobDetails> putJobDetails(@Path("id") int jobDetailsId, @Body JobDetails jobDetails);
 
-
-
-
+    @GET("api/Job/ByRecruiter/{recruiterId}")
+    Call<List<Job>> getJobsByRecruiter(@Path("recruiterId") int recruiterId);
 }
