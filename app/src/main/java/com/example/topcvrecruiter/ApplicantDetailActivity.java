@@ -36,8 +36,10 @@ public class ApplicantDetailActivity extends AppCompatActivity {
     private Button acceptButton;
     private Button rejectButton;
     private ImageButton backButton;
+    private ImageButton resumeMessageButton;
 
-    private int recruiterId = 5;
+    private int recruiterId;
+    private int applicantId;
     private int rateSuccess = 0;
     private int rateFail = 0;
 
@@ -48,7 +50,6 @@ public class ApplicantDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resume);
         apiService = ApiDashboardService.apiDashboardService;
-
         // Initialize the views
         jobApplyingTextView = findViewById(R.id.name);
         nameTextView = findViewById(R.id.job_applying);
@@ -61,10 +62,12 @@ public class ApplicantDetailActivity extends AppCompatActivity {
         certificationTextView = findViewById(R.id.certification);
         acceptButton = findViewById(R.id.recruit_button);
         rejectButton = findViewById(R.id.reject_button);
+        resumeMessageButton = findViewById(R.id.resume_message);
         backButton = findViewById(R.id.back_button);
 
         // Get the applicant ID from the Intent
-        int applicantId = getIntent().getIntExtra("applicant_id", -1);
+        recruiterId = getIntent().getIntExtra("id_Recruiter", -1);
+        applicantId = getIntent().getIntExtra("applicant_id", -1);
         boolean isAccepted = getIntent().getBooleanExtra("isAccepted", false);
         boolean isRejected = getIntent().getBooleanExtra("isRejected", false);
 
@@ -80,6 +83,11 @@ public class ApplicantDetailActivity extends AppCompatActivity {
             rejectButton.setVisibility(View.GONE);
         }
 
+        resumeMessageButton.setOnClickListener(v->{
+            Intent intent = new Intent(ApplicantDetailActivity.this, MessageActivity.class);
+            intent.putExtra("applicantId", applicantId);
+            startActivity(intent);
+        });
         // Set up the back button listener
         backButton.setOnClickListener(v -> {
             finish(); // Close the activity

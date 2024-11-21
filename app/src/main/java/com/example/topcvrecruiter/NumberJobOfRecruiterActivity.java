@@ -17,11 +17,13 @@ import com.example.topcvrecruiter.Adapter.DasboardJobAdapter;
 import com.example.topcvrecruiter.Model.Job;
 
 import java.util.List;
+import java.util.Map;
 
 public class NumberJobOfRecruiterActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     DasboardJobAdapter jobAdapter;
     List<Job> jobsList;
+    int id_Recruiter;
     private ImageButton backButton;
     private ActivityResultLauncher<Intent> applicantDetailLauncher;
     @Override
@@ -41,6 +43,8 @@ public class NumberJobOfRecruiterActivity extends AppCompatActivity {
         } else {
             Log.e("NumberJobOfRecruiterActivity", "No job list received");
         }
+        Map<Integer, Integer> applicantCounts = (Map<Integer, Integer>) intent.getSerializableExtra("applicantCounts");
+        id_Recruiter = intent.getIntExtra("id_Recruiter", 0);
 
         recyclerView = findViewById(R.id.number_job_of_recruiter_Recycler_View);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -54,7 +58,7 @@ public class NumberJobOfRecruiterActivity extends AppCompatActivity {
                 }
         );
 
-        jobAdapter = new DasboardJobAdapter(applicantDetailLauncher, jobsList);
+        jobAdapter = new DasboardJobAdapter(applicantDetailLauncher, jobsList, applicantCounts, id_Recruiter);
         recyclerView.setAdapter(jobAdapter);
 
     }
