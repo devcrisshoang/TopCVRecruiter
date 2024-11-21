@@ -67,9 +67,6 @@ public class PostingFragment extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext())); // Đặt LayoutManager cho RecyclerView
 
-        // Khi bấm nút "Post", mở Dialog chọn loại bài đăng
-
-
         // Khi chọn Tab "Article"
         articleButton.setOnClickListener(v -> {
             isArticleTabSelected = true;
@@ -261,5 +258,4 @@ public class PostingFragment extends Fragment {
             Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
         }
     }
-
 }

@@ -149,15 +149,10 @@ public class DashboardFragment extends Fragment {
 
         applicantsRecyclerView = view.findViewById(R.id.aplicants_Recycler_View);
 
+
+
         linearLayoutManager = new LinearLayoutManager(getContext());
         applicantsRecyclerView.setLayoutManager(linearLayoutManager);
-        dashboardAdapter = new DashboardApplicantAdapter(applicantDetailLauncher);
-        applicantsRecyclerView.setAdapter(dashboardAdapter);
-        bundle = getArguments();
-        if (bundle != null) {
-            id_User = bundle.getInt("user_id", 0);  // 0 là giá trị mặc định
-        }
-        apiDashboardService = ApiDashboardService.apiDashboardService;
         applicantDetailLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -166,7 +161,16 @@ public class DashboardFragment extends Fragment {
                     }
                 }
         );
+        dashboardAdapter = new DashboardApplicantAdapter(applicantDetailLauncher);
+        applicantsRecyclerView.setAdapter(dashboardAdapter);
+        bundle = getArguments();
+        if (bundle != null) {
+            id_User = bundle.getInt("user_id", 0);  // 0 là giá trị mặc định
+        }
+        apiDashboardService = ApiDashboardService.apiDashboardService;
+
         id_Recruiter = getArguments().getInt("id_Recruiter",0);
+        fetchDashboardData(id_Recruiter);
     }
 
     private void calculateAndDisplayRate() {

@@ -111,7 +111,6 @@ public class JobActivity extends AppCompatActivity {
             intent.putExtra("salary", salary);
             intent.putExtra("recruiter_id",recruiter_id);
 
-
             // Chuyển sang JobDetailsActivity
             startActivity(intent);
         });
@@ -119,6 +118,4 @@ public class JobActivity extends AppCompatActivity {
 
         back_button.setOnClickListener(view -> finish());
     }
-
-
 }
