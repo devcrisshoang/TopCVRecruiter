@@ -38,7 +38,6 @@ public class ResumeActivity extends AppCompatActivity {
     // Thiết lập các widget trên layout
     private void setWidget() {
         back_button = findViewById(R.id.back_button);
-        shareButton = findViewById(R.id.share_button);
         cv_logo = findViewById(R.id.cv_logo);
         name = findViewById(R.id.name);
         job_applying = findViewById(R.id.job_applying);
