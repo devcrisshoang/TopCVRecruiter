@@ -39,7 +39,7 @@ public interface ApiCompanyService {
             .build()
             .create(ApiCompanyService.class);
 
-    @GET("api/Company/recruiter/{id}")
+    @GET("api/Company/{id}")
     Observable <Company> getCompanyByRecruiterId(@Path("id") int id);
 
     @POST("api/Company/recruiter/{id}")
@@ -47,6 +47,7 @@ public interface ApiCompanyService {
 
     @PUT("api/Company/{id}")
     Completable updateCompanyById(@Path("id") int id, @Body Company Company);
+
 
 }
 

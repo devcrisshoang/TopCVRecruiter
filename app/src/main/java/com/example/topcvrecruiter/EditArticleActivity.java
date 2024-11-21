@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -52,6 +53,9 @@ public class EditArticleActivity extends AppCompatActivity {
         change_avatar = findViewById(R.id.change_avatar);
 
         // Retrieve article data from the Intent
+        id_Recruiter = getIntent().getIntExtra("id_Recruiter", -1);
+        Log.e("EditArticleActivity","ID recruiter: " + id_Recruiter);
+
         articleId = getIntent().getIntExtra("article_id", -1);
         String articleName = getIntent().getStringExtra("article_name");
         String content = getIntent().getStringExtra("content");

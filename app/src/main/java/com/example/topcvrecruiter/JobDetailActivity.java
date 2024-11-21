@@ -59,6 +59,8 @@ public class JobDetailActivity extends AppCompatActivity {
     private TextView numberOfPeople;
     private TextView companyName;
 
+    private int id_Recruiter;
+
     private Button delete;
     private static final int REQUEST_CODE_EDIT_JOB = 1;
     @Override
@@ -66,6 +68,8 @@ public class JobDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_job_detail);
+        id_Recruiter = getIntent().getIntExtra("id_Recruiter",0);
+        Log.e("JobDetailActivity","ID recruiter: " + id_Recruiter);
 
         back_button = findViewById(R.id.information_back_button);
         edit_button = findViewById(R.id.edit_button);
@@ -128,6 +132,7 @@ public class JobDetailActivity extends AppCompatActivity {
     private void openEditJobActivity() {
         Intent intent = new Intent(JobDetailActivity.this, EditJobActivity.class);
         intent.putExtra("jobId", jobId);
+        intent.putExtra("id_Recruiter", id_Recruiter);
         intent.putExtra("jobDetailsId", jobDetailsId); // Truyền jobDetailsId
         // Truyền thêm các thông tin cần thiết từ đối tượng Job và JobDetails
         intent.putExtra("companyLogo", companyLogo.toString());

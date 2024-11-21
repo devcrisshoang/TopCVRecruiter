@@ -39,7 +39,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PostingFragment extends Fragment {
-    private int id_Recruiter;
+    private int id_Recruiter ;
     private Button post_button;
     private RecyclerView recyclerView;
     private ArticleAdapter articleAdapter;
@@ -55,9 +55,15 @@ public class PostingFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_posting, container, false);
 
-        if (getArguments() != null) {
-            id_Recruiter = getArguments().getInt("id_Recruiter", 0);
+       if (getArguments() != null) {
+          id_Recruiter = getArguments().getInt("id_Recruiter", 0);
+      }
+        if (id_Recruiter == 0) {
+            Log.e("ArticleActivity", "Recruiter ID not received or is invalid!");
+        } else {
+            Log.d("ArticleActivity", "Recruiter ID: " + id_Recruiter);
         }
+
 
         post_button = view.findViewById(R.id.post_button);
         recyclerView = view.findViewById(R.id.recycler_view_post);
@@ -100,11 +106,11 @@ public class PostingFragment extends Fragment {
                 builder.setItems(options, (dialog, which) -> {
                     if (which == 0) {
                         Intent intent = new Intent(getContext(), ArticleActivity.class);
-                        intent.putExtra("recruiter_id",id_Recruiter);
+                        intent.putExtra("id_Recruiter",id_Recruiter);
                         startActivity(intent);
                     } else if (which == 1) {
                         Intent intent = new Intent(getContext(), JobActivity.class);
-                        intent.putExtra("recruiter_id",id_Recruiter);
+                        intent.putExtra("id_Recruiter",id_Recruiter);
                         startActivity(intent);
                     }
                 });

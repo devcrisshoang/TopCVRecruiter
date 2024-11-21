@@ -342,7 +342,7 @@ public class AccountFragment extends Fragment {
                 .subscribe(
                         recruiter -> {
                             if (recruiter != null) {
-                                //id_Recruiter = recruiter.getId();
+                                id_Recruiter = recruiter.getId();
                                 recruiter_name.setText(recruiter.getRecruiterName());
                                 email_address.setText(recruiter.getEmailAddress());
                                 getCompanyByRecruiterId(id_Recruiter);
@@ -358,7 +358,7 @@ public class AccountFragment extends Fragment {
     }
 
     private void getCompanyByRecruiterId(int recruiterId) {
-        ApiCompanyService.ApiCompanyService.getCompanyByRecruiterId(recruiterId)
+        ApiCompanyService.ApiCompanyService.getCompanyByRecruiterId(id_Recruiter)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(

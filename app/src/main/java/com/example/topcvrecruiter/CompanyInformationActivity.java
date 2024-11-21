@@ -30,6 +30,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class CompanyInformationActivity extends AppCompatActivity {
     private int recruiter_id;
+    private int id_Recruiter;
     private int user_id;
 
     private EditText editTextName;
@@ -54,6 +55,7 @@ public class CompanyInformationActivity extends AppCompatActivity {
             return insets;
         });
         recruiter_id = getIntent().getIntExtra("recruiter_id",0);
+        id_Recruiter = getIntent().getIntExtra("id_Recruiter",0);
         user_id = getIntent().getIntExtra("user_id",0);
         back_button = findViewById(R.id.back_button);
         setWidget();
@@ -129,6 +131,9 @@ public class CompanyInformationActivity extends AppCompatActivity {
                             Toast.makeText(this, "CompanyInformation đã được tạo thành công!", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(this, CompanyDetailActivity.class);
                             intent.putExtra("recruiter_id", recruiter_id);
+
+                            intent.putExtra("id_Recruiter", id_Recruiter);
+
                             intent.putExtra("user_id",user_id);
                             startActivity(intent);
                             //finish();

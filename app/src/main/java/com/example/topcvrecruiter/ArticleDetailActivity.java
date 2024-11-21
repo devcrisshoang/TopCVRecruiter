@@ -3,6 +3,7 @@ package com.example.topcvrecruiter;
 import com.bumptech.glide.Glide;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -33,6 +34,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
     private ImageButton editButton;
     private Button deleteButton;
     private ImageView articleImage;
+    private int id_Recruiter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +51,8 @@ public class ArticleDetailActivity extends AppCompatActivity {
 
         // Lấy article_id từ Intent
         articleId = getIntent().getIntExtra("article_id", -1);
-
+        id_Recruiter = getIntent().getIntExtra("id_Recruiter", -1);
+        Log.e("ArticleDetailActivity","ID recruiter: " + id_Recruiter);
         // Kiểm tra articleId có hợp lệ không
         if (articleId == -1) {
             Toast.makeText(this, "Invalid article ID", Toast.LENGTH_SHORT).show();
@@ -65,9 +68,11 @@ public class ArticleDetailActivity extends AppCompatActivity {
             String imagePath = articleImage.getTag() != null ? articleImage.getTag().toString() : "";  // Kiểm tra null trước khi gọi toString()
             Intent intent = new Intent(ArticleDetailActivity.this, EditArticleActivity.class);
             intent.putExtra("article_id", articleId);
+            intent.putExtra("id_Recruiter", id_Recruiter);
             intent.putExtra("article_name", articleName.getText().toString());
             intent.putExtra("content", content.getText().toString());
-            intent.putExtra("image_path", imagePath);  // Truyền đường dẫn ảnh từ ImageView tag
+            intent.putExtra("image_path", imagePath);
+
             startActivityForResult(intent, 1); // requestCode = 1
         });
 
