@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.topcvrecruiter.API.ApiJobService;
 import com.example.topcvrecruiter.Utils.PaginationScrollListener;
-import com.example.topcvrecruiter.adapter.AllJobAdapter;
+import com.example.topcvrecruiter.Adapter.AllJobAdapter;
 import com.example.topcvrecruiter.Model.Job;
 
 import java.util.ArrayList;
@@ -33,10 +33,13 @@ public class AllJobActivity extends AppCompatActivity {
     private boolean isLoading = false;
     private boolean isLastPage = false;
     private ImageButton backButton;
+    private int id_Recruiter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_job);
+
+        id_Recruiter = getIntent().getIntExtra("id_Recruiter",0);
 
         recyclerView = findViewById(R.id.rcvJob);
         backButton = findViewById(R.id.all_job_back_button);
@@ -80,7 +83,7 @@ public class AllJobActivity extends AppCompatActivity {
 
     private void loadJobs() {
         ApiJobService apiService = ApiJobService.retrofit.create(ApiJobService.class);
-        Call<List<Job>> call = apiService.getJobs();  // Lấy toàn bộ dữ liệu từ API (không phân trang)
+        Call<List<Job>> call = apiService.getJobsByRecruiter(id_Recruiter);  // Lấy toàn bộ dữ liệu từ API (không phân trang)
 
         call.enqueue(new Callback<List<Job>>() {
             @Override

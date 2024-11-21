@@ -36,7 +36,8 @@ public class EditJobActivity extends AppCompatActivity {
     private Uri uri;
     private String currentImagePath;  // To store the current image path (original one)
     private ImageButton backButton;
-    @SuppressLint("MissingInflatedId")
+
+    private int id_Recruiter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,8 +159,10 @@ public class EditJobActivity extends AppCompatActivity {
         // If no image selected, use the current image path
         String image = (uri != null) ? uri.toString() : currentImagePath;
 
+
+
         // Create Job and JobDetails objects with updated data
-        Job updatedJob = new Job(image, name, company, experience, location, salary, date, 1); // Assuming recruiterId is 1
+        Job updatedJob = new Job(image, name, company, experience, location, salary, date, id_Recruiter); // Assuming recruiterId is 1
         JobDetails updatedJobDetails = new JobDetails(description, skill, benefitText, gender, time, method, position, numberPeople, jobId);
 
         // Call API to update Job

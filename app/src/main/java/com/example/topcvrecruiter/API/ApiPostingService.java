@@ -62,4 +62,8 @@ public interface ApiPostingService {
     @DELETE("api/Article/{id}")
     Call<Void> deleteArticle(@Path("id") int id);
 
+    @GET("api/Article/ByRecruiter/{recruiterId}")
+    Call<List<Article>> getArticlesByRecruiter(@Path("recruiterId") int recruiterId);
+
+
 }

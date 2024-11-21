@@ -82,11 +82,13 @@ public class PostingFragment extends Fragment {
         // Khi bấm "View All"
         viewAll.setOnClickListener(v -> {
             if (isArticleTabSelected) {
-                // Nếu đang ở Tab Article thì mở AllArticleActivity
-                startActivity(new Intent(getActivity(), AllArticleActivity.class));
+                Intent intent = new Intent(getActivity(), AllArticleActivity.class);
+                intent.putExtra("id_Recruiter",id_Recruiter);
+                startActivity(intent);
             } else {
-                // Nếu đang ở Tab Job thì mở AllJobActivity
-                startActivity(new Intent(getActivity(), AllJobActivity.class));
+                Intent intent = new Intent(getActivity(), AllJobActivity.class);
+                intent.putExtra("id_Recruiter",id_Recruiter);
+                startActivity(intent);
             }
         });
         post_button.setOnClickListener(view1 -> {
@@ -128,15 +130,20 @@ public class PostingFragment extends Fragment {
         if (getContext() != null) { // Kiểm tra context
             articleButton.setTextColor(getResources().getColor(R.color.green_color));
             jobButton.setTextColor(getResources().getColor(R.color.black));
+
             ApiPostingService apiService = ApiPostingService.retrofit.create(ApiPostingService.class);
-            Call<List<Article>> call = apiService.getArticles();
+
+
+
+            // Gọi API để lấy danh sách bài viết theo recruiterId
+            Call<List<Article>> call = apiService.getArticlesByRecruiter(id_Recruiter);
             call.enqueue(new Callback<List<Article>>() {
                 @Override
                 public void onResponse(Call<List<Article>> call, Response<List<Article>> response) {
                     if (response.isSuccessful()) {
                         articleList = response.body();
                         if (articleList != null) {
-                            // Lấy 10 bài viết đầu tiên
+                            // Lấy 10 bài viết đầu tiên (nếu có nhiều hơn 10)
                             List<Article> limitedArticles = articleList.size() > 10 ? articleList.subList(0, 10) : articleList;
 
                             if (!(recyclerView.getAdapter() instanceof ArticleAdapter) || articleAdapter == null) {
@@ -159,13 +166,17 @@ public class PostingFragment extends Fragment {
         }
     }
 
+
     // Tải 10 công việc đầu tiên
     private void loadJobs() {
         if (getContext() != null) { // Kiểm tra context
             jobButton.setTextColor(getResources().getColor(R.color.green_color));
             articleButton.setTextColor(getResources().getColor(R.color.black));
+
+
+
             ApiJobService apiService = ApiJobService.retrofit.create(ApiJobService.class);
-            Call<List<Job>> call = apiService.getJobs();
+            Call<List<Job>> call = apiService.getJobsByRecruiter(id_Recruiter);
             call.enqueue(new Callback<List<Job>>() {
                 @Override
                 public void onResponse(Call<List<Job>> call, Response<List<Job>> response) {

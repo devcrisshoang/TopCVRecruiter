@@ -109,7 +109,7 @@ public class JobActivity extends AppCompatActivity {
             intent.putExtra("experience", experience);
             intent.putExtra("address", address);
             intent.putExtra("salary", salary);
-            intent.putExtra("recruiter_id",recruiter_id);
+            intent.putExtra("id_Recruiter",recruiter_id);
 
             // Chuyển sang JobDetailsActivity
             startActivity(intent);
