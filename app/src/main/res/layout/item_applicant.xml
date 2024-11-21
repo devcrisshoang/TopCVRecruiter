@@ -67,5 +67,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginRight="5dp"
-        android:text="10:10 PM"/>
+        android:text="10:10 PM" />
 </LinearLayout>

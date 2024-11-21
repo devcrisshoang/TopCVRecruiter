@@ -25,6 +25,7 @@ public class NumberApplicantActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     DashboardApplicantAdapter applicantAdapter;
     List<ApplicantJob> applicantList;
+    int id_Recruiter;
     private List<ApplicantJob> displayedList = new ArrayList<>();
 
     private ImageButton backButton;
@@ -48,6 +49,7 @@ public class NumberApplicantActivity extends AppCompatActivity {
         if (bundle == null) { return; }
 
         applicantList = (List<ApplicantJob>) getIntent().getSerializableExtra("applicantList");
+        id_Recruiter = getIntent().getIntExtra("id_Recruiter", -1); // Giá trị mặc định là -1 nếu không tìm thấy
 
         recyclerView = findViewById(R.id.number_applicant_Recycler_View);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -74,7 +76,7 @@ public class NumberApplicantActivity extends AppCompatActivity {
                 }
         );
 
-        applicantAdapter = new DashboardApplicantAdapter(applicantDetailLauncher);
+        applicantAdapter = new DashboardApplicantAdapter(applicantDetailLauncher, id_Recruiter);
         recyclerView.setAdapter(applicantAdapter);
 
         setFirstData();

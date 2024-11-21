@@ -26,15 +26,20 @@ import com.example.topcvrecruiter.API.ApiDashboardService;
 import com.example.topcvrecruiter.API.ApiRecruiterService;
 import com.example.topcvrecruiter.Adapter.DashboardApplicantAdapter;
 import com.example.topcvrecruiter.Adapter.PaginationScrollListener;
+import com.example.topcvrecruiter.ApplicantDetailActivity;
 import com.example.topcvrecruiter.Model.Job;
 import com.example.topcvrecruiter.NumberApplicantActivity;
 import com.example.topcvrecruiter.NumberJobOfRecruiterActivity;
 import com.example.topcvrecruiter.R;
 import com.example.topcvrecruiter.Model.ApplicantJob;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
@@ -149,8 +154,6 @@ public class DashboardFragment extends Fragment {
 
         applicantsRecyclerView = view.findViewById(R.id.aplicants_Recycler_View);
 
-
-
         linearLayoutManager = new LinearLayoutManager(getContext());
         applicantsRecyclerView.setLayoutManager(linearLayoutManager);
         applicantDetailLauncher = registerForActivityResult(
@@ -161,8 +164,6 @@ public class DashboardFragment extends Fragment {
                     }
                 }
         );
-        dashboardAdapter = new DashboardApplicantAdapter(applicantDetailLauncher);
-        applicantsRecyclerView.setAdapter(dashboardAdapter);
         bundle = getArguments();
         if (bundle != null) {
             id_User = bundle.getInt("user_id", 0);  // 0 là giá trị mặc định
@@ -171,6 +172,8 @@ public class DashboardFragment extends Fragment {
 
         id_Recruiter = getArguments().getInt("id_Recruiter",0);
         fetchDashboardData(id_Recruiter);
+        dashboardAdapter = new DashboardApplicantAdapter(applicantDetailLauncher, id_Recruiter);
+        applicantsRecyclerView.setAdapter(dashboardAdapter);
     }
 
     private void calculateAndDisplayRate() {
@@ -194,11 +197,54 @@ public class DashboardFragment extends Fragment {
 
                     @Override
                     public void onNext(List<Job> jobs) {
-                        Intent intent = new Intent(getContext(), NumberJobOfRecruiterActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("jobsList", new ArrayList<>(jobs));
-                        intent.putExtras(bundle);
-                        startActivity(intent);
+                        Map<Integer, Integer> applicantCounts = new HashMap<>();
+
+                        // Dùng CountDownLatch để chờ tất cả các API hoàn thành
+                        CountDownLatch latch = new CountDownLatch(jobs.size());
+                        for (Job job : jobs) {
+                            int jobId = job.getId();
+                            int recruiterId = job.getiD_Recruiter();
+
+                            apiDashboardService.getListApplicantsForJob(recruiterId, jobId)
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(new Observer<List<ApplicantJob>>() {
+                                        @Override
+                                        public void onSubscribe(Disposable d) {}
+
+                                        @Override
+                                        public void onNext(List<ApplicantJob> applicantList) {
+                                            // Lưu số lượng ứng viên vào Map
+                                            applicantCounts.put(jobId, applicantList.size());
+                                        }
+
+                                        @Override
+                                        public void onError(Throwable e) {
+                                            Log.e("DashboardFragment", "Error fetching applicants for job: " + jobId, e);
+                                        }
+
+                                        @Override
+                                        public void onComplete() {
+                                            // Giảm latch khi API hoàn thành
+                                            latch.countDown();
+                                        }
+                                    });
+                        }
+                        new Thread(() -> {
+                            try {
+                                latch.await(); // Chờ cho đến khi latch về 0
+                                Intent intent = new Intent(getContext(), NumberJobOfRecruiterActivity.class);
+
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("jobsList", new ArrayList<>(jobs)); // Truyền danh sách Job
+                                bundle.putSerializable("applicantCounts", (Serializable) applicantCounts); // Truyền Map
+                                bundle.putInt("id_Recruiter", id_Recruiter);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+                            } catch (InterruptedException e) {
+                                Log.e("DashboardFragment", "Interrupted while waiting for applicant counts", e);
+                            }
+                        }).start();
                     }
 
                     @Override
@@ -228,6 +274,7 @@ public class DashboardFragment extends Fragment {
                         Intent intent = new Intent(getContext(), NumberApplicantActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("applicantList", new ArrayList<>(applicants));
+                        bundle.putInt("id_Recruiter", id_Recruiter);
                         intent.putExtras(bundle);
                         startActivity(intent);
                     }
@@ -259,6 +306,7 @@ public class DashboardFragment extends Fragment {
                         Intent intent = new Intent(getContext(), NumberApplicantActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("applicantList", new ArrayList<>(applicants));
+                        bundle.putInt("id_Recruiter", id_Recruiter);
                         intent.putExtras(bundle);
                         startActivity(intent);
                     }
@@ -343,6 +391,33 @@ public class DashboardFragment extends Fragment {
                     }
                 });
     }
+
+//    void fetchListApplicantsForJob(int recruiterId, int jobId) {
+//        apiDashboardService.getListApplicantsForJob(recruiterId, jobId)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Observer<List<ApplicantJob>>() {
+//                    @Override
+//                    public void onSubscribe(Disposable d) {}
+//
+//                    @Override
+//                    public void onNext(List<ApplicantJob> applicantList) {
+//                        // Lưu số lượng ứng viên vào Map
+//                        applicantCounts.put(jobId, applicantList.size());
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        Log.e("DashboardFragment", "Error fetching applicants for job: " + jobId, e);
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//                        // Giảm latch khi API hoàn thành
+//                        latch.countDown();
+//                    }
+//                });
+//    }
 
     private void setFirstData(){
 
