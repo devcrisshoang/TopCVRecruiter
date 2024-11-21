@@ -25,6 +25,7 @@ public class InformationActivity extends AppCompatActivity {
     private EditText editTextEmail;
 
     private int id_User; // Biến lưu ID người dùng
+    private int id_Recruiter;
     private String username; // Biến lưu tên người dùng
 
     private ImageButton back_button;
@@ -88,23 +89,26 @@ public class InformationActivity extends AppCompatActivity {
         ApiRecruiterService.ApiRecruiterService.createRecruiter(recruiter)
                 .subscribeOn(Schedulers.io())  // Chạy trên luồng nền
                 .observeOn(AndroidSchedulers.mainThread())  // Quan sát kết quả trên luồng chính
+                // Giả sử response trả về là một đối tượng JSON có trường id_Recruiter
                 .subscribe(
                         response -> {
-                            // Xử lý khi thành công
-                            Toast.makeText(this, "Recruiter đã được tạo thành công!", Toast.LENGTH_SHORT).show();
+                            int id_Recruiter = response.getId(); // Nhận id_Recruiter từ response
+                            Log.d("Recruiter", "ID Recruiter: " + id_Recruiter);
+
+                            // Chuyển sang VerifyImageActivity với id_Recruiter
                             Intent intent = new Intent(this, VerifyImageActivity.class);
                             intent.putExtra("user_id", id_User);
+                            intent.putExtra("id_Recruiter", id_Recruiter); // Truyền id_Recruiter
                             intent.putExtra("name", name);
                             intent.putExtra("phone", phone);
                             intent.putExtra("email", email);
                             startActivity(intent);
-                            //finish();
                         },
                         throwable -> {
-                            // Xử lý khi có lỗi
                             Toast.makeText(this, "Có lỗi xảy ra: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                 );
+
         //finish();
     }
 }

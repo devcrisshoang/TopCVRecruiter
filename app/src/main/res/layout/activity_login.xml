@@ -12,21 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="200sp"
-            android:layout_height="150sp"
-            android:scaleType="fitCenter"
-            android:layout_gravity="center"
-            android:src="@drawable/topcv_icon" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Welcome to TopCV Recruiter"
-            android:textAlignment="center"
-            android:textSize="20sp">
 
-        </TextView>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

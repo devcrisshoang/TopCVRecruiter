@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
         }
         phoneNumber = intent.getStringExtra("phoneNumber");
         id_Recruiter = intent.getIntExtra("id_Recruiter",0);
-        //Log.e("MainActivity","ID: " + id_Recruiter);
+        Log.e("MainActivity","ID recruiter: " + id_Recruiter);
     }
     public static void setImageButtonColor(Context context, ImageButton button, int colorResId) {
         int color = ContextCompat.getColor(context, colorResId); // Lấy màu từ resources

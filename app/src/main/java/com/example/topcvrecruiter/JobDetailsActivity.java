@@ -38,7 +38,7 @@ public class JobDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_details);
 
-//        id_Recruiter = getIntent().getIntExtra("id_Recruiter",0);
+        id_Recruiter = getIntent().getIntExtra("id_Recruiter",0);
 
         post_button = findViewById(R.id.post_button);
         back_button = findViewById(R.id.back_button);
@@ -74,11 +74,10 @@ public class JobDetailsActivity extends AppCompatActivity {
     private void postJobAndDetailsToApi(String image, String jobName, String companyName, String experience, String address, int salary) {
         // Lấy thời gian hiện tại và định dạng
         LocalDateTime currentTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
-        String formattedDateTime = currentTime.format(formatter);
+
 
         // Tạo đối tượng Job
-        Job job = new Job(image, jobName, companyName, experience, address, salary, formattedDateTime, id_Recruiter);
+        Job job = new Job(image, jobName, companyName, experience, address, salary, currentTime.toString(), id_Recruiter);
 
         // Gọi API để post Job
         ApiJobService.apiService.postJob(job).enqueue(new Callback<Job>() {
@@ -113,6 +112,7 @@ public class JobDetailsActivity extends AppCompatActivity {
 
                                 // Chuyển về MainActivity
                                 Intent intent = new Intent(JobDetailsActivity.this, MainActivity.class);
+                                intent.putExtra("id_Recruiter", id_Recruiter);
                                 startActivity(intent);
                                 finish();
                             } else {

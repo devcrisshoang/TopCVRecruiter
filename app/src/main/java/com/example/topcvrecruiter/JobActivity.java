@@ -42,7 +42,7 @@ public class JobActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> imagePickerLauncherAvatar;
     private Uri uri;
 
-    private int id_Recruiter = 3;
+    private int recruiter_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +55,8 @@ public class JobActivity extends AppCompatActivity {
             return insets;
         });
 
-//        id_Recruiter = getIntent().getIntExtra("id_Recruiter",0);
-//        Log.e("JobActivity","ID: " + id_Recruiter);
+        recruiter_id = getIntent().getIntExtra("id_Recruiter",0);
+        Log.e("JobActivity","ID: " + recruiter_id);
 
         // Ánh xạ các thành phần giao diện
         continue_button = findViewById(R.id.continue_button);
@@ -98,27 +98,61 @@ public class JobActivity extends AppCompatActivity {
             String experience = etExperience.getText().toString().trim();
             String address = etAddress.getText().toString().trim();
             String companyName = etCompany.getText().toString().trim();
-            int salary = Integer.parseInt(etSalary.getText().toString().trim());
-            String image = (uri != null) ? uri.toString() : "";
+            String salaryText = etSalary.getText().toString().trim();
+
+            // Kiểm tra nếu bất kỳ trường nào còn trống
+            if (jobName.isEmpty()) {
+                Toast.makeText(this, "Vui lòng nhập tên công việc", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (experience.isEmpty()) {
+                Toast.makeText(this, "Vui lòng nhập kinh nghiệm", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (address.isEmpty()) {
+                Toast.makeText(this, "Vui lòng nhập địa chỉ", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (companyName.isEmpty()) {
+                Toast.makeText(this, "Vui lòng nhập tên công ty", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (salaryText.isEmpty()) {
+                Toast.makeText(this, "Vui lòng nhập mức lương", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Chuyển đổi lương thành số nguyên
+            int salary;
+            try {
+                salary = Integer.parseInt(salaryText);
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, "Mức lương phải là số nguyên", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Kiểm tra xem đã chọn hình ảnh hay chưa
+            if (uri == null) {
+                Toast.makeText(this, "Vui lòng chọn hình ảnh", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             // Tạo một Intent để chuyển sang JobDetailsActivity
             Intent intent = new Intent(JobActivity.this, JobDetailsActivity.class);
-            intent.putExtra("image", image);
+            intent.putExtra("image", uri.toString());
             intent.putExtra("jobName", jobName);
             intent.putExtra("companyName", companyName);
             intent.putExtra("experience", experience);
             intent.putExtra("address", address);
             intent.putExtra("salary", salary);
-            intent.putExtra("id_Recruiter",id_Recruiter);
-
+            intent.putExtra("id_Recruiter", recruiter_id);
 
             // Chuyển sang JobDetailsActivity
             startActivity(intent);
         });
 
 
+
         back_button.setOnClickListener(view -> finish());
     }
-
-
 }

@@ -25,6 +25,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     private List<Article> articles;
     private Context context;
 
+
     public ArticleAdapter(Context context, List<Article> articles) {
         this.context = context;
         this.articles = articles;
@@ -48,42 +49,13 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ArticleDetailActivity.class);
             intent.putExtra("article_id", article.getId()); // Chuyển article_id
+            intent.putExtra("id_Recruiter", article.getiD_Recruiter());
             Log.d("ArticleAdapter", "Article ID: " + article.getId()); // Log article_id
             context.startActivity(intent);
         });
 
 
-        // Định dạng thời gian
-        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault());
-        SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-
-        try {
-            Date createDate = inputFormat.parse(article.getCreate_Time());
-            long createTimeInMillis = createDate.getTime();
-            long currentTimeInMillis = System.currentTimeMillis();
-
-            long timeDifference = currentTimeInMillis - createTimeInMillis;
-            long minutesDifference = timeDifference / (60 * 1000);
-            long hoursDifference = timeDifference / (60 * 60 * 1000);
-
-            if (minutesDifference < 60) {
-                holder.createTime.setText(minutesDifference + " minutes ago");
-            } else if (hoursDifference < 24) {
-                holder.createTime.setText(hoursDifference + " hours ago");
-            } else if (hoursDifference < 24 * 2) {
-                holder.createTime.setText("Yesterday");
-            } else if (hoursDifference < 24 * 7) {
-                SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.getDefault());
-                String dayOfWeek = dayFormat.format(createDate);
-                holder.createTime.setText(dayOfWeek);
-            } else {
-                String formattedDate = outputFormat.format(createDate);
-                holder.createTime.setText(formattedDate);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            holder.createTime.setText("Create Time: " + article.getCreate_Time());
-        }
+        holder.createTime.setText("");
     }
 
     @Override

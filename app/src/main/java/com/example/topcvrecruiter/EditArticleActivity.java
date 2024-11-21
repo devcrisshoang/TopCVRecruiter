@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,7 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.example.topcvrecruiter.API.ApiPostingService;
 import com.example.topcvrecruiter.Model.Article;
-import com.example.topcvrecruiter.Model.Recruiter;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -37,6 +37,7 @@ public class EditArticleActivity extends AppCompatActivity {
     private Uri uri;  // Uri for selected image
     private String imagePath; // Store the original image path to prevent losing it
     private ImageButton backButton;
+
     private int id_Recruiter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +53,13 @@ public class EditArticleActivity extends AppCompatActivity {
         change_avatar = findViewById(R.id.change_avatar);
 
         // Retrieve article data from the Intent
-        articleId = getIntent().getIntExtra("article_id", -1);
+        id_Recruiter = getIntent().getIntExtra("id_Recruiter", -1);
+        Log.e("EditArticleActivity","ID recruiter: " + id_Recruiter);
 
+        articleId = getIntent().getIntExtra("article_id", -1);
         String articleName = getIntent().getStringExtra("article_name");
         String content = getIntent().getStringExtra("content");
         imagePath = getIntent().getStringExtra("image_path"); // Save the original image path
-
-//        id_Recruiter = getIntent().getIntExtra("id_Recruiter", -1);
 
         if (articleId == -1) {
             Toast.makeText(this, "Invalid article ID", Toast.LENGTH_SHORT).show();

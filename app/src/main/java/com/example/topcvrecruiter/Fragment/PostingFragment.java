@@ -39,7 +39,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PostingFragment extends Fragment {
-    private int id_Recruiter = 3;
+    private int id_Recruiter ;
     private Button post_button;
     private RecyclerView recyclerView;
     private ArticleAdapter articleAdapter;
@@ -55,10 +55,14 @@ public class PostingFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_posting, container, false);
 
-//        if (getArguments() != null) {
-//            id_Recruiter = getArguments().getInt("id_Recruiter", 0);
-//        }
-
+       if (getArguments() != null) {
+          id_Recruiter = getArguments().getInt("id_Recruiter", 0);
+      }
+        if (id_Recruiter == 0) {
+            Log.e("ArticleActivity", "Recruiter ID not received or is invalid!");
+        } else {
+            Log.d("ArticleActivity", "Recruiter ID: " + id_Recruiter);
+        }
 
 
         post_button = view.findViewById(R.id.post_button);
@@ -68,9 +72,6 @@ public class PostingFragment extends Fragment {
         viewAll = view.findViewById(R.id.view_all_button);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext())); // Đặt LayoutManager cho RecyclerView
-
-        // Khi bấm nút "Post", mở Dialog chọn loại bài đăng
-
 
         // Khi chọn Tab "Article"
         articleButton.setOnClickListener(v -> {
@@ -87,11 +88,13 @@ public class PostingFragment extends Fragment {
         // Khi bấm "View All"
         viewAll.setOnClickListener(v -> {
             if (isArticleTabSelected) {
-                // Nếu đang ở Tab Article thì mở AllArticleActivity
-                startActivity(new Intent(getActivity(), AllArticleActivity.class));
+                Intent intent = new Intent(getActivity(), AllArticleActivity.class);
+                intent.putExtra("id_Recruiter",id_Recruiter);
+                startActivity(intent);
             } else {
-                // Nếu đang ở Tab Job thì mở AllJobActivity
-                startActivity(new Intent(getActivity(), AllJobActivity.class));
+                Intent intent = new Intent(getActivity(), AllJobActivity.class);
+                intent.putExtra("id_Recruiter",id_Recruiter);
+                startActivity(intent);
             }
         });
         post_button.setOnClickListener(view1 -> {
@@ -103,11 +106,11 @@ public class PostingFragment extends Fragment {
                 builder.setItems(options, (dialog, which) -> {
                     if (which == 0) {
                         Intent intent = new Intent(getContext(), ArticleActivity.class);
-                        intent.putExtra("recruiter_id",id_Recruiter);
+                        intent.putExtra("id_Recruiter",id_Recruiter);
                         startActivity(intent);
                     } else if (which == 1) {
                         Intent intent = new Intent(getContext(), JobActivity.class);
-                        intent.putExtra("recruiter_id",id_Recruiter);
+                        intent.putExtra("id_Recruiter",id_Recruiter);
                         startActivity(intent);
                     }
                 });
@@ -272,5 +275,4 @@ public class PostingFragment extends Fragment {
             Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
         }
     }
-
 }

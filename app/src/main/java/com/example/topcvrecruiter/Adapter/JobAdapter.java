@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.topcvrecruiter.R;
 import com.example.topcvrecruiter.Model.Job;
 import com.example.topcvrecruiter.JobDetailActivity;
+import com.example.topcvrecruiter.Utils.DateTimeUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,38 +45,15 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault());
         SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
 
-        try {
-            Date createDate = inputFormat.parse(job.getCreate_Time());
-            long createTimeInMillis = createDate.getTime();
-            long currentTimeInMillis = System.currentTimeMillis();
+        String formattedTime = DateTimeUtils.formatTimeAgo(job.getCreate_Time());
+            holder.jobTime.setText("");
 
-            long timeDifference = currentTimeInMillis - createTimeInMillis;
-            long minutesDifference = timeDifference / (60 * 1000); // Chuyển đổi sang phút
-            long hoursDifference = timeDifference / (60 * 60 * 1000); // Chuyển đổi sang giờ
-
-            if (minutesDifference < 60) {
-                holder.jobTime.setText(minutesDifference + " minutes ago");
-            } else if (hoursDifference < 24) {
-                holder.jobTime.setText(hoursDifference + " hours ago");
-            } else if (hoursDifference < 24 * 2) {
-                holder.jobTime.setText("Yesterday");
-            } else if (hoursDifference < 24 * 7) {
-                SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.getDefault());
-                String dayOfWeek = dayFormat.format(createDate);
-                holder.jobTime.setText(dayOfWeek);
-            } else {
-                String formattedDate = outputFormat.format(createDate);
-                holder.jobTime.setText(formattedDate);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            holder.jobTime.setText("Create Time: " + job.getCreate_Time());
-        }
 
         // Thiết lập sự kiện khi nhấn vào item
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, JobDetailActivity.class);
             intent.putExtra("jobId", job.getId()); // Truyền jobId
+            intent.putExtra("id_Recruiter", job.getiD_Recruiter());
             context.startActivity(intent);
         });
     }

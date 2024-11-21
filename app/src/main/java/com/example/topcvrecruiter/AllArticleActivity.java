@@ -33,13 +33,13 @@ public class AllArticleActivity extends AppCompatActivity {
     private boolean isLoading = false;
     private boolean isLastPage = false;
     private ImageButton backButton;
-    private int id_Recruiter = 3;
+    private int id_Recruiter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_article);
 
-//        id_Recruiter = getIntent().getIntExtra("id_Recruiter", -1);
+        id_Recruiter = getIntent().getIntExtra("id_Recruiter",0);
 
         recyclerView = findViewById(R.id.rcvArticle);
         backButton = findViewById(R.id.article_all_back_button);
@@ -51,8 +51,6 @@ public class AllArticleActivity extends AppCompatActivity {
         recyclerView.setAdapter(articleAdapter);
 
         loadArticles();  // Gọi API để tải dữ liệu lần đầu tiên
-
-
 
         // Lắng nghe sự kiện cuộn để tải thêm dữ liệu khi người dùng kéo xuống
         recyclerView.addOnScrollListener(new PaginationScrollListener((LinearLayoutManager) recyclerView.getLayoutManager()) {
