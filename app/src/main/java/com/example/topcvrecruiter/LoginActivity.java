@@ -50,45 +50,29 @@ public class LoginActivity extends AppCompatActivity {
     private EditText usernameInput, passwordInput;
     private Button loginButton, Register_Button;
     private ImageButton facebookButton, googleButton;
+    private int id_Recruiter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        // Khởi tạo FirebaseAuth
-        firebaseAuth = FirebaseAuth.getInstance();
-        callbackManager = CallbackManager.Factory.create();
-
-        // Thiết lập Google Sign-In
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        googleSignInClient = GoogleSignIn.getClient(this, gso);
-
-        // Khởi tạo các thành phần UI
-        usernameInput = findViewById(R.id.email_input);
-        passwordInput = findViewById(R.id.password_input);
-        loginButton = findViewById(R.id.login_button);
-        Register_Button = findViewById(R.id.Register_Button);
-        facebookButton = findViewById(R.id.btnImage2);
-        googleButton = findViewById(R.id.btnImage3);
-
-        // Kích hoạt Edge-to-Edge
-        EdgeToEdge.enable(this);
-
-        // Đặt listener cho WindowInsets
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             // Sử dụng WindowInsetsCompat để lấy các giá trị Insets
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        setWidget();
+        setClick();
+    }
 
+    private void setClick(){
         // Xử lý nút đăng nhập
         loginButton.setOnClickListener(view -> loginUser());
-
+        // Xử lý nút đăng nhập bằng Facebook
+        facebookButton.setOnClickListener(view -> loginWithFacebook());
+        // Xử lý nút đăng nhập bằng Google
+        googleButton.setOnClickListener(view -> signInWithGoogle());
         // Xử lý nút đăng ký
         Register_Button.setOnClickListener(view -> {
             Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
@@ -96,12 +80,28 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+    }
 
-        // Xử lý nút đăng nhập bằng Facebook
-        facebookButton.setOnClickListener(view -> loginWithFacebook());
+    private void setWidget(){
+        usernameInput = findViewById(R.id.email_input);
+        passwordInput = findViewById(R.id.password_input);
+        loginButton = findViewById(R.id.login_button);
+        Register_Button = findViewById(R.id.Register_Button);
+        facebookButton = findViewById(R.id.btnImage2);
+        googleButton = findViewById(R.id.btnImage3);
+        firebaseAuth = FirebaseAuth.getInstance();
+        callbackManager = CallbackManager.Factory.create();
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        googleSignInClient = GoogleSignIn.getClient(this, gso);
+        // Kích hoạt Edge-to-Edge
+        EdgeToEdge.enable(this);
+    }
 
-        // Xử lý nút đăng nhập bằng Google
-        googleButton.setOnClickListener(view -> signInWithGoogle());
+    private void getRecruiterById(int userId) {
+
     }
 
     private void loginUser() {
@@ -167,19 +167,52 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void navigateToInformationActivity(int id_User) {
-        Intent intent = new Intent(LoginActivity.this, InformationActivity.class);
-        intent.putExtra("user_id", id_User);
-        startActivity(intent);
-        //finish();
+        ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(id_User)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        recruiter -> {
+                            if (recruiter != null) {
+                                id_Recruiter = recruiter.getId();
+                                Intent intent = new Intent(LoginActivity.this, InformationActivity.class);
+                                intent.putExtra("user_id", id_User);
+                                intent.putExtra("id_Recruiter", id_Recruiter);
+                                startActivity(intent);
+                            } else {
+                                Toast.makeText(this, "Recruiter not found", Toast.LENGTH_SHORT).show();
+                            }
+                        },
+                        throwable -> {
+                            Log.e("AccountFragment", "Error fetching recruiter: " + throwable.getMessage());
+                            Toast.makeText(this, "Failed to load recruiter", Toast.LENGTH_SHORT).show();
+                        }
+                );
     }
 
     private void navigateToMainActivity(int id_User, String recruiterName, String phoneNumber) {
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        intent.putExtra("user_id", id_User);
-        intent.putExtra("recruiterName", recruiterName);
-        intent.putExtra("phoneNumber", phoneNumber);
-        startActivity(intent);
-        // Tạo NewsFeedFragment và truyền Bundle vào
+        ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(id_User)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        recruiter -> {
+                            if (recruiter != null) {
+                                id_Recruiter = recruiter.getId();
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                intent.putExtra("user_id", id_User);
+                                intent.putExtra("recruiterName", recruiterName);
+                                intent.putExtra("phoneNumber", phoneNumber);
+                                intent.putExtra("id_Recruiter", id_Recruiter);
+                                Log.e("LoginActivity","ID: "+ id_Recruiter);
+                                startActivity(intent);
+                            } else {
+                                Toast.makeText(this, "Recruiter not found", Toast.LENGTH_SHORT).show();
+                            }
+                        },
+                        throwable -> {
+                            Log.e("AccountFragment", "Error fetching recruiter: " + throwable.getMessage());
+                            Toast.makeText(this, "Failed to load recruiter", Toast.LENGTH_SHORT).show();
+                        }
+                );
         finish();
     }
 

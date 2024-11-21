@@ -13,17 +13,6 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical">
-        <TextView
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:text="Pooh"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textSize="50dp"
-            android:textColor="@color/white"
-            android:scaleType="fitCenter">
-
-        </TextView>
 
         <ProgressBar
             android:layout_width="32dp"
