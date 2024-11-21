@@ -39,8 +39,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PostingFragment extends Fragment {
-    private int id_user;
-    private int id_Recruiter;
+    private int id_Recruiter = 3;
     private Button post_button;
     private RecyclerView recyclerView;
     private ArticleAdapter articleAdapter;
@@ -56,13 +55,11 @@ public class PostingFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_posting, container, false);
 
-        if (getArguments() != null) {
-            id_user = getArguments().getInt("user_id", -1);
-            Log.e("ID","ID: "+ id_user);
-        }
+//        if (getArguments() != null) {
+//            id_Recruiter = getArguments().getInt("id_Recruiter", 0);
+//        }
 
-        getRecruiterById(id_user);
-        Log.e("PostingFragment","Id: " + id_Recruiter);
+
 
         post_button = view.findViewById(R.id.post_button);
         recyclerView = view.findViewById(R.id.recycler_view_post);
@@ -97,50 +94,31 @@ public class PostingFragment extends Fragment {
                 startActivity(new Intent(getActivity(), AllJobActivity.class));
             }
         });
+        post_button.setOnClickListener(view1 -> {
+            if (getContext() != null) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Choose Post Type");
+                String[] options = {"Article", "Job"};
+
+                builder.setItems(options, (dialog, which) -> {
+                    if (which == 0) {
+                        Intent intent = new Intent(getContext(), ArticleActivity.class);
+                        intent.putExtra("recruiter_id",id_Recruiter);
+                        startActivity(intent);
+                    } else if (which == 1) {
+                        Intent intent = new Intent(getContext(), JobActivity.class);
+                        intent.putExtra("recruiter_id",id_Recruiter);
+                        startActivity(intent);
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+                builder.create().show();
+            }
+        });
 
         loadArticles();  // Mặc định sẽ tải bài viết khi mở fragment lần đầu
         return view;
-    }
-
-    private void getRecruiterById(int userId) {
-        ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(userId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        recruiter -> {
-                            if (recruiter != null) {
-                                id_Recruiter = recruiter.getId();
-                                post_button.setOnClickListener(view1 -> {
-                                    if (getContext() != null) {
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                        builder.setTitle("Choose Post Type");
-                                        String[] options = {"Article", "Job"};
-
-                                        builder.setItems(options, (dialog, which) -> {
-                                            if (which == 0) {
-                                                Intent intent = new Intent(getContext(), ArticleActivity.class);
-                                                intent.putExtra("recruiter_id",id_Recruiter);
-                                                startActivity(intent);
-                                            } else if (which == 1) {
-                                                Intent intent = new Intent(getContext(), JobActivity.class);
-                                                intent.putExtra("recruiter_id",id_Recruiter);
-                                                startActivity(intent);
-                                            }
-                                        });
-
-                                        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-                                        builder.create().show();
-                                    }
-                                });
-                            } else {
-                                Toast.makeText(getContext(), "Recruiter not found", Toast.LENGTH_SHORT).show();
-                            }
-                        },
-                        throwable -> {
-                            Log.e("AccountFragment", "Error fetching recruiter: " + throwable.getMessage());
-                            Toast.makeText(getContext(), "Failed to load recruiter", Toast.LENGTH_SHORT).show();
-                        }
-                );
     }
 
     @Override
@@ -155,15 +133,20 @@ public class PostingFragment extends Fragment {
         if (getContext() != null) { // Kiểm tra context
             articleButton.setTextColor(getResources().getColor(R.color.green_color));
             jobButton.setTextColor(getResources().getColor(R.color.black));
+
             ApiPostingService apiService = ApiPostingService.retrofit.create(ApiPostingService.class);
-            Call<List<Article>> call = apiService.getArticles();
+
+
+
+            // Gọi API để lấy danh sách bài viết theo recruiterId
+            Call<List<Article>> call = apiService.getArticlesByRecruiter(id_Recruiter);
             call.enqueue(new Callback<List<Article>>() {
                 @Override
                 public void onResponse(Call<List<Article>> call, Response<List<Article>> response) {
                     if (response.isSuccessful()) {
                         articleList = response.body();
                         if (articleList != null) {
-                            // Lấy 10 bài viết đầu tiên
+                            // Lấy 10 bài viết đầu tiên (nếu có nhiều hơn 10)
                             List<Article> limitedArticles = articleList.size() > 10 ? articleList.subList(0, 10) : articleList;
 
                             if (!(recyclerView.getAdapter() instanceof ArticleAdapter) || articleAdapter == null) {
@@ -186,13 +169,17 @@ public class PostingFragment extends Fragment {
         }
     }
 
+
     // Tải 10 công việc đầu tiên
     private void loadJobs() {
         if (getContext() != null) { // Kiểm tra context
             jobButton.setTextColor(getResources().getColor(R.color.green_color));
             articleButton.setTextColor(getResources().getColor(R.color.black));
+
+
+
             ApiJobService apiService = ApiJobService.retrofit.create(ApiJobService.class);
-            Call<List<Job>> call = apiService.getJobs();
+            Call<List<Job>> call = apiService.getJobsByRecruiter(id_Recruiter);
             call.enqueue(new Callback<List<Job>>() {
                 @Override
                 public void onResponse(Call<List<Job>> call, Response<List<Job>> response) {

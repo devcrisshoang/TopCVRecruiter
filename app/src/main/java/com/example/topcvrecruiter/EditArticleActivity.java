@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.example.topcvrecruiter.API.ApiPostingService;
 import com.example.topcvrecruiter.Model.Article;
+import com.example.topcvrecruiter.Model.Recruiter;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -36,6 +37,7 @@ public class EditArticleActivity extends AppCompatActivity {
     private Uri uri;  // Uri for selected image
     private String imagePath; // Store the original image path to prevent losing it
     private ImageButton backButton;
+    private int id_Recruiter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,9 +53,12 @@ public class EditArticleActivity extends AppCompatActivity {
 
         // Retrieve article data from the Intent
         articleId = getIntent().getIntExtra("article_id", -1);
+
         String articleName = getIntent().getStringExtra("article_name");
         String content = getIntent().getStringExtra("content");
         imagePath = getIntent().getStringExtra("image_path"); // Save the original image path
+
+//        id_Recruiter = getIntent().getIntExtra("id_Recruiter", -1);
 
         if (articleId == -1) {
             Toast.makeText(this, "Invalid article ID", Toast.LENGTH_SHORT).show();
@@ -121,8 +126,7 @@ public class EditArticleActivity extends AppCompatActivity {
                         Article updatedArticle = new Article(
                                 articleNameEdit.getText().toString(),
                                 contentEdit.getText().toString(),
-                                formattedDateTime, image,
-                                1);  // Assuming '1' is the recruiter ID
+                                formattedDateTime, image,id_Recruiter);
 
                         // Call the API to update the article
                         updateArticle(articleId, updatedArticle);

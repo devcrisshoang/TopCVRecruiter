@@ -33,10 +33,13 @@ public class AllJobActivity extends AppCompatActivity {
     private boolean isLoading = false;
     private boolean isLastPage = false;
     private ImageButton backButton;
+    private int id_Recruiter =3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_job);
+
+//        id_Recruiter = getIntent().getIntExtra("id_Recruiter", -1);
 
         recyclerView = findViewById(R.id.rcvJob);
         backButton = findViewById(R.id.all_job_back_button);
@@ -45,6 +48,7 @@ public class AllJobActivity extends AppCompatActivity {
         displayList = new ArrayList<>();
         jobAdapter = new AllJobAdapter(this,displayList);
         recyclerView.setAdapter(jobAdapter);
+
 
         loadJobs();  // Gọi API để tải dữ liệu lần đầu tiên
 
@@ -79,8 +83,11 @@ public class AllJobActivity extends AppCompatActivity {
     }
 
     private void loadJobs() {
+
+
+
         ApiJobService apiService = ApiJobService.retrofit.create(ApiJobService.class);
-        Call<List<Job>> call = apiService.getJobs();  // Lấy toàn bộ dữ liệu từ API (không phân trang)
+        Call<List<Job>> call = apiService.getJobsByRecruiter(id_Recruiter);  // Lấy toàn bộ dữ liệu từ API (không phân trang)
 
         call.enqueue(new Callback<List<Job>>() {
             @Override

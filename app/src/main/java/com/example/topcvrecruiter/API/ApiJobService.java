@@ -1,6 +1,7 @@
 package com.example.topcvrecruiter.API;
 
 
+import com.example.topcvrecruiter.Model.Article;
 import com.example.topcvrecruiter.Model.Job;
 import com.example.topcvrecruiter.Model.JobDetails;
 
@@ -70,6 +71,7 @@ public interface ApiJobService {
     Call<JobDetails> putJobDetails(@Path("id") int jobDetailsId, @Body JobDetails jobDetails);
 
 
-
+    @GET("api/Job/ByRecruiter/{recruiterId}")
+    Call<List<Job>> getJobsByRecruiter(@Path("recruiterId") int recruiterId);
 
 }

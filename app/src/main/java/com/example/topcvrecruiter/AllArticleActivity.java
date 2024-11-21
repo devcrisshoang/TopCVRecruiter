@@ -33,10 +33,13 @@ public class AllArticleActivity extends AppCompatActivity {
     private boolean isLoading = false;
     private boolean isLastPage = false;
     private ImageButton backButton;
+    private int id_Recruiter = 3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_article);
+
+//        id_Recruiter = getIntent().getIntExtra("id_Recruiter", -1);
 
         recyclerView = findViewById(R.id.rcvArticle);
         backButton = findViewById(R.id.article_all_back_button);
@@ -48,6 +51,8 @@ public class AllArticleActivity extends AppCompatActivity {
         recyclerView.setAdapter(articleAdapter);
 
         loadArticles();  // Gọi API để tải dữ liệu lần đầu tiên
+
+
 
         // Lắng nghe sự kiện cuộn để tải thêm dữ liệu khi người dùng kéo xuống
         recyclerView.addOnScrollListener(new PaginationScrollListener((LinearLayoutManager) recyclerView.getLayoutManager()) {
@@ -80,9 +85,10 @@ public class AllArticleActivity extends AppCompatActivity {
     }
 
     private void loadArticles() {
-        ApiPostingService apiService = ApiPostingService.retrofit.create(ApiPostingService.class);
-        Call<List<Article>> call = apiService.getArticles();  // Lấy toàn bộ dữ liệu từ API (không phân trang)
 
+        ApiPostingService apiService = ApiPostingService.retrofit.create(ApiPostingService.class);
+
+        Call<List<Article>> call = apiService.getArticlesByRecruiter(id_Recruiter);  // Lấy toàn bộ dữ liệu từ API (không phân trang)
         call.enqueue(new Callback<List<Article>>() {
             @Override
             public void onResponse(Call<List<Article>> call, Response<List<Article>> response) {

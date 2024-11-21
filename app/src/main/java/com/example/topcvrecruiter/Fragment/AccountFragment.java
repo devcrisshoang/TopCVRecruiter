@@ -54,8 +54,8 @@ public class AccountFragment extends Fragment {
     private ActivityResultLauncher<Intent> imagePickerLauncherAvatar;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    private int id_User;
-    private int id_Recruiter;
+    private int id_User = 3;
+    private int id_Recruiter = 3;
     private String username;
     private String password;
     private String currentAvatarUrl;
@@ -76,14 +76,20 @@ public class AccountFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_account, container, false);
         setWidget(view);
-        if (getArguments() != null) {
-            id_User = getArguments().getInt("user_id", -1);
-            Log.e("ID","ID: "+id_User);
-        }
+
+//        if (getArguments() != null) {
+//            id_User = getArguments().getInt("user_id", -1);
+//            Log.e("ID","ID: "+id_User);
+//        }
+
+//        if (getArguments() != null) {
+//            id_Recruiter = getArguments().getInt("id_Recruiter", -1);
+//            Log.e("ID","ID: "+id_Recruiter);
+//        }
         // Gọi hàm lấy thông tin người dùng với id cố định
-        getUserById(id_User);
+        getUserById();
         // Gọi hàm lấy thông tin Recruiter với ID cứng
-        getRecruiterById(id_User);  // Giả sử ID người tuyển dụng là 1
+        getRecruiterById();  // Giả sử ID người tuyển dụng là 1
         //Log.e("AccountFragment","ID: " + id_Recruiter);
         // Khởi tạo ActivityResultLauncher cho việc chọn ảnh
         initImagePicker();
@@ -221,8 +227,10 @@ public class AccountFragment extends Fragment {
         );
     }
 
-    private void getUserById(int userId) {
-        ApiUserService.apiUserService.getUserById(userId)
+    private void getUserById() {
+
+
+        ApiUserService.apiUserService.getUserById(id_User)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -245,6 +253,9 @@ public class AccountFragment extends Fragment {
     }
 
     private void updateAvatar(Uri avatarUri) {
+
+
+
         String avatarUrl = (avatarUri != null) ? avatarUri.toString() : (currentAvatarUrl != null ? currentAvatarUrl : "");
 
         if (avatarUrl.isEmpty()) {
@@ -277,6 +288,8 @@ public class AccountFragment extends Fragment {
     }
 
     private void updateBackground(Uri backgroundUri) {
+
+
         String backgroundUrl = (backgroundUri != null) ? backgroundUri.toString() : (currentBackgroundUrl != null ? currentBackgroundUrl : "");
 
         if (backgroundUrl.isEmpty()) {
@@ -331,17 +344,19 @@ public class AccountFragment extends Fragment {
     }
 
     // Hàm để gọi API lấy thông tin của Recruiter
-    private void getRecruiterById(int userId) {
-        ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(userId)
+    private void getRecruiterById() {
+
+
+        ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(id_Recruiter)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         recruiter -> {
                             if (recruiter != null) {
-                                id_Recruiter = recruiter.getId();
+                                //id_Recruiter = recruiter.getId();
                                 recruiter_name.setText(recruiter.getRecruiterName());
                                 email_address.setText(recruiter.getEmailAddress());
-                                getCompanyByRecruiterId(id_Recruiter);
+                                getCompanyByRecruiterId();
                             } else {
                                 Toast.makeText(getContext(), "Recruiter not found", Toast.LENGTH_SHORT).show();
                             }
@@ -353,8 +368,10 @@ public class AccountFragment extends Fragment {
                 );
     }
 
-    private void getCompanyByRecruiterId(int recruiterId) {
-        ApiCompanyService.ApiCompanyService.getCompanyByRecruiterId(recruiterId)
+    private void getCompanyByRecruiterId() {
+
+
+        ApiCompanyService.ApiCompanyService.getCompanyByRecruiterId(id_Recruiter)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -385,8 +402,23 @@ public class AccountFragment extends Fragment {
         // Tạo đối tượng Company với thông tin đã thay đổi
         Company company = new Company(companyName, "", "", field, "", false);  // Chỉ truyền những trường thay đổi
 
-        // Gọi API để cập nhật thông tin công tys
+        // Gọi API để cập nhật thông tin công ty
+        ApiCompanyService.ApiCompanyService.updateCompanyById(companyId, company)
+                .subscribeOn(Schedulers.io())  // Chạy API request trên background thread
+                .observeOn(AndroidSchedulers.mainThread())  // Nhận kết quả trên main thread
+                .subscribe(
+                        () -> {
+                            // Khi cập nhật thành công
+                            Toast.makeText(getContext(), "Updated company information successfully", Toast.LENGTH_SHORT).show();
+                        },
+                        throwable -> {
+                            // Khi có lỗi xảy ra
+                            Log.e("AccountFragment", "Error updating company: " + throwable.getMessage());
+                            Toast.makeText(getContext(), "Error updating company", Toast.LENGTH_SHORT).show();
+                        }
+                );
     }
+
 
     @Override
     public void onDestroy() {

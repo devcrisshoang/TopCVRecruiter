@@ -42,7 +42,7 @@ public class JobActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> imagePickerLauncherAvatar;
     private Uri uri;
 
-    private int recruiter_id;
+    private int id_Recruiter = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +55,8 @@ public class JobActivity extends AppCompatActivity {
             return insets;
         });
 
-        recruiter_id = getIntent().getIntExtra("recruiter_id",0);
-        Log.e("JobActivity","ID: " + recruiter_id);
+//        id_Recruiter = getIntent().getIntExtra("id_Recruiter",0);
+//        Log.e("JobActivity","ID: " + id_Recruiter);
 
         // Ánh xạ các thành phần giao diện
         continue_button = findViewById(R.id.continue_button);
@@ -109,7 +109,7 @@ public class JobActivity extends AppCompatActivity {
             intent.putExtra("experience", experience);
             intent.putExtra("address", address);
             intent.putExtra("salary", salary);
-            intent.putExtra("recruiter_id",recruiter_id);
+            intent.putExtra("id_Recruiter",id_Recruiter);
 
 
             // Chuyển sang JobDetailsActivity
