@@ -358,53 +358,57 @@ public class AccountFragment extends Fragment {
     }
 
     private void getCompanyByRecruiterId(int recruiterId) {
-        ApiCompanyService.ApiCompanyService.getCompanyByRecruiterId(id_Recruiter)
+        ApiCompanyService.ApiCompanyService.getCompanyByRecruiterId(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         company -> {
                             if (company != null) {
-                                ac_company_name.setText(company.getName());
-                                ac_field.setText(company.getField());
-                                // Lưu lại companyId để sử dụng trong việc cập nhật
-                                companyId = company.getId(); // Giả sử bạn đã thêm trường "id" trong model Company
+                                ac_company_name.setText(company.getName() != null ? company.getName() : "Chưa cập nhật");
+                                ac_field.setText(company.getField() != null ? company.getField() : "Chưa cập nhật");
+                                companyId = company.getId(); // Lưu ID công ty
                             } else {
-                                Toast.makeText(getContext(), "Không tìm thấy công ty", Toast.LENGTH_SHORT).show();
+                                // Gán giá trị mặc định nếu không tìm thấy công ty
+                                ac_company_name.setText("Chưa có công ty");
+                                ac_field.setText("Chưa có lĩnh vực");
+                                companyId = -1; // Đảm bảo companyId không bị lỗi
                             }
                         },
                         throwable -> {
                             Log.e("AccountFragment", "Error fetching company: " + throwable.getMessage());
                             Toast.makeText(getContext(), "Lỗi khi tải thông tin công ty", Toast.LENGTH_SHORT).show();
+                            ac_company_name.setText("None");
+                            ac_field.setText("None");
+                            companyId = -1;
                         }
                 );
     }
 
+
     private void updateCompanyInfo(String companyName, String field) {
-        // Nếu chưa có id công ty thì không thực hiện
         if (companyId == -1) {
-            Toast.makeText(getContext(), "Chưa có ID công ty", Toast.LENGTH_SHORT).show();
+            // Không có ID công ty, thông báo lỗi
+            Toast.makeText(getContext(), "Không thể cập nhật vì chưa có thông tin công ty", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Tạo đối tượng Company với thông tin đã thay đổi
-        Company company = new Company(companyName, "", "", field, "", false);  // Chỉ truyền những trường thay đổi
+        // Tạo đối tượng Company với thông tin mới
+        Company company = new Company(companyName, "", "", field, "", false);
 
-        // Gọi API để cập nhật thông tin công ty
         ApiCompanyService.ApiCompanyService.updateCompanyById(companyId, company)
-                .subscribeOn(Schedulers.io())  // Chạy API request trên background thread
-                .observeOn(AndroidSchedulers.mainThread())  // Nhận kết quả trên main thread
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         () -> {
-                            // Khi cập nhật thành công
-                            Toast.makeText(getContext(), "Updated company information successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Cập nhật công ty thành công", Toast.LENGTH_SHORT).show();
                         },
                         throwable -> {
-                            // Khi có lỗi xảy ra
                             Log.e("AccountFragment", "Error updating company: " + throwable.getMessage());
-                            Toast.makeText(getContext(), "Error updating company", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Lỗi khi cập nhật công ty", Toast.LENGTH_SHORT).show();
                         }
                 );
     }
+
 
     @Override
     public void onDestroy() {
