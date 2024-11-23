@@ -53,7 +53,7 @@ public class CompanyDetailActivity extends AppCompatActivity {
             return insets;
         });
         recruiter_id = getIntent().getIntExtra("id_Recruiter",0);
-        Log.e("VerifyImageActivity", "Id Recruiter: " + recruiter_id);
+        Log.e("CompanyDetailActivity", "Id Recruiter: " + recruiter_id);
 
         user_id = getIntent().getIntExtra("user_id",0);
         editTextWebsite = findViewById(R.id.editTextWebsite);
