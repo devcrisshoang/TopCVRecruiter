@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.topcvrecruiter.R;
 import com.example.topcvrecruiter.Model.Job;
 import com.example.topcvrecruiter.JobDetailActivity;
+import com.example.topcvrecruiter.Utils.DateTimeUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,12 +40,20 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
         holder.jobName.setText(job.getJob_Name());
         holder.jobAddress.setText(job.getWorking_Address());
         holder.jobTime.setText(job.getCreate_Time());
-        holder.jobTime.setText("");
+
+        // Chuyển đổi chuỗi thời gian sang định dạng ngày tháng năm
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault());
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+
+        String formattedTime = DateTimeUtils.formatTimeAgo(job.getCreate_Time());
+            holder.jobTime.setText("");
+
 
         // Thiết lập sự kiện khi nhấn vào item
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, JobDetailActivity.class);
             intent.putExtra("jobId", job.getId()); // Truyền jobId
+            intent.putExtra("id_Recruiter", job.getiD_Recruiter());
             context.startActivity(intent);
         });
     }

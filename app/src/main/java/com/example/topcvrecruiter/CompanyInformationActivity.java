@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -53,7 +54,8 @@ public class CompanyInformationActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        recruiter_id = getIntent().getIntExtra("recruiter_id",0);
+        recruiter_id = getIntent().getIntExtra("id_Recruiter",0);
+        Log.e("CompanyInformationActivity", "Id Recruiter: " + recruiter_id);
         user_id = getIntent().getIntExtra("user_id",0);
         back_button = findViewById(R.id.back_button);
         setWidget();
@@ -128,7 +130,7 @@ public class CompanyInformationActivity extends AppCompatActivity {
                             // Xử lý khi thành công
                             Toast.makeText(this, "CompanyInformation đã được tạo thành công!", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(this, CompanyDetailActivity.class);
-                            intent.putExtra("recruiter_id", recruiter_id);
+                            intent.putExtra("id_Recruiter", recruiter_id);
                             intent.putExtra("user_id",user_id);
                             startActivity(intent);
                             //finish();

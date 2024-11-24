@@ -1,5 +1,6 @@
 package com.example.topcvrecruiter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -61,8 +62,12 @@ public class VerifyImageActivity extends AppCompatActivity {
         name = getIntent().getStringExtra("name");
         phone = getIntent().getStringExtra("phone");
         email = getIntent().getStringExtra("email");
+        recruiter_id = getIntent().getIntExtra("id_Recruiter",0);
         getRecruiterId(user_id);
+
         Log.e("RecruiterID", "Recruiter ID: " + recruiter_id);
+
+
         select_front_image.setOnClickListener(view -> {
             selectFrontImage();
         });
@@ -76,6 +81,7 @@ public class VerifyImageActivity extends AppCompatActivity {
         initImagePicker();
     }
 
+    @SuppressLint("CheckResult")
     private void updateRecruiter(){
 
         Recruiter recruiter = new Recruiter();
@@ -100,7 +106,7 @@ public class VerifyImageActivity extends AppCompatActivity {
                     Log.d("VerifyImageActivity", "Updated successfully");
                     Toast.makeText(this, "Updated successfully", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(this, CompanyInformationActivity.class);
-                    intent.putExtra("recruiter_id", recruiter_id);
+                    intent.putExtra("id_Recruiter", recruiter_id);
                     intent.putExtra("user_id",user_id);
                     startActivity(intent);
                 }, throwable -> {

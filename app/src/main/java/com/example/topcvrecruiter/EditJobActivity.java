@@ -66,6 +66,7 @@ public class EditJobActivity extends AppCompatActivity {
 
         // Get data from Intent
         jobId = getIntent().getIntExtra("jobId", -1);
+        id_Recruiter = getIntent().getIntExtra("id_Recruiter", -1);
         jobDetailsId = getIntent().getIntExtra("jobDetailsId", -1);
         jobName.setText(getIntent().getStringExtra("jobName"));
         Salary.setText(getIntent().getStringExtra("salary"));

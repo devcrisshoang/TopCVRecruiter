@@ -25,6 +25,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     private List<Article> articles;
     private Context context;
 
+
     public ArticleAdapter(Context context, List<Article> articles) {
         this.context = context;
         this.articles = articles;
@@ -48,11 +49,13 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ArticleDetailActivity.class);
             intent.putExtra("article_id", article.getId()); // Chuyển article_id
+            intent.putExtra("id_Recruiter", article.getiD_Recruiter());
             Log.d("ArticleAdapter", "Article ID: " + article.getId()); // Log article_id
             context.startActivity(intent);
         });
 
-        holder.createTime.setText("Create Time: " + article.getCreate_Time());
+
+        holder.createTime.setText("");
     }
 
     @Override
