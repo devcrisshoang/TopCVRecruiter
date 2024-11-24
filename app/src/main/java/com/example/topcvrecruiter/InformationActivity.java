@@ -44,7 +44,7 @@ public class InformationActivity extends AppCompatActivity {
         Intent intent = getIntent();
         username = intent.getStringExtra("username"); // Tên tài khoản
         id_User = intent.getIntExtra("user_id", -1); // Nhận ID người dùng
-
+        id_Recruiter = intent.getIntExtra("id_Recruiter", -1);
         // Điền dữ liệu vào EditText nếu cần
         if (username != null) {
             nameEditText.setText(username);

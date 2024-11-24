@@ -52,7 +52,9 @@ public class CompanyDetailActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        recruiter_id = getIntent().getIntExtra("recruiter_id",0);
+        recruiter_id = getIntent().getIntExtra("id_Recruiter",0);
+        Log.e("CompanyDetailActivity", "Id Recruiter: " + recruiter_id);
+
         user_id = getIntent().getIntExtra("user_id",0);
         editTextWebsite = findViewById(R.id.editTextWebsite);
         editTextTaxID = findViewById(R.id.editTextTaxID);
@@ -100,7 +102,7 @@ public class CompanyDetailActivity extends AppCompatActivity {
                             // Xử lý khi thành công
                             Toast.makeText(this, "CompanyInformation đã được tạo thành công!", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(this, MainActivity.class);
-                            intent.putExtra("recruiter_id", recruiter_id);
+                            intent.putExtra("id_Recruiter", recruiter_id);
                             intent.putExtra("user_id",user_id);
                             startActivity(intent);
                             finish();
@@ -121,7 +123,7 @@ public class CompanyDetailActivity extends AppCompatActivity {
                     Log.d("VerifyImageActivity", "Updated successfully");
                     Toast.makeText(this, "Updated successfully", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(this, CompanyInformationActivity.class);
-                    intent.putExtra("recruiter_id", recruiter_id);
+                    intent.putExtra("id_Recruiter", recruiter_id);
                     intent.putExtra("user_id",user_id);
                     startActivity(intent);
                 }, throwable -> {
