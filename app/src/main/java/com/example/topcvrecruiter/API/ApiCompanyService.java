@@ -39,8 +39,8 @@ public interface ApiCompanyService {
             .build()
             .create(ApiCompanyService.class);
 
-    @GET("api/Company/{id}")
-    Observable <Company> getCompanyByRecruiterId(@Path("id") int id);
+    @GET("api/Company/recruiter/{recruiterId}")
+    Observable <Company> getCompanyByRecruiterId(@Path("recruiterId") int id);
 
     @POST("api/Company/recruiter/{id}")
     Observable<Company> createCompanyForRecruiter(@Path("id") int id, @Body Company company);
