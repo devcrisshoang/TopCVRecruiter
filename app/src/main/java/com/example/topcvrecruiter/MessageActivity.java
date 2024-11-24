@@ -38,6 +38,9 @@ public class MessageActivity extends AppCompatActivity {
     private int userId;
     private TextView friend_name; // lay ten applicant
 
+    private String applicantName;
+    private int user_id_applicant;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +54,9 @@ public class MessageActivity extends AppCompatActivity {
         friend_name = findViewById(R.id.friend_name);
 
         userId = getIntent().getIntExtra("userId", -1);  // Nhận giá trị userId
+        applicantName = getIntent().getStringExtra("userId");
+
+        user_id_applicant = getIntent().getIntExtra("user_id",0);
         getApplicantName(userId);
 
         // Kiểm tra nếu userId hợp lệ
@@ -63,8 +69,6 @@ public class MessageActivity extends AppCompatActivity {
 
         // Đóng Activity khi nhấn nút quay lại
         back_button.setOnClickListener(view -> finish());
-
-        // Gọi API để lấy dữ liệu
 
         messengerShowAdapter = new MessengerShowAdapter(messageList, userId);
 
@@ -89,8 +93,9 @@ public class MessageActivity extends AppCompatActivity {
                 .subscribe(
                         recruiter -> {
                             if (recruiter != null) {
-                                friend_name.setText(recruiter.getRecruiterName());
-                                Log.d("MessengerAdapter", "Fetched applicant name: " + recruiter.getRecruiterName());
+                                friend_name.setText(applicantName);
+
+                                Log.d("MessengerAdapter", "Fetched applicant name: " + applicantName);
                             } else {
                                 friend_name.setText("Unknown User"); // Hoặc xử lý lỗi nếu không có dữ liệu
                             }
@@ -111,8 +116,8 @@ public class MessageActivity extends AppCompatActivity {
             // Tạo đối tượng Message mới
             Message newMessage = new Message(
                     0,  // ID tạm thời (server sẽ tự sinh)
-                    9,  // sender_ID là 9
-                    userId,  // receiver_ID
+                    userId,  // sender_ID là 9
+                    user_id_applicant,  // receiver_ID
                     messageContent,
                     false,  // status giả định là "sent"
                     currentTime  // send_Time giả định, dùng thời gian hiện tại

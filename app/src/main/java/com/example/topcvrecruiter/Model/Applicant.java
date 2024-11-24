@@ -10,6 +10,23 @@ public class Applicant implements Serializable {
     private String job_Desire;
     private String working_Location_Desire;
     private String working_Experience;
+    private int iD_User;
+
+    public String getPhone_Number() {
+        return phone_Number;
+    }
+
+    public void setPhone_Number(String phone_Number) {
+        this.phone_Number = phone_Number;
+    }
+
+    public int getiD_User() {
+        return iD_User;
+    }
+
+    public void setiD_User(int iD_User) {
+        this.iD_User = iD_User;
+    }
 
     public Applicant(int id, String applicant_Name, String email, String phone_number, String job_Desire, String working_Location_Desire, String working_Experience) {
         this.id = id;

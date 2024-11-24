@@ -6,36 +6,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     android:padding="16dp"
     tools:context=".InformationActivity">
 
-    <ImageButton
-        android:id="@+id/back_button"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:src="@drawable/back_ic"
-        android:scaleType="fitCenter"
-        android:background="@color/white">
 
-    </ImageButton>
 
     <!-- Header Section -->
     <LinearLayout
-        android:id="@+id/linearLayoutHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:orientation="horizontal">
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
+            android:src="@drawable/back_ic"
+            android:scaleType="fitCenter"
+            android:background="@color/white">
+
+        </ImageButton>
 
         <TextView
-            android:id="@+id/textViewTitle"
+            android:id="@+id/image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Enter your information"
-            android:textSize="24sp"
             android:textStyle="bold"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="30dp" />
+            android:textSize="20sp"
+            android:layout_margin="10dp"
+            android:layout_gravity="center">
+
+        </TextView>
     </LinearLayout>
 
     <LinearLayout

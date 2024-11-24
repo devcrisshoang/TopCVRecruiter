@@ -90,67 +90,67 @@
                 android:inputType="textPassword"
                 android:padding="10dp"></EditText>
         </LinearLayout>
-        <Button
-            android:id="@+id/login_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20sp"
-            android:background="@drawable/button_rounded_corner"
-            app:backgroundTint="@null"
-            android:text="Login"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold">
-        </Button>
 
-        <LinearLayout
+    </LinearLayout>
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20sp"
+        android:background="@drawable/button_rounded_corner"
+        app:backgroundTint="@null"
+        android:text="Login"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold">
+    </Button>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+        <ImageButton
+            android:id="@+id/btnImage2"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@color/white"
+            android:scaleType="fitCenter"
+            android:src="@drawable/facebook_ic"
+            tools:ignore="SpeakableTextPresentCheck" />
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:layout_gravity="center">
+            android:layout_margin="10dp"
+            android:textStyle="bold"
+            android:text="OR">
 
-            <ImageButton
-                android:id="@+id/btnImage2"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="@color/white"
-                android:scaleType="fitCenter"
-                android:src="@drawable/facebook_ic"
-                tools:ignore="SpeakableTextPresentCheck" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:textStyle="bold"
-                android:text="OR">
+        </TextView>
 
-            </TextView>
+        <ImageButton
+            android:id="@+id/btnImage3"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@color/white"
+            android:scaleType="fitCenter"
+            android:src="@drawable/google_ic"
+            tools:ignore="SpeakableTextPresentCheck" />
 
-            <ImageButton
-                android:id="@+id/btnImage3"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="@color/white"
-                android:scaleType="fitCenter"
-                android:src="@drawable/google_ic"
-                tools:ignore="SpeakableTextPresentCheck" />
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/Register_Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sign up here"
-            android:textAlignment="center"
-            android:textColor="@color/green_color"
-            android:backgroundTint="@color/white"
-            android:layout_margin="20sp"
-            android:layout_gravity="center"
-            android:textSize="15sp">
-        </Button>
     </LinearLayout>
 
+    <Button
+        android:id="@+id/Register_Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign up here"
+        android:textAlignment="center"
+        android:textColor="@color/green_color"
+        android:backgroundTint="@color/white"
+        android:layout_margin="20sp"
+        android:layout_gravity="center"
+        android:textSize="15sp">
+    </Button>
 </LinearLayout>

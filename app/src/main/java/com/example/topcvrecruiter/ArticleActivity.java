@@ -141,8 +141,6 @@ public class ArticleActivity extends AppCompatActivity {
         });
     }
 
-
-
     // Xử lý kết quả yêu cầu quyền gửi thông báo
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {

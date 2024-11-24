@@ -39,38 +39,7 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
         holder.jobName.setText(job.getJob_Name());
         holder.jobAddress.setText(job.getWorking_Address());
         holder.jobTime.setText(job.getCreate_Time());
-
-        // Chuyển đổi chuỗi thời gian sang định dạng ngày tháng năm
-        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault());
-        SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-
-        try {
-            Date createDate = inputFormat.parse(job.getCreate_Time());
-            long createTimeInMillis = createDate.getTime();
-            long currentTimeInMillis = System.currentTimeMillis();
-
-            long timeDifference = currentTimeInMillis - createTimeInMillis;
-            long minutesDifference = timeDifference / (60 * 1000); // Chuyển đổi sang phút
-            long hoursDifference = timeDifference / (60 * 60 * 1000); // Chuyển đổi sang giờ
-
-            if (minutesDifference < 60) {
-                holder.jobTime.setText(minutesDifference + " minutes ago");
-            } else if (hoursDifference < 24) {
-                holder.jobTime.setText(hoursDifference + " hours ago");
-            } else if (hoursDifference < 24 * 2) {
-                holder.jobTime.setText("Yesterday");
-            } else if (hoursDifference < 24 * 7) {
-                SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.getDefault());
-                String dayOfWeek = dayFormat.format(createDate);
-                holder.jobTime.setText(dayOfWeek);
-            } else {
-                String formattedDate = outputFormat.format(createDate);
-                holder.jobTime.setText(formattedDate);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            holder.jobTime.setText("Create Time: " + job.getCreate_Time());
-        }
+        holder.jobTime.setText("");
 
         // Thiết lập sự kiện khi nhấn vào item
         holder.itemView.setOnClickListener(v -> {

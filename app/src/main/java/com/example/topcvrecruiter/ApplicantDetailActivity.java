@@ -7,11 +7,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.topcvrecruiter.API.ApiApplicantService;
 import com.example.topcvrecruiter.API.ApiDashboardService;
+import com.example.topcvrecruiter.API.ApiRecruiterService;
 import com.example.topcvrecruiter.Model.CV;
 
 
@@ -84,9 +87,30 @@ public class ApplicantDetailActivity extends AppCompatActivity {
         }
 
         resumeMessageButton.setOnClickListener(v->{
-            Intent intent = new Intent(ApplicantDetailActivity.this, MessageActivity.class);
-            intent.putExtra("applicantId", applicantId);
-            startActivity(intent);
+                ApiApplicantService.ApiApplicantService.getApplicantById(applicantId)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                applicant -> {
+                                    if (applicant != null) {
+                                        Intent intent = new Intent(ApplicantDetailActivity.this, MessageActivity.class);
+                                        intent.putExtra("applicantId", applicantId);
+                                        intent.putExtra("applicantName",applicant.getApplicant_Name());
+                                        intent.putExtra("user_id",applicant.getiD_User());
+                                        Log.e("ApplicantDetail","ID: "+ applicantId);
+                                        Log.e("ApplicantDetail","Name: "+ applicant.getApplicant_Name());
+                                        Log.e("ApplicantDetail","user_id: "+ applicant.getiD_User());
+                                        startActivity(intent);
+                                    } else {
+                                        Toast.makeText(this, "Recruiter not found", Toast.LENGTH_SHORT).show();
+                                    }
+                                },
+                                throwable -> {
+                                    Log.e("AccountFragment", "Error fetching recruiter: " + throwable.getMessage());
+                                    Toast.makeText(this, "Failed to load recruiter", Toast.LENGTH_SHORT).show();
+                                }
+                        );
+
         });
         // Set up the back button listener
         backButton.setOnClickListener(v -> {

@@ -52,38 +52,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             context.startActivity(intent);
         });
 
-
-        // Định dạng thời gian
-        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault());
-        SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-
-        try {
-            Date createDate = inputFormat.parse(article.getCreate_Time());
-            long createTimeInMillis = createDate.getTime();
-            long currentTimeInMillis = System.currentTimeMillis();
-
-            long timeDifference = currentTimeInMillis - createTimeInMillis;
-            long minutesDifference = timeDifference / (60 * 1000);
-            long hoursDifference = timeDifference / (60 * 60 * 1000);
-
-            if (minutesDifference < 60) {
-                holder.createTime.setText(minutesDifference + " minutes ago");
-            } else if (hoursDifference < 24) {
-                holder.createTime.setText(hoursDifference + " hours ago");
-            } else if (hoursDifference < 24 * 2) {
-                holder.createTime.setText("Yesterday");
-            } else if (hoursDifference < 24 * 7) {
-                SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.getDefault());
-                String dayOfWeek = dayFormat.format(createDate);
-                holder.createTime.setText(dayOfWeek);
-            } else {
-                String formattedDate = outputFormat.format(createDate);
-                holder.createTime.setText(formattedDate);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            holder.createTime.setText("Create Time: " + article.getCreate_Time());
-        }
+        holder.createTime.setText("Create Time: " + article.getCreate_Time());
     }
 
     @Override
