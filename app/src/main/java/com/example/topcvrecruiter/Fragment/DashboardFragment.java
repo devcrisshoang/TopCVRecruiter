@@ -7,7 +7,6 @@ import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,14 +18,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.topcvrecruiter.API.ApiDashboardService;
 
-import com.example.topcvrecruiter.API.ApiRecruiterService;
 import com.example.topcvrecruiter.Adapter.DashboardApplicantAdapter;
 import com.example.topcvrecruiter.Adapter.PaginationScrollListener;
-import com.example.topcvrecruiter.ApplicantDetailActivity;
 import com.example.topcvrecruiter.Model.Job;
 import com.example.topcvrecruiter.NumberApplicantActivity;
 import com.example.topcvrecruiter.NumberJobOfRecruiterActivity;

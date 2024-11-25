@@ -14,7 +14,6 @@ import com.example.topcvrecruiter.JobDetailActivity;
 import com.example.topcvrecruiter.Utils.DateTimeUtils;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 

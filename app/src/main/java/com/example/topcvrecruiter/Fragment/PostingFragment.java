@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.Toast;
 import com.example.topcvrecruiter.API.ApiJobService;
 import com.example.topcvrecruiter.API.ApiPostingService;
-import com.example.topcvrecruiter.API.ApiRecruiterService;
 import com.example.topcvrecruiter.AllArticleActivity;
 import com.example.topcvrecruiter.AllJobActivity;
 import com.example.topcvrecruiter.ArticleActivity;
@@ -32,8 +31,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

@@ -16,10 +16,7 @@ import com.example.topcvrecruiter.ArticleDetailActivity;
 import com.example.topcvrecruiter.R;
 import com.example.topcvrecruiter.Model.Article;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHolder> {
     private List<Article> articles;
