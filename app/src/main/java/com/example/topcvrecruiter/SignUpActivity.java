@@ -1,5 +1,6 @@
 package com.example.topcvrecruiter;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -22,24 +23,69 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class SignUpActivity extends AppCompatActivity {
     private Button Next_Button;
-    private EditText usernameInput, passwordInput, confirmPasswordInput;
+
+    private EditText usernameInput;
+    private EditText passwordInput;
+    private EditText confirmPasswordInput;
+
     private ImageView iconNumber1;
-    private ImageButton see_password1, see_password2;
+
+    private ImageButton see_password1;
+    private ImageButton see_password2;
+
     private boolean isPasswordVisible = false;
+
     private ApiUserService apiUserService;
+
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_sign_up);
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
+        setWidget();
+
+        setClick();
+
+    }
+
+    private void createAccount(){
+        String username = usernameInput.getText().toString().trim();
+        String password = passwordInput.getText().toString().trim();
+        String confirmPassword = confirmPasswordInput.getText().toString().trim();
+
+        // Kiểm tra mật khẩu và xác nhận mật khẩu
+        if (!password.equals(confirmPassword)) {
+            Toast.makeText(SignUpActivity.this, "Passwords do not match. Please try again!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (password.length() < 6) {
+            Toast.makeText(SignUpActivity.this, "Your password is too short, try again!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Kiểm tra tên tài khoản đã tồn tại
+        checkUsernameExists(username);
+    }
+
+    private void setClick(){
+
+        see_password1.setOnClickListener(v -> togglePasswordVisibility(passwordInput));
+
+        see_password2.setOnClickListener(v -> togglePasswordVisibility(confirmPasswordInput));
+
+        Next_Button.setOnClickListener(view -> createAccount());
+
+    }
+
+    private void setWidget(){
         Next_Button = findViewById(R.id.Next_Button);
         usernameInput = findViewById(R.id.txtDangkymail);
         passwordInput = findViewById(R.id.txtDangkymatkhau);
@@ -47,35 +93,11 @@ public class SignUpActivity extends AppCompatActivity {
         iconNumber1 = findViewById(R.id.iconNumber1);
         see_password1 = findViewById(R.id.see_password1);
         see_password2 = findViewById(R.id.see_password2);
-
-        see_password1.setOnClickListener(v -> togglePasswordVisibility(passwordInput));
-        see_password2.setOnClickListener(v -> togglePasswordVisibility(confirmPasswordInput));
-
         apiUserService = ApiUserService.apiUserService;
-
-        Intent intent = getIntent();
+        intent = getIntent();
         if (intent.getBooleanExtra("isSignUpButtonClicked", false)) {
             iconNumber1.setColorFilter(getResources().getColor(R.color.green_color), android.graphics.PorterDuff.Mode.SRC_IN);
         }
-
-        Next_Button.setOnClickListener(view -> {
-            String username = usernameInput.getText().toString().trim();
-            String password = passwordInput.getText().toString().trim();
-            String confirmPassword = confirmPasswordInput.getText().toString().trim();
-
-            // Kiểm tra mật khẩu và xác nhận mật khẩu
-            if (!password.equals(confirmPassword)) {
-                Toast.makeText(SignUpActivity.this, "Passwords do not match. Please try again!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (password.length() < 6) {
-                Toast.makeText(SignUpActivity.this, "Your password is too short, try again!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            // Kiểm tra tên tài khoản đã tồn tại
-            checkUsernameExists(username);
-        });
     }
 
     private void togglePasswordVisibility(EditText editText) {
@@ -88,6 +110,7 @@ public class SignUpActivity extends AppCompatActivity {
         isPasswordVisible = !isPasswordVisible;
     }
 
+    @SuppressLint("CheckResult")
     private void checkUsernameExists(String username) {
         apiUserService.getAllUsernames()
                 .subscribeOn(Schedulers.io())

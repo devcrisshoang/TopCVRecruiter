@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:padding="10dp"
+    android:background="@color/white"
     tools:context=".InformationActivity">
 
     <!-- Header Section -->
@@ -14,7 +15,6 @@
         android:id="@+id/linearLayoutHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
         android:orientation="horizontal">
 
         <ImageButton
@@ -32,18 +32,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Enter your company information"
-            android:textSize="24sp"
+            android:textSize="20dp"
             android:textStyle="bold"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="30dp" />
+            android:layout_gravity="center" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_weight="1"
-        android:padding="16dp">
+        android:layout_weight="1">
 
         <!-- Name Label -->
         <TextView
@@ -66,7 +64,7 @@
             <EditText
                 android:id="@+id/editTextWebsite"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="60dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:backgroundTint="@color/white"
@@ -84,7 +82,7 @@
             android:text="Enter your taxID:"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="5dp" />
 
         <!-- Phone Input Section -->
         <LinearLayout
@@ -98,7 +96,7 @@
             <EditText
                 android:id="@+id/editTextTaxID"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="60dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:backgroundTint="@color/white"
@@ -137,7 +135,7 @@
             android:id="@+id/finish"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20sp"
+            android:layout_margin="10dp"
             android:background="@drawable/button_rounded_corner"
             app:backgroundTint="@null"
             android:text="Finish"

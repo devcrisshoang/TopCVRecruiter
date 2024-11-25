@@ -27,13 +27,17 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class VerifyImageActivity extends AppCompatActivity {
+
     private ImageView front_image;
     private ImageView back_image;
+
     private Button select_front_image;
     private Button select_back_image;
     private Button apply;
+
     private int user_id;
     private int recruiter_id;
+
     private Uri backImageUri;
     private Uri frontImageUri;
 
@@ -58,34 +62,62 @@ public class VerifyImageActivity extends AppCompatActivity {
             return insets;
         });
         setWidget();
-        user_id = getIntent().getIntExtra("user_id",0);
-        name = getIntent().getStringExtra("name");
-        phone = getIntent().getStringExtra("phone");
-        email = getIntent().getStringExtra("email");
-        recruiter_id = getIntent().getIntExtra("id_Recruiter",0);
+
         getRecruiterId(user_id);
 
-        Log.e("RecruiterID", "Recruiter ID: " + recruiter_id);
+        setClick();
 
+        initImagePicker();
+    }
 
+    private void setClick(){
         select_front_image.setOnClickListener(view -> {
             selectFrontImage();
         });
-        select_back_image.setOnClickListener(view -> {
-            selectBackImage();
-        });
+        select_back_image.setOnClickListener(view -> selectBackImage());
         back_button.setOnClickListener(view -> finish());
         apply.setOnClickListener(view -> {
             updateRecruiter();
         });
-        initImagePicker();
     }
 
     @SuppressLint("CheckResult")
-    private void updateRecruiter(){
+    private void updateRecruiter() {
+        if (recruiter_id <= 0 || user_id <= 0) {
+            Toast.makeText(this, "ID người dùng không hợp lệ", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
+        String frontImagePath = (frontImageUri != null) ? frontImageUri.toString().trim() : "";
+        String backImagePath = (backImageUri != null) ? backImageUri.toString().trim() : "";
+
+        // Biến lưu trữ danh sách các trường bị thiếu
+        StringBuilder missingFields = new StringBuilder();
+
+        if (name.isEmpty()) {
+            missingFields.append("- Tên\n");
+        }
+        if (email.isEmpty()) {
+            missingFields.append("- Email\n");
+        }
+        if (phone.isEmpty()) {
+            missingFields.append("- Số điện thoại\n");
+        }
+        if (frontImagePath.isEmpty()) {
+            missingFields.append("- Hình ảnh mặt trước\n");
+        }
+        if (backImagePath.isEmpty()) {
+            missingFields.append("- Hình ảnh mặt sau\n");
+        }
+
+        // Nếu có trường bị thiếu, hiển thị thông báo và dừng xử lý
+        if (missingFields.length() > 0) {
+            Toast.makeText(this, "Vui lòng điền đầy đủ thông tin:\n" + missingFields.toString(), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // Nếu thông tin đầy đủ, tiếp tục xử lý cập nhật
         Recruiter recruiter = new Recruiter();
-        //recruiter.setId(recruiter_id);
         recruiter.setRecruiterName(name);
         recruiter.setEmailAddress(email);
         recruiter.setPhoneNumber(phone);
@@ -93,28 +125,28 @@ public class VerifyImageActivity extends AppCompatActivity {
         recruiter.setIdCompany(0);
         recruiter.setIs_Registered(true);
         recruiter.setIs_Confirm(false);
-        recruiter.setFrontImage(frontImageUri.toString());
-        Log.e("VerifyImageActivity","Path: "+ frontImageUri);
-        recruiter.setBackImage(backImageUri.toString());
-        Log.e("VerifyImageActivity","Path: "+ backImageUri);
+        recruiter.setFrontImage(frontImagePath);
+        recruiter.setBackImage(backImagePath);
 
+        // Gọi API cập nhật thông tin
         ApiRecruiterService.ApiRecruiterService.updateRecruiterById(recruiter_id, recruiter)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> {
                     // Xử lý thành công
                     Log.d("VerifyImageActivity", "Updated successfully");
-                    Toast.makeText(this, "Updated successfully", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "Updated successfully", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(this, CompanyInformationActivity.class);
                     intent.putExtra("id_Recruiter", recruiter_id);
-                    intent.putExtra("user_id",user_id);
+                    intent.putExtra("user_id", user_id);
                     startActivity(intent);
                 }, throwable -> {
                     // Xử lý lỗi
                     Log.e("VerifyImageActivity", "Failed to update: " + throwable.getMessage());
-                    Toast.makeText(this, "Failed to update", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "Failed to update", Toast.LENGTH_SHORT).show();
                 });
     }
+
 
     private void selectFrontImage(){
         ImagePicker.with(this)
@@ -145,8 +177,14 @@ public class VerifyImageActivity extends AppCompatActivity {
         select_back_image = findViewById(R.id.select_back_image);
         apply = findViewById(R.id.apply);
         back_button = findViewById(R.id.back_button);
+
+        user_id = getIntent().getIntExtra("user_id",0);
+        name = getIntent().getStringExtra("name");
+        phone = getIntent().getStringExtra("phone");
+        email = getIntent().getStringExtra("email");
     }
 
+    @SuppressLint("CheckResult")
     private void getRecruiterId(int userId){
             ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(userId)
                     .subscribeOn(Schedulers.io()) // Xử lý ở luồng IO

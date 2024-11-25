@@ -11,12 +11,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         android:orientation="horizontal">
         <ImageButton
             android:id="@+id/back_button"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_margin="10dp"
             android:src="@drawable/back_ic"
             android:scaleType="fitCenter"
             android:background="@color/white">
@@ -62,12 +62,15 @@
 
         <Button
             android:id="@+id/select_front_image"
-            android:layout_width="wrap_content"
+            android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:text="Select front photo"
+            app:backgroundTint="@null"
+            android:background="@drawable/button_rounded_corner"
             android:layout_gravity="center">
 
         </Button>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -90,19 +93,24 @@
 
         <Button
             android:id="@+id/select_back_image"
-            android:layout_width="wrap_content"
+            android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:text="Select back photo"
+            app:backgroundTint="@null"
+            android:background="@drawable/button_rounded_corner"
             android:layout_gravity="center">
 
         </Button>
+
     </LinearLayout>
 
     <Button
         android:id="@+id/apply"
-        android:layout_width="wrap_content"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        app:backgroundTint="@null"
+        android:background="@drawable/button_rounded_corner"
         android:layout_gravity="center"
         android:text="Apply">
 

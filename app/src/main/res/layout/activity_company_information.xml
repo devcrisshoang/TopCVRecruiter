@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:background="@color/white"
+    android:padding="10dp"
     tools:context=".InformationActivity">
 
     <!-- Header Section -->
@@ -14,7 +15,6 @@
         android:id="@+id/linearLayoutHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
         android:orientation="horizontal">
 
         <ImageButton
@@ -32,10 +32,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Enter your company information"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:textStyle="bold"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="30dp" />
+            android:layout_gravity="center" />
     </LinearLayout>
 
     <LinearLayout
@@ -43,7 +42,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_weight="1"
-        android:padding="16dp">
+        android:padding="10dp">
 
         <!-- Name Label -->
         <TextView
@@ -66,7 +65,7 @@
             <EditText
                 android:id="@+id/editTextName"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="60dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:backgroundTint="@color/white"
@@ -84,7 +83,7 @@
             android:text="Enter your address:"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="5dp" />
 
         <!-- Phone Input Section -->
         <LinearLayout
@@ -98,12 +97,11 @@
             <EditText
                 android:id="@+id/editTextAddress"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="60dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:backgroundTint="@color/white"
                 android:hint="Address"
-                android:inputType="phone"
                 android:paddingLeft="10dp"
                 tools:ignore="TouchTargetSizeCheck" />
         </LinearLayout>
@@ -114,7 +112,7 @@
             android:text="Enter your hotline:"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="5dp" />
 
         <!-- Phone Input Section -->
         <LinearLayout
@@ -127,12 +125,11 @@
             <EditText
                 android:id="@+id/editTextHotline"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="60dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:backgroundTint="@color/white"
                 android:hint="Hotline"
-                android:inputType="phone"
                 android:paddingLeft="10dp"
                 tools:ignore="TouchTargetSizeCheck" />
         </LinearLayout>
@@ -144,7 +141,7 @@
             android:text="Enter your field:"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="5dp" />
 
         <!-- Phone Input Section -->
         <LinearLayout
@@ -157,12 +154,11 @@
             <EditText
                 android:id="@+id/editTextField"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="60dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:backgroundTint="@color/white"
                 android:hint="Field"
-                android:inputType="phone"
                 android:paddingLeft="10dp"
                 tools:ignore="TouchTargetSizeCheck" />
         </LinearLayout>
@@ -180,7 +176,7 @@
             android:id="@+id/image"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/facebook_ic"
+            android:src="@drawable/image"
             android:scaleType="fitCenter"
             android:background="@color/white"
             android:layout_margin="5dp"
@@ -189,8 +185,6 @@
         </ImageButton>
 
     </LinearLayout>
-
-
 
     <!-- Submit Button -->
     <LinearLayout
@@ -201,7 +195,7 @@
             android:id="@+id/Submit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20sp"
+            android:layout_margin="10sp"
             android:background="@drawable/button_rounded_corner"
             app:backgroundTint="@null"
             android:text="Next"

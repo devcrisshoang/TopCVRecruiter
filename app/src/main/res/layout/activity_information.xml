@@ -21,7 +21,6 @@
             android:id="@+id/back_button"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_margin="10dp"
             android:src="@drawable/back_ic"
             android:scaleType="fitCenter"
             android:background="@color/white">
@@ -69,7 +68,7 @@
             <EditText
                 android:id="@+id/editTextName"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="60dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:backgroundTint="@color/white"
@@ -87,7 +86,7 @@
             android:text="Enter your phone number:"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="5dp" />
 
         <!-- Phone Input Section -->
         <LinearLayout
@@ -101,7 +100,7 @@
             <EditText
                 android:id="@+id/editTextPhone"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="60dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:backgroundTint="@color/white"
@@ -117,7 +116,7 @@
             android:text="Enter your email:"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="5dp" />
 
         <!-- Phone Input Section -->
         <LinearLayout
@@ -130,7 +129,7 @@
             <EditText
                 android:id="@+id/editTextEmail"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="60dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:backgroundTint="@color/white"
@@ -152,7 +151,7 @@
             android:id="@+id/Submit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20sp"
+            android:layout_margin="10sp"
             android:background="@drawable/button_rounded_corner"
             app:backgroundTint="@null"
             android:text="Next"

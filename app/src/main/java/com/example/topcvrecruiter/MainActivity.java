@@ -27,20 +27,35 @@ import com.example.topcvrecruiter.Fragment.NotificationFragment;
 import com.example.topcvrecruiter.Fragment.PostingFragment;
 
 public class MainActivity extends AppCompatActivity {
+
     private LinearLayout layout_header;
+
     private EditText search_edit_text;
+
     private static final int FRAGMENT_HOME = 0;
     private static final int FRAGMENT_PROFILE = 1;
     private static final int FRAGMENT_NOTIFICATION = 2;
     private static final int FRAGMENT_ACCOUNT = 3;
     private static final int FRAGMENT_MESSENGER = 4;
     private int currentFragment = FRAGMENT_HOME;
+
     private String recruiterName;
-    private int id_User;      // Lưu trữ ID ứng viên
-    private int id_Recruiter;
     private String phoneNumber;
-    private ImageButton Dashboard, Posting, messengerButton, notificationButton, accountButton;
-    private TextView Dashboard_textview,Posting_Textview,Messenger_Textview,Notification_Textview,Account_Textview;
+
+    private int id_User;
+    private int id_Recruiter;
+
+    private ImageButton Dashboard;
+    private ImageButton Posting;
+    private ImageButton messengerButton;
+    private ImageButton notificationButton;
+    private ImageButton accountButton;
+
+    private TextView Dashboard_textview;
+    private TextView Posting_Textview;
+    private TextView Messenger_Textview;
+    private TextView Notification_Textview;
+    private TextView Account_Textview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +67,11 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
         setWidget();
-        openDashboardFragment(id_User);
+
         setDefaultColorButton();
+
         setClick();
     }
 
@@ -168,16 +185,17 @@ public class MainActivity extends AppCompatActivity {
         Messenger_Textview = findViewById(R.id.Messenger_Textview);
         Notification_Textview = findViewById(R.id.Notification_Textview);
         Account_Textview = findViewById(R.id.Account_Textview);
-        Intent intent = getIntent();
-        recruiterName = intent.getStringExtra("recruiterName");
-        id_User = intent.getIntExtra("user_id", -1);  // Lấy userId từ Intent
+        recruiterName = getIntent().getStringExtra("recruiterName");
+        id_User = getIntent().getIntExtra("user_id", -1);
+        openDashboardFragment(id_User);
         if (id_User == -1) {
             Log.e("Error", "userId không hợp lệ");
         }
-        phoneNumber = intent.getStringExtra("phoneNumber");
-        id_Recruiter = intent.getIntExtra("id_Recruiter",0);
+        phoneNumber = getIntent().getStringExtra("phoneNumber");
+        id_Recruiter = getIntent().getIntExtra("id_Recruiter",0);
         Log.e("MainActivity","ID recruiter: " + id_Recruiter);
     }
+
     public static void setImageButtonColor(Context context, ImageButton button, int colorResId) {
         int color = ContextCompat.getColor(context, colorResId); // Lấy màu từ resources
         button.setColorFilter(color, PorterDuff.Mode.SRC_IN);

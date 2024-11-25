@@ -2,13 +2,15 @@ package com.example.topcvrecruiter;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,47 +30,66 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class MessageActivity extends AppCompatActivity {
+
     private ImageButton back_button;
+
     private RecyclerView MessageShowRecyclerView;
+
     private MessengerShowAdapter messengerShowAdapter;
+
     private List<Message> messageList;
+
     private Disposable disposable;
+
     private ImageButton messenger_send_button;
+
     private EditText input_message_edittext;
+
     private int userId;
-    private TextView friend_name; // lay ten applicant
+    private int user_id_applicant;
+
+    private TextView friend_name;
 
     private String applicantName;
-    private int user_id_applicant;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
-        // Khởi tạo View
+        setWidget();
+
+        setClick();
+
+    }
+
+    private void setClick(){
+
+        back_button.setOnClickListener(view -> finish());
+
+        messenger_send_button.setOnClickListener(v -> sendMessage());
+    }
+
+    private void setWidget(){
         back_button = findViewById(R.id.back_button);
         MessageShowRecyclerView = findViewById(R.id.MessageShowRecyclerView);
         messenger_send_button = findViewById(R.id.messenger_send_button);
         input_message_edittext = findViewById(R.id.input_message_edittext);
         friend_name = findViewById(R.id.friend_name);
 
-        userId = getIntent().getIntExtra("userId", -1);  // Nhận giá trị userId
-        applicantName = getIntent().getStringExtra("userId");
-
-        user_id_applicant = getIntent().getIntExtra("user_id",0);
-        getApplicantName(userId);
-
-        // Kiểm tra nếu userId hợp lệ
+        userId = getIntent().getIntExtra("userId", -1);
         if (userId != -1) {
             getAPIData(userId);
         }
-
-        // Khởi tạo danh sách và adapter trống ban đầu
+        applicantName = getIntent().getStringExtra("userId");
+        getApplicantName(userId);
+        user_id_applicant = getIntent().getIntExtra("user_id",0);
         messageList = new ArrayList<>();
-
-        // Đóng Activity khi nhấn nút quay lại
-        back_button.setOnClickListener(view -> finish());
 
         messengerShowAdapter = new MessengerShowAdapter(messageList, userId);
 
@@ -76,16 +97,8 @@ public class MessageActivity extends AppCompatActivity {
         MessageShowRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         MessageShowRecyclerView.setAdapter(messengerShowAdapter);
 
-        // Bổ sung trong onCreate để xử lý sự kiện click nút gửi tin nhắn
-        messenger_send_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendMessage();
-            }
-        });
     }
 
-    // Method to get applicant name based on the user ID
     private void getApplicantName(int userId) {
         ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(userId)
                 .subscribeOn(Schedulers.io())
@@ -159,7 +172,7 @@ public class MessageActivity extends AppCompatActivity {
             Toast.makeText(MessageActivity.this, "Message content cannot be empty", Toast.LENGTH_SHORT).show();
         }
     }
-    // Thay thế `Single<List<Message>>` bằng kiểu trả về đúng
+
     public void getAPIData(int userId) {
         // Thay vì gọi getAllMessages, bạn gọi getAllMessageByTwoUserId với userId hiện tại và userId bạn nhận từ Intent
         ApiMessageService.apiMessageService.getAllMessageByTwoUserId(9, userId)  // 9 là ID của người dùng hiện tại

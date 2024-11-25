@@ -1,5 +1,6 @@
 package com.example.topcvrecruiter;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -47,9 +48,15 @@ public class LoginActivity extends AppCompatActivity {
     private GoogleSignInClient googleSignInClient;
     private CallbackManager callbackManager;
 
-    private EditText usernameInput, passwordInput;
-    private Button loginButton, Register_Button;
-    private ImageButton facebookButton, googleButton;
+    private EditText usernameInput;
+    private EditText passwordInput;
+
+    private Button loginButton;
+    private Button Register_Button;
+
+    private ImageButton facebookButton;
+    private ImageButton googleButton;
+
     private int id_Recruiter;
 
     @Override
@@ -62,7 +69,9 @@ public class LoginActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
         setWidget();
+
         setClick();
     }
 
@@ -100,10 +109,7 @@ public class LoginActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
     }
 
-    private void getRecruiterById(int userId) {
-
-    }
-
+    @SuppressLint("CheckResult")
     private void loginUser() {
         String username = usernameInput.getText().toString().trim();
         String password = passwordInput.getText().toString().trim();
@@ -131,23 +137,24 @@ public class LoginActivity extends AppCompatActivity {
 
                             int userId = user.getId();
 
-                            if(user.isRecruiter() == true){
+                            if(user.isRecruiter()){
                                 ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(userId)
                                         .subscribeOn(Schedulers.io())
                                         .observeOn(AndroidSchedulers.mainThread())
                                         .subscribe(response -> {
-                                            if (response.isIs_Registered() == true) {
-                                                // Nếu tồn tại Applicant, chuyển đến MainActivity
+                                            if (response.isIs_Confirm()) {
                                                 navigateToMainActivity(userId, response.getRecruiterName(), response.getPhoneNumber());
-                                            } else if(response.isIs_Registered() == false || response == null){
-                                                // Nếu không tồn tại Applicant, chuyển đến InformationActivity
+                                            }
+                                            else if (!response.isIs_Confirm() && response.isIs_Registered()){
+                                                navigateToWaitingConfirmActivity(userId, response.getRecruiterName(), response.getPhoneNumber());
+                                            }
+                                            else if(!response.isIs_Registered()){
                                                 navigateToInformationActivity(userId);
                                             } else {
-                                                Toast.makeText(this, "This account is invalid", Toast.LENGTH_SHORT).show();
+                                                navigateToInformationActivity(userId);
                                             }
                                         }, throwable -> {
                                             Log.e("API Error", "Error fetching applicant: " + throwable.getMessage());
-                                            Toast.makeText(LoginActivity.this, "Không tìm thấy Applicant, chuyển đến trang Information.", Toast.LENGTH_SHORT).show();
                                             navigateToInformationActivity(userId);
                                         });
                                 return;
@@ -166,6 +173,36 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
+    @SuppressLint("CheckResult")
+    private void navigateToWaitingConfirmActivity(int id_User, String recruiterName, String phoneNumber){
+        ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(id_User)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        recruiter -> {
+                            if (recruiter != null) {
+                                id_Recruiter = recruiter.getId();
+                                Intent intent = new Intent(LoginActivity.this, WaitingConfirmActivity.class);
+                                intent.putExtra("user_id", id_User);
+                                intent.putExtra("recruiterName", recruiterName);
+                                intent.putExtra("phoneNumber", phoneNumber);
+                                intent.putExtra("id_Recruiter", id_Recruiter);
+                                Log.e("LoginActivity","ID: "+ id_Recruiter);
+                                startActivity(intent);
+                            } else {
+                                //Toast.makeText(this, "Recruiter not found", Toast.LENGTH_SHORT).show();
+                                Log.e("AccountFragment", "Recruiter not found");
+                            }
+                        },
+                        throwable -> {
+                            Log.e("AccountFragment", "Error fetching recruiter: " + throwable.getMessage());
+                            //Toast.makeText(this, "Failed to load recruiter", Toast.LENGTH_SHORT).show();
+                        }
+                );
+        finish();
+    }
+
+    @SuppressLint("CheckResult")
     private void navigateToInformationActivity(int id_User) {
         ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(id_User)
                 .subscribeOn(Schedulers.io())
@@ -189,6 +226,7 @@ public class LoginActivity extends AppCompatActivity {
                 );
     }
 
+    @SuppressLint("CheckResult")
     private void navigateToMainActivity(int id_User, String recruiterName, String phoneNumber) {
         ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(id_User)
                 .subscribeOn(Schedulers.io())
@@ -312,4 +350,5 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
+
 }
