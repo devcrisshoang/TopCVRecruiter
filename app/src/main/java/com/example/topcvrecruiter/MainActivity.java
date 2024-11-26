@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         setClick();
     }
 
-    private void setDefaultColorButton(){
+    private void setDefaultColorButton() {
         // Thiết lập fragment mặc định và màu sắc ban đầu cho nút
         setImageButtonColor(this, Dashboard, R.color.green_color);
         setImageButtonColor(this, Posting, R.color.black);
@@ -88,7 +88,8 @@ public class MainActivity extends AppCompatActivity {
         DashboardFragment newsFeedFragment = new DashboardFragment();
         Bundle bundle = new Bundle();
         bundle.putInt("user_id", userId);
-        bundle.putInt("id_Recruiter",id_Recruiter);
+        bundle.putInt("id_Recruiter", id_Recruiter);
+        Log.e("MainActivity", "Recruiter ID: " + id_Recruiter);
         newsFeedFragment.setArguments(bundle);
 
         getSupportFragmentManager().beginTransaction()
@@ -96,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
-    private void setClick(){
+    private void setClick() {
         Dashboard.setOnClickListener(view -> selectFragment(FRAGMENT_HOME, new DashboardFragment(), layout_header, View.VISIBLE));
         Posting.setOnClickListener(view -> selectFragment(FRAGMENT_PROFILE, new PostingFragment(), layout_header, View.GONE));
         messengerButton.setOnClickListener(view -> selectFragment(FRAGMENT_MESSENGER, new MessengerFragment(), layout_header, View.GONE));
@@ -116,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
                 bundle.putString("applicantName", recruiterName); // chỉ cần thiết cho AccountFragment
                 bundle.putInt("user_id", id_User); // truyền id_User cho tất cả các fragment
                 bundle.putString("phoneNumber", phoneNumber); // chỉ cần thiết cho AccountFragment
-                bundle.putInt("id_Recruiter",id_Recruiter);
+                bundle.putInt("id_Recruiter", id_Recruiter);
                 fragment.setArguments(bundle); // Đặt Bundle vào Fragment
             }
             replaceFragment(fragment); // Thay thế fragment hiện tại bằng fragment đã chọn
@@ -172,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
         Account_Textview.setTextColor(getResources().getColor(R.color.black));
     }
 
-    private void setWidget(){
+    private void setWidget() {
         layout_header = findViewById(R.id.layout_header);
         search_edit_text = findViewById(R.id.search_edit_text);
         Dashboard = findViewById(R.id.Dashboard);
@@ -187,13 +188,14 @@ public class MainActivity extends AppCompatActivity {
         Account_Textview = findViewById(R.id.Account_Textview);
         recruiterName = getIntent().getStringExtra("recruiterName");
         id_User = getIntent().getIntExtra("user_id", -1);
-        openDashboardFragment(id_User);
+
         if (id_User == -1) {
             Log.e("Error", "userId không hợp lệ");
         }
         phoneNumber = getIntent().getStringExtra("phoneNumber");
-        id_Recruiter = getIntent().getIntExtra("id_Recruiter",0);
-        Log.e("MainActivity","ID recruiter: " + id_Recruiter);
+        id_Recruiter = getIntent().getIntExtra("id_Recruiter", 0);
+        Log.e("MainActivity", "ID recruiter: " + id_Recruiter);
+        openDashboardFragment(id_User);
     }
 
     public static void setImageButtonColor(Context context, ImageButton button, int colorResId) {
@@ -202,9 +204,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void replaceFragment(Fragment fragment){
+    private void replaceFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.news,fragment);
+        transaction.replace(R.id.news, fragment);
         transaction.commit();
     }
 }

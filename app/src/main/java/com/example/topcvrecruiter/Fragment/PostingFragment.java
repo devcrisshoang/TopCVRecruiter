@@ -2,6 +2,7 @@ package com.example.topcvrecruiter.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
 import com.example.topcvrecruiter.API.ApiJobService;
 import com.example.topcvrecruiter.API.ApiPostingService;
 import com.example.topcvrecruiter.AllArticleActivity;
@@ -26,6 +28,7 @@ import com.example.topcvrecruiter.Adapter.ArticleAdapter;
 import com.example.topcvrecruiter.Adapter.JobAdapter;
 import com.example.topcvrecruiter.Model.Article;
 import com.example.topcvrecruiter.Model.Job;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -36,89 +39,110 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PostingFragment extends Fragment {
-    private int id_Recruiter ;
+
+    private int id_Recruiter;
+
     private Button post_button;
+    private Button articleButton;
+    private Button jobButton;
+    private Button viewAll;
+
     private RecyclerView recyclerView;
+
     private ArticleAdapter articleAdapter;
     private JobAdapter jobAdapter;
+
     private List<Article> articleList;
-    private Button articleButton, jobButton;
     private List<Job> jobList;
-    private Button viewAll;
-    private boolean isArticleTabSelected = true;  // Biến để kiểm tra tab hiện tại
+
+    private boolean isArticleTabSelected = true;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_posting, container, false);
+        setWidget(view);
 
-       if (getArguments() != null) {
-          id_Recruiter = getArguments().getInt("id_Recruiter", 0);
-      }
-        if (id_Recruiter == 0) {
-            Log.e("ArticleActivity", "Recruiter ID not received or is invalid!");
-        } else {
-            Log.d("ArticleActivity", "Recruiter ID: " + id_Recruiter);
-        }
+        setClick();
 
+        loadArticles();
 
+        return view;
+    }
+
+    private void setClick(){
+
+        articleButton.setOnClickListener(v -> articleButtonClick());
+
+        jobButton.setOnClickListener(v -> jobButtonClick());
+
+        viewAll.setOnClickListener(v -> viewAllButtonClick());
+
+        post_button.setOnClickListener(view1 -> postButtonClick());
+    }
+
+    private void setWidget(View view){
         post_button = view.findViewById(R.id.post_button);
         recyclerView = view.findViewById(R.id.recycler_view_post);
         articleButton = view.findViewById(R.id.article);
         jobButton = view.findViewById(R.id.job);
         viewAll = view.findViewById(R.id.view_all_button);
 
+        if (getArguments() != null) {
+            id_Recruiter = getArguments().getInt("id_Recruiter", 0);
+        }
+        if (id_Recruiter == 0) {
+            Log.e("ArticleActivity", "Recruiter ID not received or is invalid!");
+        } else {
+            Log.d("ArticleActivity", "Recruiter ID: " + id_Recruiter);
+        }
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext())); // Đặt LayoutManager cho RecyclerView
+    }
 
-        // Khi chọn Tab "Article"
-        articleButton.setOnClickListener(v -> {
-            isArticleTabSelected = true;
-            loadArticles();  // Tải bài viết
-        });
+    private void articleButtonClick(){
+        isArticleTabSelected = true;
+        loadArticles();
+    }
 
-        // Khi chọn Tab "Job"
-        jobButton.setOnClickListener(v -> {
-            isArticleTabSelected = false;
-            loadJobs();  // Tải công việc
-        });
+    private void jobButtonClick(){
+        isArticleTabSelected = false;
+        loadJobs();
+    }
 
-        // Khi bấm "View All"
-        viewAll.setOnClickListener(v -> {
-            if (isArticleTabSelected) {
-                Intent intent = new Intent(getActivity(), AllArticleActivity.class);
-                intent.putExtra("id_Recruiter",id_Recruiter);
-                startActivity(intent);
-            } else {
-                Intent intent = new Intent(getActivity(), AllJobActivity.class);
-                intent.putExtra("id_Recruiter",id_Recruiter);
-                startActivity(intent);
-            }
-        });
-        post_button.setOnClickListener(view1 -> {
-            if (getContext() != null) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Choose Post Type");
-                String[] options = {"Article", "Job"};
+    private void viewAllButtonClick(){
+        if (isArticleTabSelected) {
+            Intent intent = new Intent(getActivity(), AllArticleActivity.class);
+            intent.putExtra("id_Recruiter", id_Recruiter);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(getActivity(), AllJobActivity.class);
+            intent.putExtra("id_Recruiter", id_Recruiter);
+            startActivity(intent);
+        }
+    }
 
-                builder.setItems(options, (dialog, which) -> {
-                    if (which == 0) {
-                        Intent intent = new Intent(getContext(), ArticleActivity.class);
-                        intent.putExtra("id_Recruiter",id_Recruiter);
-                        startActivity(intent);
-                    } else if (which == 1) {
-                        Intent intent = new Intent(getContext(), JobActivity.class);
-                        intent.putExtra("id_Recruiter",id_Recruiter);
-                        startActivity(intent);
-                    }
-                });
+    private void postButtonClick(){
+        if (getContext() != null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Choose Post Type");
+            String[] options = {"Article", "Job"};
 
-                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-                builder.create().show();
-            }
-        });
+            builder.setItems(options, (dialog, which) -> {
+                if (which == 0) {
+                    Intent intent = new Intent(getContext(), ArticleActivity.class);
+                    intent.putExtra("id_Recruiter", id_Recruiter);
+                    startActivity(intent);
+                } else if (which == 1) {
+                    Intent intent = new Intent(getContext(), JobActivity.class);
+                    intent.putExtra("id_Recruiter", id_Recruiter);
+                    startActivity(intent);
+                }
+            });
 
-        loadArticles();  // Mặc định sẽ tải bài viết khi mở fragment lần đầu
-        return view;
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+            builder.create().show();
+        }
     }
 
     @Override
@@ -128,14 +152,12 @@ public class PostingFragment extends Fragment {
         checkAndDeleteExpiredJobs();
     }
 
-    // Tải 10 bài viết đầu tiên
     private void loadArticles() {
         if (getContext() != null) { // Kiểm tra context
             articleButton.setTextColor(getResources().getColor(R.color.green_color));
             jobButton.setTextColor(getResources().getColor(R.color.black));
 
             ApiPostingService apiService = ApiPostingService.retrofit.create(ApiPostingService.class);
-
 
 
             // Gọi API để lấy danh sách bài viết theo recruiterId
@@ -169,13 +191,10 @@ public class PostingFragment extends Fragment {
         }
     }
 
-
-    // Tải 10 công việc đầu tiên
     private void loadJobs() {
         if (getContext() != null) { // Kiểm tra context
             jobButton.setTextColor(getResources().getColor(R.color.green_color));
             articleButton.setTextColor(getResources().getColor(R.color.black));
-
 
 
             ApiJobService apiService = ApiJobService.retrofit.create(ApiJobService.class);
@@ -209,7 +228,6 @@ public class PostingFragment extends Fragment {
         }
     }
 
-    // Kiểm tra và xóa các bài tuyển dụng đã hết hạn
     private void checkAndDeleteExpiredJobs() {
         ApiJobService.apiService.getJobs().enqueue(new Callback<List<Job>>() {
             @Override
@@ -246,8 +264,6 @@ public class PostingFragment extends Fragment {
         });
     }
 
-
-    // Hàm gọi API để xóa bài tuyển dụng
     private void deleteJob(int jobId) {
         ApiJobService.apiService.deleteJobById(jobId).enqueue(new Callback<Void>() {
             @Override
@@ -266,10 +282,10 @@ public class PostingFragment extends Fragment {
         });
     }
 
-    // Hiển thị toast
     private void showToast(String message) {
         if (getContext() != null) {
             Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
         }
     }
+
 }

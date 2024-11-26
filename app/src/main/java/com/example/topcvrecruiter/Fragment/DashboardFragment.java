@@ -44,8 +44,6 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class DashboardFragment extends Fragment {
-    private int id_Recruiter;
-    private int id_User;
 
     private TextView jobCountTextView;
     private TextView acceptedTextView;
@@ -60,16 +58,17 @@ public class DashboardFragment extends Fragment {
     private CardView jobCountCardView;
     private CardView acceptedCardView;
     private CardView rejectedCardView;
+
+    private boolean isLoading = false;
+    private boolean isLastPage;
+
     private int totalAccepted = 0;
     private int totalRejected = 0;
-
-    private boolean isLoading = false;//
-    private boolean isLastPage;//
-    private int totalPage;//
-    private int currentPage = 1;//
-    private int totalItemInPage = 10;//
-
-    private Bundle bundle;
+    private int totalPage;
+    private int currentPage = 1;
+    private int totalItemInPage = 10;
+    private int id_Recruiter;
+    private int id_User;
 
     private List<ApplicantJob> displayedList = new ArrayList<>();
     List<ApplicantJob> applicantList = new ArrayList<>();
@@ -83,14 +82,19 @@ public class DashboardFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
+
         setWidget(view);
+
         setTotalPage();
+
         setRecyclerViewPagination();
+
         setClick();
+
         return view;
     }
 
-    private void setRecyclerViewPagination(){
+    private void setRecyclerViewPagination() {
         applicantsRecyclerView.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
             @Override
             public void loadMoreItem() {
@@ -111,20 +115,18 @@ public class DashboardFragment extends Fragment {
         });
     }
 
-    private void setTotalPage(){
-        if(applicantList.size() <= totalItemInPage){
+    private void setTotalPage() {
+        if (applicantList.size() <= totalItemInPage) {
             totalPage = 1;
-        }
-        else if(applicantList.size() % totalItemInPage == 0){
-            totalPage = applicantList.size()/totalItemInPage;
-        }
-        else if(applicantList.size() % totalItemInPage != 0){
-            totalPage = applicantList.size()/totalItemInPage +1;
+        } else if (applicantList.size() % totalItemInPage == 0) {
+            totalPage = applicantList.size() / totalItemInPage;
+        } else if (applicantList.size() % totalItemInPage != 0) {
+            totalPage = applicantList.size() / totalItemInPage + 1;
         }
     }
 
-    private void setClick(){
-        fetchDashboardData(id_Recruiter);
+    private void setClick() {
+
         jobCountCardView.setOnClickListener(view1 -> fetchListJobs(id_Recruiter));
         acceptedCardView.setOnClickListener(view1 -> fetchListAccepted(id_Recruiter));
         rejectedCardView.setOnClickListener(view1 -> fetchListRejected(id_Recruiter));
@@ -136,14 +138,13 @@ public class DashboardFragment extends Fragment {
         fetchDashboardData(id_Recruiter);
     }
 
-    private void setWidget(View view){
-        //Card View TextView
+    private void setWidget(View view) {
+
         jobCountTextView = view.findViewById(R.id.electricity_amount);
         acceptedTextView = view.findViewById(R.id.job_count);
         rateSuccessTextView = view.findViewById(R.id.recruiting_rate);
         rejectedTextView = view.findViewById(R.id.resume_amount);
 
-        //Card View onclick view
         jobCountCardView = view.findViewById(R.id.applicant_cardView);
         acceptedCardView = view.findViewById(R.id.job_cardView);
         rejectedCardView = view.findViewById((R.id.resume_cardView));
@@ -160,13 +161,11 @@ public class DashboardFragment extends Fragment {
                     }
                 }
         );
-        bundle = getArguments();
-        if (bundle != null) {
-            id_User = bundle.getInt("user_id", 0);  // 0 là giá trị mặc định
-        }
+        id_User = getArguments().getInt("user_id", 0);  // 0 là giá trị mặc định
         apiDashboardService = ApiDashboardService.apiDashboardService;
 
-        id_Recruiter = getArguments().getInt("id_Recruiter",0);
+        id_Recruiter = getArguments().getInt("id_Recruiter", 0);
+        Log.e("DashboardFragment", "ID: " + id_Recruiter);
         fetchDashboardData(id_Recruiter);
         dashboardAdapter = new DashboardApplicantAdapter(applicantDetailLauncher, id_Recruiter);
         applicantsRecyclerView.setAdapter(dashboardAdapter);
@@ -206,7 +205,8 @@ public class DashboardFragment extends Fragment {
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribe(new Observer<List<ApplicantJob>>() {
                                         @Override
-                                        public void onSubscribe(Disposable d) {}
+                                        public void onSubscribe(Disposable d) {
+                                        }
 
                                         @Override
                                         public void onNext(List<ApplicantJob> applicantList) {
@@ -254,7 +254,7 @@ public class DashboardFragment extends Fragment {
                     }
 
                 });
-    };
+    }
 
     private void fetchListAccepted(int recruiterId) {
         apiDashboardService.getAcceptedApplicants(recruiterId)
@@ -415,19 +415,19 @@ public class DashboardFragment extends Fragment {
 //                });
 //    }
 
-    private void setFirstData(){
+    private void setFirstData() {
 
         displayedList = getList();
         dashboardAdapter.setListApplicant(displayedList);
 
-        if (currentPage < totalPage){
+        if (currentPage < totalPage) {
             dashboardAdapter.addFooterLoading();
         } else {
             isLastPage = true;
         }
     }
 
-    private void loadNextPage(){
+    private void loadNextPage() {
         new Handler().postDelayed(() -> {
             dashboardAdapter.removeFooterLoading();
             List<ApplicantJob> nextPageList = getList();
@@ -438,14 +438,13 @@ public class DashboardFragment extends Fragment {
 
             if (currentPage < totalPage) {
                 dashboardAdapter.addFooterLoading();
-            }
-            else {
+            } else {
                 isLastPage = true;
             }
         }, 2000);
     }
 
-    private List<ApplicantJob> getList(){
+    private List<ApplicantJob> getList() {
         //Toast.makeText(getContext(), "Load data page: " + currentPage, Toast.LENGTH_SHORT).show();
         List<ApplicantJob> list = new ArrayList<>();
 
