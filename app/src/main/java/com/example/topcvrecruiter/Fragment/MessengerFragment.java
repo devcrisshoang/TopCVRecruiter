@@ -47,11 +47,12 @@ public class MessengerFragment extends Fragment {
     }
 
     private void setWidget() {
+        id_User = getArguments().getInt("user_id", -1);
+        Log.e("MessageFragment","User ID: " + id_User);
         messageRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        messageAdapter = new MessengerAdapter(userList, getContext());
+        messageAdapter = new MessengerAdapter(userList, getContext(),id_User);
         messageRecyclerView.setAdapter(messageAdapter);
         assert getArguments() != null;
-        id_User = getArguments().getInt("user_id", -1);
         getChatPartners(id_User);
     }
 
@@ -62,10 +63,9 @@ public class MessengerFragment extends Fragment {
                 .observeOn(AndroidSchedulers.mainThread()) // Quan sát trên thread UI
                 .subscribe(
                         users -> {
-                            userList.clear(); // Xóa danh sách cũ nếu có
-                            userList.addAll(users); // Thêm tất cả người dùng vào danh sách
+                            userList.clear();
+                            userList.addAll(users);
 
-                            // Cập nhật lại RecyclerView sau khi dữ liệu thay đổi
                             if (messageAdapter != null) {
                                 messageAdapter.notifyDataSetChanged();
                             }

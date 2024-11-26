@@ -22,13 +22,18 @@ public class DashboardApplicantAdapter extends RecyclerView.Adapter<RecyclerView
     private static final int TYPE_LOADING = 2;
 
     private List<ApplicantJob> listApplicant;
-    private ActivityResultLauncher<Intent> applicantDetailLauncher;
-    private boolean isLoadingAdd;
-    private int recruiterId;
 
-    public DashboardApplicantAdapter(ActivityResultLauncher<Intent> applicantDetailLauncher, int recruiterId){
+    private ActivityResultLauncher<Intent> applicantDetailLauncher;
+
+    private boolean isLoadingAdd;
+
+    private int recruiterId;
+    private int userId;
+
+    public DashboardApplicantAdapter(ActivityResultLauncher<Intent> applicantDetailLauncher, int recruiterId, int userId){
         this.applicantDetailLauncher = applicantDetailLauncher;
         this.recruiterId = recruiterId;
+        this.userId = userId;
     }
 
     public void setListApplicant(List<ApplicantJob> listApplicant) {
@@ -74,8 +79,7 @@ public class DashboardApplicantAdapter extends RecyclerView.Adapter<RecyclerView
             Intent intent = new Intent(holder.itemView.getContext(), ApplicantDetailActivity.class);
             intent.putExtra("id_Recruiter", recruiterId);
             intent.putExtra("applicant_id", applicant.getId());
-            intent.putExtra("isAccepted", applicant.isAccepted());
-            intent.putExtra("isRejected", applicant.isRejected());
+            intent.putExtra("userId", userId);
             applicantDetailLauncher.launch(intent);
         });
 

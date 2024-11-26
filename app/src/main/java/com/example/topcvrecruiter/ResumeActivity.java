@@ -1,14 +1,10 @@
 package com.example.topcvrecruiter;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -16,13 +12,20 @@ import androidx.core.view.WindowInsetsCompat;
 
 
 public class ResumeActivity extends AppCompatActivity {
-    private ImageButton back_button, shareButton;
-    private Button exportPdfButton;
-    private ActivityResultLauncher<Intent> createPdfLauncher;
-    private Uri savedPdfUri;
+
+    private ImageButton back_button;
 
     private ImageView cv_logo;
-    private TextView name, job_applying, introduction, experience, email, phone_number, education, skill, certification;
+
+    private TextView name;
+    private TextView job_applying;
+    private TextView introduction;
+    private TextView experience;
+    private TextView email;
+    private TextView phone_number;
+    private TextView education;
+    private TextView skill;
+    private TextView certification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +36,10 @@ public class ResumeActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
         setWidget();
     }
-    // Thiết lập các widget trên layout
+
     private void setWidget() {
         back_button = findViewById(R.id.back_button);
         cv_logo = findViewById(R.id.cv_logo);

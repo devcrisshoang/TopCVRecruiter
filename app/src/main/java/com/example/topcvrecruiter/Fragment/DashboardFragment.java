@@ -167,7 +167,7 @@ public class DashboardFragment extends Fragment {
         id_Recruiter = getArguments().getInt("id_Recruiter", 0);
         Log.e("DashboardFragment", "ID: " + id_Recruiter);
         fetchDashboardData(id_Recruiter);
-        dashboardAdapter = new DashboardApplicantAdapter(applicantDetailLauncher, id_Recruiter);
+        dashboardAdapter = new DashboardApplicantAdapter(applicantDetailLauncher, id_Recruiter, id_User);
         applicantsRecyclerView.setAdapter(dashboardAdapter);
     }
 
@@ -284,7 +284,6 @@ public class DashboardFragment extends Fragment {
                     public void onComplete() {
                     }
                 });
-
 
     }
 

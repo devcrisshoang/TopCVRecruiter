@@ -22,25 +22,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NumberApplicantActivity extends AppCompatActivity {
+
     RecyclerView recyclerView;
+
     DashboardApplicantAdapter applicantAdapter;
+
     List<ApplicantJob> applicantList;
-    int id_Recruiter;
+
     private List<ApplicantJob> displayedList = new ArrayList<>();
 
     private ImageButton backButton;
+
     private ActivityResultLauncher<Intent> applicantDetailLauncher;
 
-    private boolean isLoading = false;//
-    private boolean isLastPage;//
-    private int totalPage;//
-    private int currentPage = 1;//
-    private int totalItemInPage = 10;//
+    private boolean isLoading = false;
+    private boolean isLastPage;
+
+    private int totalPage;
+    private int currentPage = 1;
+    private int totalItemInPage = 10;
+    int id_Recruiter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_number_applicant); // Sửa chính tả tên layout
+        setContentView(R.layout.activity_number_applicant);
 
         backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(v -> finish());
@@ -76,7 +82,7 @@ public class NumberApplicantActivity extends AppCompatActivity {
                 }
         );
 
-        applicantAdapter = new DashboardApplicantAdapter(applicantDetailLauncher, id_Recruiter);
+        applicantAdapter = new DashboardApplicantAdapter(applicantDetailLauncher, id_Recruiter, 0); //Warning
         recyclerView.setAdapter(applicantAdapter);
 
         setFirstData();
@@ -129,6 +135,7 @@ public class NumberApplicantActivity extends AppCompatActivity {
             }
         }, 2000);
     }
+
     private List<ApplicantJob> getList(){
         //Toast.makeText(this, "Load data page: " + currentPage, Toast.LENGTH_SHORT).show();
         List<ApplicantJob> list = new ArrayList<>();
