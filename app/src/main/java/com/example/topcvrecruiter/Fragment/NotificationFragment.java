@@ -1,5 +1,6 @@
 package com.example.topcvrecruiter.Fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,10 +9,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.topcvrecruiter.API.ApiNotificationService;
 import com.example.topcvrecruiter.Adapter.NotificationAdapter;
@@ -26,10 +27,15 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class NotificationFragment extends Fragment {
+
     private RecyclerView NotificationRecyclerView;
+
     private NotificationAdapter notificationAdapter;
+
     private List<Notification> notificationList;
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+    private CompositeDisposable compositeDisposable;
+
     private int id_User;
 
     @Nullable
@@ -38,22 +44,23 @@ public class NotificationFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_notification, container, false);
         NotificationRecyclerView = view.findViewById(R.id.NotificationRecyclerView);
 
-        id_User = getArguments().getInt("user_id", -1);
-
-        // Khởi tạo danh sách thông báo
-        notificationList = new ArrayList<>();
-
-        // Thiết lập RecyclerView
-        NotificationRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        notificationAdapter = new NotificationAdapter(notificationList, getContext());
-        NotificationRecyclerView.setAdapter(notificationAdapter);
-
-        // Gọi API để lấy thông báo của userId = 9
-        loadNotifications(id_User);
+        setWidget();
 
         return view;
     }
 
+    private void setWidget() {
+
+        id_User = getArguments().getInt("user_id", -1);
+        compositeDisposable = new CompositeDisposable();
+        notificationList = new ArrayList<>();
+        NotificationRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        notificationAdapter = new NotificationAdapter(notificationList, getContext());
+        NotificationRecyclerView.setAdapter(notificationAdapter);
+        loadNotifications(id_User);
+    }
+
+    @SuppressLint("CheckResult")
     private void loadNotifications(int userId) {
         ApiNotificationService.ApiNotificationService.getNotificationByUserId(userId)
                 .subscribeOn(Schedulers.io())
@@ -65,7 +72,7 @@ public class NotificationFragment extends Fragment {
                     notificationAdapter.notifyDataSetChanged();
                 }, throwable -> {
                     // Xử lý lỗi khi gọi API
-                    Toast.makeText(getContext(), "Failed to load notifications: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e("NotificationFragment", "Failed to load notifications: " + throwable.getMessage());
                 });
     }
 
