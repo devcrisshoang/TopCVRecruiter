@@ -6,22 +6,18 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.topcvrecruiter.Adapter.MessengerShowAdapter;
 import com.example.topcvrecruiter.API.ApiMessageService;
 import com.example.topcvrecruiter.Model.Message;
 import com.example.topcvrecruiter.Utils.DateTimeUtils;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
@@ -84,23 +80,12 @@ public class MessageActivity extends AppCompatActivity {
         messenger_send_button = findViewById(R.id.messenger_send_button);
         input_message_edittext = findViewById(R.id.input_message_edittext);
         friend_name = findViewById(R.id.friend_name);
-
-        // Get from MessageFragment
-        // User Id of Recruiter table
         mainUserId = getIntent().getIntExtra("mainUserId", 0);
-        Log.e("MessageActivity","mainUserId: "+ mainUserId);
-        // User Id of Applicant table
         applicantUserId = getIntent().getIntExtra("applicantUserId",0);
-        Log.e("MessageActivity","applicantUserId: "+ applicantUserId);
-        // Applicant Name
         applicantName = getIntent().getStringExtra("applicantName");
 
-        // Get from contact
-        // Applicant Name
         applicantNameContact = getIntent().getStringExtra("applicantNameContact");
-        // User Id of Applicant table
         userIdContact = getIntent().getIntExtra("userIdContact",0);
-        // User Id of Recruiter table
         userIdRecruiter = getIntent().getIntExtra("userIdRecruiter",0);
 
         if(getIntent().getIntExtra("mainUserId", 0) == 0){

@@ -5,19 +5,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ImageButton;
-import android.widget.Toast;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.topcvrecruiter.Adapter.DashboardApplicantAdapter;
 import com.example.topcvrecruiter.Adapter.PaginationScrollListener;
 import com.example.topcvrecruiter.Model.ApplicantJob;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,37 +30,41 @@ public class NumberApplicantActivity extends AppCompatActivity {
 
     private List<ApplicantJob> displayedList = new ArrayList<>();
 
-    private ImageButton backButton;
-
-    private ActivityResultLauncher<Intent> applicantDetailLauncher;
-
     private boolean isLoading = false;
     private boolean isLastPage;
 
     private int totalPage;
     private int currentPage = 1;
     private int totalItemInPage = 10;
-    int id_Recruiter;
+    private int id_Recruiter;
+
+    private ImageButton backButton;
+
+    private ActivityResultLauncher<Intent> applicantDetailLauncher;
+
+    private LinearLayoutManager linearLayoutManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_number_applicant);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
-        backButton = findViewById(R.id.back_button);
-        backButton.setOnClickListener(v -> finish());
+        setWidget();
 
-        Bundle bundle = getIntent().getExtras();
-        if (bundle == null) { return; }
+        setClick();
 
-        applicantList = (List<ApplicantJob>) getIntent().getSerializableExtra("applicantList");
-        id_Recruiter = getIntent().getIntExtra("id_Recruiter", -1); // Giá trị mặc định là -1 nếu không tìm thấy
+        setTotalPage();
 
-        recyclerView = findViewById(R.id.number_applicant_Recycler_View);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(linearLayoutManager);
+        setFirstData();
 
-        //------------------
+    }
+
+    private void setTotalPage(){
         if(applicantList.size() <= totalItemInPage){
             totalPage = 1;
         }
@@ -71,21 +74,11 @@ public class NumberApplicantActivity extends AppCompatActivity {
         else if(applicantList.size() % totalItemInPage != 0){
             totalPage = applicantList.size()/totalItemInPage +1;
         }
-        //-------------------
+    }
 
-        applicantDetailLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                        Intent data = result.getData();
-                    }
-                }
-        );
+    private void setClick() {
 
-        applicantAdapter = new DashboardApplicantAdapter(applicantDetailLauncher, id_Recruiter, 0); //Warning
-        recyclerView.setAdapter(applicantAdapter);
-
-        setFirstData();
+        backButton.setOnClickListener(v -> finish());
 
         recyclerView.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
             @Override
@@ -106,6 +99,28 @@ public class NumberApplicantActivity extends AppCompatActivity {
             }
         });
     }
+
+    private  void setWidget(){
+        backButton = findViewById(R.id.back_button);
+        applicantList = (List<ApplicantJob>) getIntent().getSerializableExtra("applicantList");
+        id_Recruiter = getIntent().getIntExtra("id_Recruiter", -1);
+        recyclerView = findViewById(R.id.number_applicant_Recycler_View);
+
+        linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        applicantDetailLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        Intent data = result.getData();
+                    }
+                }
+        );
+        applicantAdapter = new DashboardApplicantAdapter(applicantDetailLauncher, id_Recruiter, 0); //Warning
+        recyclerView.setAdapter(applicantAdapter);
+    }
+
     private void setFirstData(){
 
         displayedList = getList();
@@ -137,14 +152,13 @@ public class NumberApplicantActivity extends AppCompatActivity {
     }
 
     private List<ApplicantJob> getList(){
-        //Toast.makeText(this, "Load data page: " + currentPage, Toast.LENGTH_SHORT).show();
         List<ApplicantJob> list = new ArrayList<>();
 
-        int start = (currentPage - 1) * totalItemInPage; // Tính chỉ số bắt đầu
-        int end = Math.min(start + totalItemInPage, applicantList.size()); // Tính chỉ số kết thúc
+        int start = (currentPage - 1) * totalItemInPage;
+        int end = Math.min(start + totalItemInPage, applicantList.size());
 
         if (start < applicantList.size()) {
-            list.addAll(applicantList.subList(start, end)); // Thêm các phần tử từ workList vào danh sách
+            list.addAll(applicantList.subList(start, end));
         }
 
         return list;

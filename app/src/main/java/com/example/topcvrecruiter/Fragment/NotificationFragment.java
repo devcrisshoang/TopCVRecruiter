@@ -2,26 +2,21 @@ package com.example.topcvrecruiter.Fragment;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.example.topcvrecruiter.API.ApiNotificationService;
 import com.example.topcvrecruiter.Adapter.NotificationAdapter;
 import com.example.topcvrecruiter.Model.Notification;
 import com.example.topcvrecruiter.R;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -36,8 +31,6 @@ public class NotificationFragment extends Fragment {
 
     private CompositeDisposable compositeDisposable;
 
-    private int id_User;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -50,8 +43,7 @@ public class NotificationFragment extends Fragment {
     }
 
     private void setWidget() {
-
-        id_User = getArguments().getInt("user_id", -1);
+        int id_User = getArguments().getInt("user_id", -1);
         compositeDisposable = new CompositeDisposable();
         notificationList = new ArrayList<>();
         NotificationRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -66,12 +58,10 @@ public class NotificationFragment extends Fragment {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(notifications -> {
-                    // Cập nhật danh sách thông báo và làm mới RecyclerView
                     notificationList.clear();
                     notificationList.addAll(notifications);
                     notificationAdapter.notifyDataSetChanged();
                 }, throwable -> {
-                    // Xử lý lỗi khi gọi API
                     Log.e("NotificationFragment", "Failed to load notifications: " + throwable.getMessage());
                 });
     }
@@ -79,6 +69,6 @@ public class NotificationFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        compositeDisposable.clear(); // Xóa các request để tránh rò rỉ bộ nhớ
+        compositeDisposable.clear();
     }
 }

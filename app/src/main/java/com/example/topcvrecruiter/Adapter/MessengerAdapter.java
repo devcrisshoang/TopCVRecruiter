@@ -9,12 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.topcvrecruiter.API.ApiApplicantService;
-import com.example.topcvrecruiter.API.ApiRecruiterService;
 import com.example.topcvrecruiter.MessageActivity;
 import com.example.topcvrecruiter.R;
 import com.example.topcvrecruiter.API.ApiMessageService;
@@ -29,13 +26,12 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class MessengerAdapter extends RecyclerView.Adapter<MessengerAdapter.MessengerViewHolder> {
 
-    private List<User> userList;
+    private final List<User> userList;
 
-    private Context context;
+    private final Context context;
 
-    private int currentUserId;
+    private final int currentUserId;
     private int applicantId;
-    private int applicantUserId;
 
     private String applicantName;
 
@@ -70,12 +66,12 @@ public class MessengerAdapter extends RecyclerView.Adapter<MessengerAdapter.Mess
             intent.putExtra("mainUserId",currentUserId);
             intent.putExtra("applicantId",applicantId);
             intent.putExtra("applicantName",applicantName);
-            intent.putExtra("applicantUserId",applicantUserId);
+            intent.putExtra("applicantUserId",userId);
             context.startActivity(intent);
         });
     }
 
-    @SuppressLint("CheckResult")
+    @SuppressLint({"CheckResult", "SetTextI18n"})
     private void getApplicantInformation(int userId, MessengerViewHolder holder) {
         ApiApplicantService.ApiApplicantService.getApplicantByUserId(userId)
                 .subscribeOn(Schedulers.io())
@@ -86,31 +82,26 @@ public class MessengerAdapter extends RecyclerView.Adapter<MessengerAdapter.Mess
                                 holder.sender_name.setText(applicant.getApplicant_Name());
                                 applicantId = applicant.getId();
                                 applicantName = applicant.getApplicant_Name();
-                                applicantUserId = applicant.getiD_User();
-                                Log.d("MessengerAdapter", "Fetched applicant name: " + applicant.getApplicant_Name());
+
                             } else {
-                                holder.sender_name.setText("Unknown User"); // Hoặc xử lý lỗi nếu không có dữ liệu
+                                holder.sender_name.setText("Unknown User");
                             }
                         },
-                        throwable -> {
-                            Log.e("MessengerAdapter", "Error fetching applicant name: " + throwable.getMessage());
-                        }
+                        throwable -> Log.e("MessengerAdapter", "Error fetching applicant name: " + throwable.getMessage())
                 );
     }
 
-    @SuppressLint("CheckResult")
+    @SuppressLint({"CheckResult", "SetTextI18n"})
     private void getLatestMessage(int currentUserId, int otherUserId, MessengerViewHolder holder) {
         ApiMessageService.apiMessageService.getAllMessageByTwoUserId(currentUserId, otherUserId)
-                .subscribeOn(Schedulers.io())  // Run in the background
-                .observeOn(AndroidSchedulers.mainThread())  // Observe on the main thread
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         messages -> {
                             if (!messages.isEmpty()) {
-                                // Get the latest message
                                 Message latestMessage = messages.get(messages.size() - 1);
                                 holder.message.setText(latestMessage.getContent());
 
-                                // Format and set the timestamp
                                 String time = latestMessage.getSend_Time();
                                 if (time != null && !time.isEmpty()) {
                                     String formattedTime = DateTimeUtils.formatTimeAgo(time);

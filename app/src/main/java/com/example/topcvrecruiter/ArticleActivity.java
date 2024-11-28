@@ -19,15 +19,12 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
 import com.example.topcvrecruiter.API.ApiPostingService;
 import com.example.topcvrecruiter.Model.Article;
 import com.example.topcvrecruiter.Utils.NotificationUtils;
 import com.github.dhaval2404.imagepicker.ImagePicker;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -67,11 +64,11 @@ public class ArticleActivity extends AppCompatActivity {
 
     private void changeAvatarButton(){
         ImagePicker.with(this)
-                .crop()                // Cắt ảnh (tùy chọn)
-                .compress(1024)        // Nén ảnh (tùy chọn)
-                .maxResultSize(1080, 1080)  // Giới hạn kích thước ảnh (tùy chọn)
+                .crop()
+                .compress(1024)
+                .maxResultSize(1080, 1080)
                 .createIntent(intent -> {
-                    imagePickerLauncherAvatar.launch(intent);  // Sử dụng launcher thay vì onActivityResult
+                    imagePickerLauncherAvatar.launch(intent);
                     return null;
                 });
     }
@@ -81,7 +78,6 @@ public class ArticleActivity extends AppCompatActivity {
         String content = editTextContent.getText().toString();
         String image = (uri != null) ? uri.toString() : "";
 
-        // Kiểm tra xem title và content có dữ liệu hay không
         if (!title.isEmpty() && !content.isEmpty()) {
             postArticle(title, content, image);
 
@@ -130,38 +126,31 @@ public class ArticleActivity extends AppCompatActivity {
     }
 
     private void postArticle(String title, String content, String image) {
-        // Nếu không có ảnh, có thể sử dụng ảnh mặc định hoặc để trống
+
         if (image.isEmpty()) {
-            image = "";  // Hoặc để trống "" nếu không cần ảnh
+            image = "";
         }
 
-        // Lấy thời gian hiện tại
         LocalDateTime currentTime = LocalDateTime.now();
 
-        // Định dạng thời gian
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
-        // Chuyển đổi thời gian thành chuỗi theo định dạng đã chọn
         String formattedDateTime = currentTime.format(formatter);
 
-        Article article = new Article(title, content, formattedDateTime, image, id_Recruiter ); // Thay đổi giá trị mặc định của iD_Recruiter tại đây
+        Article article = new Article(title, content, formattedDateTime, image, id_Recruiter );
         ApiPostingService.apiService.postArticle(article).enqueue(new Callback<Article>() {
             @Override
             public void onResponse(Call<Article> call, Response<Article> response) {
                 if (response.isSuccessful()) {
-                    // Sử dụng NotificationUtils để hiển thị thông báo
                     NotificationUtils.showNotification(ArticleActivity.this, "You just posted an article !");
-                    // Hiển thị Toast
                     Toast.makeText(ArticleActivity.this, "Post Article Successfully!", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    // Thông báo lỗi nếu không thành công
                     Toast.makeText(ArticleActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
             public void onFailure(Call<Article> call, Throwable t) {
-                // Hiển thị lỗi nếu API thất bại
                 Toast.makeText(ArticleActivity.this, "Error!", Toast.LENGTH_SHORT).show();
             }
         });
@@ -172,10 +161,8 @@ public class ArticleActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Đã cấp quyền
                 Toast.makeText(this, "Permission granted to post notifications", Toast.LENGTH_SHORT).show();
             } else {
-                // Không cấp quyền
                 Toast.makeText(this, "Permission denied to post notifications", Toast.LENGTH_SHORT).show();
             }
         }

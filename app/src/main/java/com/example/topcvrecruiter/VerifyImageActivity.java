@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -18,11 +17,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
 import com.example.topcvrecruiter.API.ApiRecruiterService;
 import com.example.topcvrecruiter.Model.Recruiter;
 import com.github.dhaval2404.imagepicker.ImagePicker;
-
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -71,52 +68,45 @@ public class VerifyImageActivity extends AppCompatActivity {
     }
 
     private void setClick(){
-        select_front_image.setOnClickListener(view -> {
-            selectFrontImage();
-        });
+        select_front_image.setOnClickListener(view -> selectFrontImage());
         select_back_image.setOnClickListener(view -> selectBackImage());
         back_button.setOnClickListener(view -> finish());
-        apply.setOnClickListener(view -> {
-            updateRecruiter();
-        });
+        apply.setOnClickListener(view -> updateRecruiter());
     }
 
     @SuppressLint("CheckResult")
     private void updateRecruiter() {
         if (recruiter_id <= 0 || user_id <= 0) {
-            Toast.makeText(this, "ID người dùng không hợp lệ", Toast.LENGTH_SHORT).show();
+            Log.e("VerifyImageActivity","Invalid user ID");
             return;
         }
 
         String frontImagePath = (frontImageUri != null) ? frontImageUri.toString().trim() : "";
         String backImagePath = (backImageUri != null) ? backImageUri.toString().trim() : "";
 
-        // Biến lưu trữ danh sách các trường bị thiếu
         StringBuilder missingFields = new StringBuilder();
 
         if (name.isEmpty()) {
-            missingFields.append("- Tên\n");
+            missingFields.append("- Name\n");
         }
         if (email.isEmpty()) {
             missingFields.append("- Email\n");
         }
         if (phone.isEmpty()) {
-            missingFields.append("- Số điện thoại\n");
+            missingFields.append("- Phone number\n");
         }
         if (frontImagePath.isEmpty()) {
-            missingFields.append("- Hình ảnh mặt trước\n");
+            missingFields.append("- Front view\n");
         }
         if (backImagePath.isEmpty()) {
-            missingFields.append("- Hình ảnh mặt sau\n");
+            missingFields.append("- Back image\n");
         }
 
-        // Nếu có trường bị thiếu, hiển thị thông báo và dừng xử lý
         if (missingFields.length() > 0) {
-            Toast.makeText(this, "Vui lòng điền đầy đủ thông tin:\n" + missingFields.toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Please fill in all information:\n" + missingFields.toString(), Toast.LENGTH_LONG).show();
             return;
         }
 
-        // Nếu thông tin đầy đủ, tiếp tục xử lý cập nhật
         Recruiter recruiter = new Recruiter();
         recruiter.setRecruiterName(name);
         recruiter.setEmailAddress(email);
@@ -128,25 +118,17 @@ public class VerifyImageActivity extends AppCompatActivity {
         recruiter.setFrontImage(frontImagePath);
         recruiter.setBackImage(backImagePath);
 
-        // Gọi API cập nhật thông tin
         ApiRecruiterService.ApiRecruiterService.updateRecruiterById(recruiter_id, recruiter)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> {
-                    // Xử lý thành công
                     Log.d("VerifyImageActivity", "Updated successfully");
-                    //Toast.makeText(this, "Updated successfully", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(this, CompanyInformationActivity.class);
                     intent.putExtra("id_Recruiter", recruiter_id);
                     intent.putExtra("user_id", user_id);
                     startActivity(intent);
-                }, throwable -> {
-                    // Xử lý lỗi
-                    Log.e("VerifyImageActivity", "Failed to update: " + throwable.getMessage());
-                    //Toast.makeText(this, "Failed to update", Toast.LENGTH_SHORT).show();
-                });
+                }, throwable -> Log.e("VerifyImageActivity", "Failed to update: " + throwable.getMessage()));
     }
-
 
     private void selectFrontImage(){
         ImagePicker.with(this)
@@ -187,10 +169,9 @@ public class VerifyImageActivity extends AppCompatActivity {
     @SuppressLint("CheckResult")
     private void getRecruiterId(int userId){
             ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(userId)
-                    .subscribeOn(Schedulers.io()) // Xử lý ở luồng IO
-                    .observeOn(AndroidSchedulers.mainThread()) // Quan sát trên luồng chính
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(recruiter -> {
-                        // Thành công: Lấy ID của Recruiter
                         if (recruiter != null){
                             recruiter_id = recruiter.getId();
                             Log.e("RecruiterID", "Get successfully Recruiter ID: " + recruiter.getId());
@@ -199,11 +180,8 @@ public class VerifyImageActivity extends AppCompatActivity {
                             Log.e("VerifyImageActivity", "Failed Null: " + recruiter_id);
                         }
 
-                        // Sử dụng recruiterId trong logic tiếp theo của bạn
-                    }, throwable -> {
-                        // Thất bại: Ghi log lỗi
-                        Log.e("API Error", "Failed to fetch Recruiter: " + throwable.getMessage());
-                    });
+
+                    }, throwable -> Log.e("API Error", "Failed to fetch Recruiter: " + throwable.getMessage()));
     }
 
     private void initImagePicker() {
@@ -211,13 +189,11 @@ public class VerifyImageActivity extends AppCompatActivity {
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                        // Nhận URI của ảnh đã chọn
                         frontImageUri = result.getData().getData();
 
-                        // Cập nhật hình ảnh cho ImageView background
                         front_image.setImageURI(frontImageUri);
                     } else {
-                        Toast.makeText(this, "Chưa chọn hình ảnh", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
                     }
                 }
         );
@@ -229,7 +205,7 @@ public class VerifyImageActivity extends AppCompatActivity {
                         backImageUri = result.getData().getData();
                         back_image.setImageURI(backImageUri);
                     } else {
-                        Toast.makeText(this, "Chưa chọn hình ảnh", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
                     }
                 }
         );

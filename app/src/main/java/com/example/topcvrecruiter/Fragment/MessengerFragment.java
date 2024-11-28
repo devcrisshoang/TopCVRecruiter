@@ -48,7 +48,7 @@ public class MessengerFragment extends Fragment {
 
     private void setWidget() {
         id_User = getArguments().getInt("user_id", -1);
-        Log.e("MessageFragment","User ID: " + id_User);
+        //Log.e("MessageFragment","User ID: " + id_User);
         messageRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         messageAdapter = new MessengerAdapter(userList, getContext(),id_User);
         messageRecyclerView.setAdapter(messageAdapter);

@@ -1,48 +1,39 @@
 package com.example.topcvrecruiter;
+
 import com.bumptech.glide.Glide;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
 import com.example.topcvrecruiter.API.ApiJobService;
 import com.example.topcvrecruiter.Model.Job;
 import com.example.topcvrecruiter.Model.JobDetails;
-
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import android.content.DialogInterface;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class JobDetailActivity extends AppCompatActivity {
-    private ImageButton back_button, edit_button;
-    private int jobId,jobDetailsId;
+
+    private ImageButton back_button;
+    private ImageButton edit_button;
+
+    private int jobId;
+    private int jobDetailsId;
+
     private ImageView companyLogo;
+
     private TextView jobName;
     private TextView workLocation;
     private TextView experienceRequire;
@@ -62,15 +53,35 @@ public class JobDetailActivity extends AppCompatActivity {
     private int id_Recruiter;
 
     private Button delete;
+
     private static final int REQUEST_CODE_EDIT_JOB = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        setWidget();
+
+        setClick();
+    }
+
+    private void setClick(){
+        back_button.setOnClickListener(v -> finish());
+
+        delete.setOnClickListener(v -> showDeleteConfirmationDialog());
+
+        edit_button.setOnClickListener(v -> openEditJobActivity());
+    }
+
+    private void setWidget(){
         setContentView(R.layout.activity_job_detail);
         id_Recruiter = getIntent().getIntExtra("id_Recruiter",0);
-        Log.e("JobDetailActivity","ID recruiter: " + id_Recruiter);
-
         back_button = findViewById(R.id.information_back_button);
         edit_button = findViewById(R.id.edit_button);
         companyLogo = findViewById(R.id.company_logo);
@@ -90,51 +101,30 @@ public class JobDetailActivity extends AppCompatActivity {
         workingTime = findViewById(R.id.working_time);
         numberOfPeople = findViewById(R.id.number_of_people);
         delete = findViewById(R.id.delete_button);
-
-        // Thiết lập sự kiện nút back
-        back_button.setOnClickListener(v -> finish());
-
-        // Lấy jobId từ Intent
         jobId = getIntent().getIntExtra("jobId", -1);
         if (jobId != -1) {
             getJobData(jobId);
             getJobDetails(jobId);
-        } else {
-            Toast.makeText(this, "Job ID error!", Toast.LENGTH_SHORT).show();
         }
-
-        // Thiết lập sự kiện cho nút delete
-        delete.setOnClickListener(v -> showDeleteConfirmationDialog()); // Hiển thị hộp thoại xác nhận
-
-        // Thiết lập sự kiện cho nút edit
-        edit_button.setOnClickListener(v -> openEditJobActivity());
-
-        // Thiết lập padding cho View chính
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_EDIT_JOB) { // Đảm bảo sử dụng đúng requestCode
+        if (requestCode == REQUEST_CODE_EDIT_JOB) {
             if (resultCode == RESULT_OK) {
-                // Gọi lại dữ liệu job để refresh
                 getJobData(jobId);
                 getJobDetails(jobId);
             }
         }
     }
-    // Phương thức mở EditJobActivity
+
     private void openEditJobActivity() {
         Intent intent = new Intent(JobDetailActivity.this, EditJobActivity.class);
         intent.putExtra("jobId", jobId);
         intent.putExtra("id_Recruiter", id_Recruiter);
-        intent.putExtra("jobDetailsId", jobDetailsId); // Truyền jobDetailsId
-        // Truyền thêm các thông tin cần thiết từ đối tượng Job và JobDetails
+        intent.putExtra("jobDetailsId", jobDetailsId);
+
         intent.putExtra("companyLogo", companyLogo.toString());
         intent.putExtra("jobName", jobName.getText().toString());
         intent.putExtra("companyName", companyName.getText().toString());
@@ -151,14 +141,12 @@ public class JobDetailActivity extends AppCompatActivity {
         intent.putExtra("benefit", benefit.getText().toString());
         intent.putExtra("workingTime", workingTime.getText().toString());
         intent.putExtra("numberOfPeople", numberOfPeople.getText().toString());
-        // Truyền thêm đường dẫn ảnh
-        String imagePath = companyLogo.getTag() != null ? companyLogo.getTag().toString() : ""; // Lấy đường dẫn ảnh từ tag của ImageView
+
+        String imagePath = companyLogo.getTag() != null ? companyLogo.getTag().toString() : "";
         intent.putExtra("imagePath", imagePath);
-        startActivityForResult(intent, REQUEST_CODE_EDIT_JOB); // Sử dụng startActivityForResult
+        startActivity(intent);
     }
 
-
-    // Phương thức gọi API để lấy thông tin công việc
     private void getJobData(int jobId) {
         ApiJobService apiService = ApiJobService.apiService;
 
@@ -170,19 +158,18 @@ public class JobDetailActivity extends AppCompatActivity {
                     Job job = response.body();
                     displayJobData(job);
                 } else {
-                    Toast.makeText(JobDetailActivity.this, "Không thể lấy thông tin công việc!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(JobDetailActivity.this, "Unable to get job information!", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Job> call, Throwable t) {
-                Toast.makeText(JobDetailActivity.this, "Lỗi kết nối!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(JobDetailActivity.this, "Error !", Toast.LENGTH_SHORT).show();
                 Log.e("API_ERROR", t.getMessage());
             }
         });
     }
 
-    // Phương thức gọi API để lấy chi tiết công việc
     private void getJobDetails(int jobId) {
         ApiJobService apiService = ApiJobService.apiService;
 
@@ -193,10 +180,10 @@ public class JobDetailActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     List<JobDetails> jobDetailsList = response.body();
                     if (!jobDetailsList.isEmpty()) {
-                        displayJobDetails(jobDetailsList.get(0)); // Hiển thị đối tượng đầu tiên trong danh sách
+                        displayJobDetails(jobDetailsList.get(0));
                     }
                 } else {
-                    Toast.makeText(JobDetailActivity.this, "Không thể lấy chi tiết công việc!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(JobDetailActivity.this, "Unable to get job details!", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -208,17 +195,15 @@ public class JobDetailActivity extends AppCompatActivity {
         });
     }
 
-    // Hiển thị hộp thoại xác nhận trước khi xóa
     private void showDeleteConfirmationDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Confirm Delete")
                 .setMessage("Are you sure you want to delete this job?")
-                .setPositiveButton("Yes", (dialog, which) -> deleteJob(jobId)) // Nếu đồng ý, gọi phương thức xóa
-                .setNegativeButton("No", null) // Nếu không đồng ý, chỉ cần đóng hộp thoại
+                .setPositiveButton("Yes", (dialog, which) -> deleteJob(jobId))
+                .setNegativeButton("No", null)
                 .show();
     }
 
-    // Phương thức gọi API để xóa job
     private void deleteJob(int jobId) {
         ApiJobService apiService = ApiJobService.apiService;
 
@@ -228,7 +213,7 @@ public class JobDetailActivity extends AppCompatActivity {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(JobDetailActivity.this, "Job deleted successfully!", Toast.LENGTH_SHORT).show();
-                    finish(); // Quay lại Activity trước đó
+                    finish();
                 } else {
                     Toast.makeText(JobDetailActivity.this, "Cannot delete the job!", Toast.LENGTH_SHORT).show();
                 }
@@ -242,7 +227,6 @@ public class JobDetailActivity extends AppCompatActivity {
         });
     }
 
-    // Hiển thị dữ liệu của đối tượng Job
     private void displayJobData(Job job) {
         jobName.setText(job.getJob_Name());
         companyName.setText(job.getCompany_Name());
@@ -252,23 +236,21 @@ public class JobDetailActivity extends AppCompatActivity {
         experience.setText(job.getWorking_Experience_Require());
         applyDate.setText(job.getApplication_Date());
 
-        // Tải hình ảnh vào ImageView bằng Glide
-        String imagePath = job.getImage_Id(); // Lấy đường dẫn ảnh từ API
+        String imagePath = job.getImage_Id();
         if (imagePath != null && !imagePath.isEmpty()) {
             Glide.with(JobDetailActivity.this)
-                    .load(Uri.parse(imagePath))  // Tải ảnh từ đường dẫn file URI
+                    .load(Uri.parse(imagePath))
                     .into(companyLogo);
             companyLogo.setTag(imagePath);
         }else {
             Glide.with(JobDetailActivity.this)
-                    .load(R.drawable.google_ic)  // Thay "account_ic" bằng ID ảnh mặc định của bạn
+                    .load(R.drawable.google_ic)
                     .into(companyLogo);
         }
     }
 
-    // Hiển thị dữ liệu của đối tượng JobDetails
     private void displayJobDetails(JobDetails jobDetails) {
-        jobDetailsId = jobDetails.getId(); // Lưu jobDetailsId
+        jobDetailsId = jobDetails.getId();
         jobDescription.setText(jobDetails.getJob_Description());
         skillRequire.setText(jobDetails.getSkill_Require());
         benefit.setText(jobDetails.getBenefit());

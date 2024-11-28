@@ -38,8 +38,6 @@ public class Article implements Serializable {
     public void setImage(String image) {
         this.image = image;
     }
-    // Getter và Setter
-
 
     public int getId() {
         return id;

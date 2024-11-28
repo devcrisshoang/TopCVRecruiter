@@ -1,5 +1,6 @@
 package com.example.topcvrecruiter.Adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -11,15 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.topcvrecruiter.R;
 import com.example.topcvrecruiter.Model.Job;
 import com.example.topcvrecruiter.JobDetailActivity;
-import com.example.topcvrecruiter.Utils.DateTimeUtils;
-
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
 
 public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
+
     private List<Job> jobList;
-    private Context context;
+
+    private final Context context;
 
     public JobAdapter(Context context, List<Job> jobList) {
         this.context = context;
@@ -40,18 +39,11 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
         holder.jobAddress.setText(job.getWorking_Address());
         holder.jobTime.setText(job.getCreate_Time());
 
-        // Chuyển đổi chuỗi thời gian sang định dạng ngày tháng năm
-        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault());
-        SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+        holder.jobTime.setText("");
 
-        String formattedTime = DateTimeUtils.formatTimeAgo(job.getCreate_Time());
-            holder.jobTime.setText("");
-
-
-        // Thiết lập sự kiện khi nhấn vào item
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, JobDetailActivity.class);
-            intent.putExtra("jobId", job.getId()); // Truyền jobId
+            intent.putExtra("jobId", job.getId());
             intent.putExtra("id_Recruiter", job.getiD_Recruiter());
             context.startActivity(intent);
         });
@@ -62,6 +54,7 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
         return jobList.size();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void updateData(List<Job> jobs) {
         this.jobList = jobs;
         notifyDataSetChanged();

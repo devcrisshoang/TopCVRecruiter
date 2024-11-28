@@ -9,14 +9,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
 import com.example.topcvrecruiter.API.ApiRecruiterService;
 import com.example.topcvrecruiter.API.ApiUserService;
 import com.example.topcvrecruiter.Model.User;
@@ -37,7 +35,6 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -64,7 +61,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            // Sử dụng WindowInsetsCompat để lấy các giá trị Insets
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
@@ -76,19 +72,21 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void setClick(){
-        // Xử lý nút đăng nhập
+
         loginButton.setOnClickListener(view -> loginUser());
-        // Xử lý nút đăng nhập bằng Facebook
+
         facebookButton.setOnClickListener(view -> loginWithFacebook());
-        // Xử lý nút đăng nhập bằng Google
+
         googleButton.setOnClickListener(view -> signInWithGoogle());
-        // Xử lý nút đăng ký
-        Register_Button.setOnClickListener(view -> {
-            Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-            intent.putExtra("isSignUpButtonClicked", true);
-            startActivity(intent);
-            finish();
-        });
+
+        Register_Button.setOnClickListener(view -> registerButton());
+    }
+
+    private void registerButton(){
+        Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+        intent.putExtra("isSignUpButtonClicked", true);
+        startActivity(intent);
+        finish();
     }
 
     private void setWidget(){
@@ -105,7 +103,6 @@ public class LoginActivity extends AppCompatActivity {
                 .requestEmail()
                 .build();
         googleSignInClient = GoogleSignIn.getClient(this, gso);
-        // Kích hoạt Edge-to-Edge
         EdgeToEdge.enable(this);
     }
 
@@ -115,11 +112,10 @@ public class LoginActivity extends AppCompatActivity {
         String password = passwordInput.getText().toString().trim();
 
         if (username.isEmpty() || password.isEmpty()) {
-            Toast.makeText(LoginActivity.this, "Vui lòng nhập tên đăng nhập và mật khẩu", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, "Please enter your username and password!", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Lấy tất cả người dùng
         ApiUserService.apiUserService.getAllUser()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -131,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
                             isValidUser = true;
 
                             if (!user.getPassword().equals(password)) {
-                                Toast.makeText(LoginActivity.this, "Tên đăng nhập hoặc mật khẩu không đúng.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, "Incorrect username or password!", Toast.LENGTH_SHORT).show();
                                 return;
                             }
 
@@ -166,11 +162,9 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     if (!isValidUser) {
-                        Toast.makeText(LoginActivity.this, "Tên đăng nhập không tồn tại", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Username does not exist!", Toast.LENGTH_SHORT).show();
                     }
-                }, throwable -> {
-                    Toast.makeText(LoginActivity.this, "Lỗi kết nối đến server: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+                }, throwable -> Toast.makeText(LoginActivity.this, "Error connecting to server: " + throwable.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     @SuppressLint("CheckResult")
@@ -190,14 +184,10 @@ public class LoginActivity extends AppCompatActivity {
                                 Log.e("LoginActivity","ID: "+ id_Recruiter);
                                 startActivity(intent);
                             } else {
-                                //Toast.makeText(this, "Recruiter not found", Toast.LENGTH_SHORT).show();
                                 Log.e("AccountFragment", "Recruiter not found");
                             }
                         },
-                        throwable -> {
-                            Log.e("AccountFragment", "Error fetching recruiter: " + throwable.getMessage());
-                            //Toast.makeText(this, "Failed to load recruiter", Toast.LENGTH_SHORT).show();
-                        }
+                        throwable -> Log.e("AccountFragment", "Error fetching recruiter: " + throwable.getMessage())
                 );
         finish();
     }

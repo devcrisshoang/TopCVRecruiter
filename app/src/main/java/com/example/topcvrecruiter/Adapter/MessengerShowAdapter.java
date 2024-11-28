@@ -5,20 +5,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.topcvrecruiter.R;
 import com.example.topcvrecruiter.Model.Message;
-
 import java.util.List;
 
 public class MessengerShowAdapter extends RecyclerView.Adapter<MessengerShowAdapter.MessengerViewHolder> {
 
-    private List<Message> messageList;
-    private int MainID;
-    private int SubID;
+    private final List<Message> messageList;
+
+    private final int MainID;
+    private final int SubID;
 
     public MessengerShowAdapter(List<Message> messageList, int MainID, int SubID) {
         this.messageList = messageList;
@@ -44,10 +42,10 @@ public class MessengerShowAdapter extends RecyclerView.Adapter<MessengerShowAdap
 
         if (message.getSender_ID() == MainID) {
             holder.me.setText(message.getContent());
-            holder.other_people.setVisibility(View.GONE);  // Ẩn tin nhắn của người khác
+            holder.other_people.setVisibility(View.GONE);
         } else if (message.getSender_ID() == SubID) {
             holder.other_people.setText(message.getContent());
-            holder.me.setVisibility(View.GONE);  // Ẩn tin nhắn của chính mình
+            holder.me.setVisibility(View.GONE);
         }
     }
 

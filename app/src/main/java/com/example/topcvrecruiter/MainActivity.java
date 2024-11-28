@@ -1,16 +1,13 @@
 package com.example.topcvrecruiter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -19,7 +16,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-
 import com.example.topcvrecruiter.Fragment.AccountFragment;
 import com.example.topcvrecruiter.Fragment.DashboardFragment;
 import com.example.topcvrecruiter.Fragment.MessengerFragment;
@@ -29,8 +25,6 @@ import com.example.topcvrecruiter.Fragment.PostingFragment;
 public class MainActivity extends AppCompatActivity {
 
     private LinearLayout layout_header;
-
-    private EditText search_edit_text;
 
     private static final int FRAGMENT_HOME = 0;
     private static final int FRAGMENT_PROFILE = 1;
@@ -76,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setDefaultColorButton() {
-        // Thiết lập fragment mặc định và màu sắc ban đầu cho nút
         setImageButtonColor(this, Dashboard, R.color.green_color);
         setImageButtonColor(this, Posting, R.color.black);
         setImageButtonColor(this, messengerButton, R.color.black);
@@ -103,24 +96,19 @@ public class MainActivity extends AppCompatActivity {
         messengerButton.setOnClickListener(view -> selectFragment(FRAGMENT_MESSENGER, new MessengerFragment(), layout_header, View.GONE));
         notificationButton.setOnClickListener(view -> selectFragment(FRAGMENT_NOTIFICATION, new NotificationFragment(), layout_header, View.GONE));
         accountButton.setOnClickListener(view -> selectFragment(FRAGMENT_ACCOUNT, new AccountFragment(), layout_header, View.GONE));
-        search_edit_text.setOnClickListener(view -> {
-//            Intent searchIntent = new Intent(this, SearchActivity.class);
-//            startActivity(searchIntent);
-        });
     }
 
     private void selectFragment(int fragmentCode, Fragment fragment, LinearLayout layoutHeader, int headerVisibility) {
         if (currentFragment != fragmentCode) {
-            // Kiểm tra fragment và truyền id_User vào bundle khi cần
             if (fragment instanceof AccountFragment || fragment instanceof PostingFragment || fragment instanceof MessengerFragment || fragment instanceof NotificationFragment || fragment instanceof DashboardFragment) {
                 Bundle bundle = new Bundle();
-                bundle.putString("applicantName", recruiterName); // chỉ cần thiết cho AccountFragment
-                bundle.putInt("user_id", id_User); // truyền id_User cho tất cả các fragment
-                bundle.putString("phoneNumber", phoneNumber); // chỉ cần thiết cho AccountFragment
+                bundle.putString("applicantName", recruiterName);
+                bundle.putInt("user_id", id_User);
+                bundle.putString("phoneNumber", phoneNumber);
                 bundle.putInt("id_Recruiter", id_Recruiter);
-                fragment.setArguments(bundle); // Đặt Bundle vào Fragment
+                fragment.setArguments(bundle);
             }
-            replaceFragment(fragment); // Thay thế fragment hiện tại bằng fragment đã chọn
+            replaceFragment(fragment);
             currentFragment = fragmentCode;
             layoutHeader.setVisibility(headerVisibility);
             resetButtonColors();
@@ -175,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void setWidget() {
         layout_header = findViewById(R.id.layout_header);
-        search_edit_text = findViewById(R.id.search_edit_text);
         Dashboard = findViewById(R.id.Dashboard);
         Posting = findViewById(R.id.Posting);
         messengerButton = findViewById(R.id.Messenger);
@@ -188,10 +175,6 @@ public class MainActivity extends AppCompatActivity {
         Account_Textview = findViewById(R.id.Account_Textview);
         recruiterName = getIntent().getStringExtra("recruiterName");
         id_User = getIntent().getIntExtra("user_id", -1);
-
-        if (id_User == -1) {
-            Log.e("Error", "userId không hợp lệ");
-        }
         phoneNumber = getIntent().getStringExtra("phoneNumber");
         id_Recruiter = getIntent().getIntExtra("id_Recruiter", 0);
         Log.e("MainActivity", "ID recruiter: " + id_Recruiter);

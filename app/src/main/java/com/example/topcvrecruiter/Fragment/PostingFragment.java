@@ -2,21 +2,18 @@ package com.example.topcvrecruiter.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
-
 import com.example.topcvrecruiter.API.ApiJobService;
 import com.example.topcvrecruiter.API.ApiPostingService;
 import com.example.topcvrecruiter.AllArticleActivity;
@@ -28,12 +25,10 @@ import com.example.topcvrecruiter.Adapter.ArticleAdapter;
 import com.example.topcvrecruiter.Adapter.JobAdapter;
 import com.example.topcvrecruiter.Model.Article;
 import com.example.topcvrecruiter.Model.Job;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -111,15 +106,14 @@ public class PostingFragment extends Fragment {
     }
 
     private void viewAllButtonClick(){
+        Intent intent;
         if (isArticleTabSelected) {
-            Intent intent = new Intent(getActivity(), AllArticleActivity.class);
-            intent.putExtra("id_Recruiter", id_Recruiter);
-            startActivity(intent);
+            intent = new Intent(getActivity(), AllArticleActivity.class);
         } else {
-            Intent intent = new Intent(getActivity(), AllJobActivity.class);
-            intent.putExtra("id_Recruiter", id_Recruiter);
-            startActivity(intent);
+            intent = new Intent(getActivity(), AllJobActivity.class);
         }
+        intent.putExtra("id_Recruiter", id_Recruiter);
+        startActivity(intent);
     }
 
     private void postButtonClick(){
@@ -148,19 +142,16 @@ public class PostingFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        // Kiểm tra và xóa các bài tuyển dụng đã hết hạn khi Fragment bắt đầu
         checkAndDeleteExpiredJobs();
     }
 
     private void loadArticles() {
-        if (getContext() != null) { // Kiểm tra context
+        if (getContext() != null) {
             articleButton.setTextColor(getResources().getColor(R.color.green_color));
             jobButton.setTextColor(getResources().getColor(R.color.black));
 
             ApiPostingService apiService = ApiPostingService.retrofit.create(ApiPostingService.class);
 
-
-            // Gọi API để lấy danh sách bài viết theo recruiterId
             Call<List<Article>> call = apiService.getArticlesByRecruiter(id_Recruiter);
             call.enqueue(new Callback<List<Article>>() {
                 @Override
@@ -168,7 +159,6 @@ public class PostingFragment extends Fragment {
                     if (response.isSuccessful()) {
                         articleList = response.body();
                         if (articleList != null) {
-                            // Lấy 10 bài viết đầu tiên (nếu có nhiều hơn 10)
                             List<Article> limitedArticles = articleList.size() > 10 ? articleList.subList(0, 10) : articleList;
 
                             if (!(recyclerView.getAdapter() instanceof ArticleAdapter) || articleAdapter == null) {
@@ -192,7 +182,7 @@ public class PostingFragment extends Fragment {
     }
 
     private void loadJobs() {
-        if (getContext() != null) { // Kiểm tra context
+        if (getContext() != null) {
             jobButton.setTextColor(getResources().getColor(R.color.green_color));
             articleButton.setTextColor(getResources().getColor(R.color.black));
 
@@ -205,7 +195,6 @@ public class PostingFragment extends Fragment {
                     if (response.isSuccessful()) {
                         jobList = response.body();
                         if (jobList != null) {
-                            // Lấy 10 công việc đầu tiên
                             List<Job> limitedJobs = jobList.size() > 10 ? jobList.subList(0, 10) : jobList;
 
                             if (!(recyclerView.getAdapter() instanceof JobAdapter) || jobAdapter == null) {
@@ -234,22 +223,19 @@ public class PostingFragment extends Fragment {
             public void onResponse(Call<List<Job>> call, Response<List<Job>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     for (Job job : response.body()) {
-                        // Lấy thời gian tạo của bài đăng và tính toán xem đã quá 30 ngày chưa
-                        String createTimeString = job.getCreate_Time(); // Định dạng: yyyy-MM-dd'T'HH:mm:ss.SSS
+                        String createTimeString = job.getCreate_Time();
                         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
                         try {
                             LocalDateTime createTime = LocalDateTime.parse(createTimeString, formatter);
 
-                            // Tính toán thời gian đã trôi qua từ lúc tạo
                             Duration duration = Duration.between(createTime, LocalDateTime.now());
                             long daysPassed = duration.toDays();
 
-                            // Nếu bài đăng đã được 30 ngày, xóa bài đăng
                             if (daysPassed >= 30) {
                                 deleteJob(job.getId());
                             }
                         } catch (Exception e) {
-                            e.printStackTrace(); // In lỗi nếu có vấn đề khi phân tích chuỗi thời gian
+                            e.printStackTrace();
                         }
                     }
                 } else {

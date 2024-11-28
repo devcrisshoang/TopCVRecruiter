@@ -1,26 +1,22 @@
 package com.example.topcvrecruiter;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
 import com.example.topcvrecruiter.API.ApiRecruiterService;
-
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class WaitingConfirmActivity extends AppCompatActivity {
 
-    private int user_id;
     private int id_Recruiter;
 
     private String recruiterName;
@@ -52,7 +48,7 @@ public class WaitingConfirmActivity extends AppCompatActivity {
     }
 
     private void setWidget(){
-        user_id = getIntent().getIntExtra("user_id",0);
+        int user_id = getIntent().getIntExtra("user_id", 0);
         id_Recruiter = getIntent().getIntExtra("id_Recruiter",0);
         recruiterName = getIntent().getStringExtra("recruiterName");
         phoneNumber = getIntent().getStringExtra("phoneNumber");
@@ -60,19 +56,19 @@ public class WaitingConfirmActivity extends AppCompatActivity {
         confirm(user_id);
     }
 
+    @SuppressLint("CheckResult")
     private void confirm(int user_id){
         ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(user_id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(response -> {
-                    if(response.isIs_Confirm() == true){
+                    if(response.isIs_Confirm()){
                         navigateToMainActivity(user_id, recruiterName, phoneNumber);
                     }
-                }, throwable -> {
-                    Log.e("API Error", "Error fetching applicant: " + throwable.getMessage());
-                });
+                }, throwable -> Log.e("API Error", "Error fetching applicant: " + throwable.getMessage()));
     }
 
+    @SuppressLint("CheckResult")
     private void navigateToMainActivity(int id_User, String recruiterName, String phoneNumber) {
         ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(id_User)
                 .subscribeOn(Schedulers.io())

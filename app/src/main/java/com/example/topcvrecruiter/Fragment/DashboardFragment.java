@@ -4,23 +4,19 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.example.topcvrecruiter.API.ApiDashboardService;
-
 import com.example.topcvrecruiter.Adapter.DashboardApplicantAdapter;
 import com.example.topcvrecruiter.Adapter.PaginationScrollListener;
 import com.example.topcvrecruiter.Model.Job;
@@ -28,7 +24,6 @@ import com.example.topcvrecruiter.NumberApplicantActivity;
 import com.example.topcvrecruiter.NumberJobOfRecruiterActivity;
 import com.example.topcvrecruiter.R;
 import com.example.topcvrecruiter.Model.ApplicantJob;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +31,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
-
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
@@ -161,7 +155,7 @@ public class DashboardFragment extends Fragment {
                     }
                 }
         );
-        id_User = getArguments().getInt("user_id", 0);  // 0 là giá trị mặc định
+        id_User = getArguments().getInt("user_id", 0);
         apiDashboardService = ApiDashboardService.apiDashboardService;
 
         id_Recruiter = getArguments().getInt("id_Recruiter", 0);
@@ -172,11 +166,11 @@ public class DashboardFragment extends Fragment {
     }
 
     private void calculateAndDisplayRate() {
-        if (totalAccepted + totalRejected > 0) { // Kiểm tra tránh chia cho 0
+        if (totalAccepted + totalRejected > 0) {
             float rate = (float) totalAccepted / (totalAccepted + totalRejected);
-            rateSuccessTextView.setText(String.format(Locale.getDefault(), "%.2f%%", rate * 100)); // Cập nhật tỷ lệ vào TextView
+            rateSuccessTextView.setText(String.format(Locale.getDefault(), "%.2f%%", rate * 100));
         } else {
-            rateSuccessTextView.setText("0%"); // Nếu không có ứng viên nào
+            rateSuccessTextView.setText("0%");
         }
     }
 
@@ -194,7 +188,6 @@ public class DashboardFragment extends Fragment {
                     public void onNext(List<Job> jobs) {
                         Map<Integer, Integer> applicantCounts = new HashMap<>();
 
-                        // Dùng CountDownLatch để chờ tất cả các API hoàn thành
                         CountDownLatch latch = new CountDownLatch(jobs.size());
                         for (Job job : jobs) {
                             int jobId = job.getId();
@@ -210,7 +203,6 @@ public class DashboardFragment extends Fragment {
 
                                         @Override
                                         public void onNext(List<ApplicantJob> applicantList) {
-                                            // Lưu số lượng ứng viên vào Map
                                             applicantCounts.put(jobId, applicantList.size());
                                         }
 
@@ -221,19 +213,18 @@ public class DashboardFragment extends Fragment {
 
                                         @Override
                                         public void onComplete() {
-                                            // Giảm latch khi API hoàn thành
                                             latch.countDown();
                                         }
                                     });
                         }
                         new Thread(() -> {
                             try {
-                                latch.await(); // Chờ cho đến khi latch về 0
+                                latch.await();
                                 Intent intent = new Intent(getContext(), NumberJobOfRecruiterActivity.class);
 
                                 Bundle bundle = new Bundle();
-                                bundle.putSerializable("jobsList", new ArrayList<>(jobs)); // Truyền danh sách Job
-                                bundle.putSerializable("applicantCounts", (Serializable) applicantCounts); // Truyền Map
+                                bundle.putSerializable("jobsList", new ArrayList<>(jobs));
+                                bundle.putSerializable("applicantCounts", (Serializable) applicantCounts);
                                 bundle.putInt("id_Recruiter", id_Recruiter);
                                 intent.putExtras(bundle);
                                 startActivity(intent);
@@ -321,45 +312,36 @@ public class DashboardFragment extends Fragment {
 
     @SuppressLint("CheckResult")
     private void fetchDashboardData(int recruiterId) {
-        //------------------Job------------------------//
         apiDashboardService.getListJobs(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(jobs -> {
-                    int jobCount = jobs.size(); // Đếm số lượng item trong danh sách
-                    jobCountTextView.setText(String.valueOf(jobCount)); // Hiển thị số lượng ứng viên lên TextView
+                    int jobCount = jobs.size();
+                    jobCountTextView.setText(String.valueOf(jobCount));
                 }, throwable -> {
-                    // Xử lý lỗi nếu có
                     Log.e("API Error", "Error fetching applicants", throwable);
                 });
 
-
-        //------------------Accepted--------------------------//
         apiDashboardService.getAcceptedApplicants(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(accepted -> {
-                    totalAccepted = accepted.size(); // Đếm số lượng item trong danh sách
+                    totalAccepted = accepted.size();
                     acceptedTextView.setText(String.valueOf(totalAccepted));
                     calculateAndDisplayRate();
                 }, throwable -> {
-                    // Xử lý lỗi nếu có
                     Log.e("API Error", "Error fetching applicants", throwable);
                 });
-        //------------------Rejected--------------------------//
         apiDashboardService.getRejectedApplicants(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(rejected -> {
-                    totalRejected = rejected.size(); // Đếm số lượng item trong danh sách
+                    totalRejected = rejected.size();
                     rejectedTextView.setText(String.valueOf(totalRejected));
                     calculateAndDisplayRate();
                 }, throwable -> {
-                    // Xử lý lỗi nếu có
                     Log.e("API Error", "Error fetching applicants", throwable);
                 });
-
-        //------------------Suggest------------------------//
         apiDashboardService.getListSuggestedApplicants(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -386,33 +368,6 @@ public class DashboardFragment extends Fragment {
                     }
                 });
     }
-
-//    void fetchListApplicantsForJob(int recruiterId, int jobId) {
-//        apiDashboardService.getListApplicantsForJob(recruiterId, jobId)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Observer<List<ApplicantJob>>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {}
-//
-//                    @Override
-//                    public void onNext(List<ApplicantJob> applicantList) {
-//                        // Lưu số lượng ứng viên vào Map
-//                        applicantCounts.put(jobId, applicantList.size());
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        Log.e("DashboardFragment", "Error fetching applicants for job: " + jobId, e);
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//                        // Giảm latch khi API hoàn thành
-//                        latch.countDown();
-//                    }
-//                });
-//    }
 
     private void setFirstData() {
 
@@ -447,11 +402,11 @@ public class DashboardFragment extends Fragment {
         //Toast.makeText(getContext(), "Load data page: " + currentPage, Toast.LENGTH_SHORT).show();
         List<ApplicantJob> list = new ArrayList<>();
 
-        int start = (currentPage - 1) * totalItemInPage; // Tính chỉ số bắt đầu
-        int end = Math.min(start + totalItemInPage, applicantList.size()); // Tính chỉ số kết thúc
+        int start = (currentPage - 1) * totalItemInPage;
+        int end = Math.min(start + totalItemInPage, applicantList.size());
 
         if (start < applicantList.size()) {
-            list.addAll(applicantList.subList(start, end)); // Thêm các phần tử từ workList vào danh sách
+            list.addAll(applicantList.subList(start, end));
         }
 
         return list;

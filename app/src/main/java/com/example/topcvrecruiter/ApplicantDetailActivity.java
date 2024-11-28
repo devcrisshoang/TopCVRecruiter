@@ -7,17 +7,14 @@ import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
 import com.example.topcvrecruiter.API.ApiApplicantService;
 import com.example.topcvrecruiter.API.ApiDashboardService;
 import com.example.topcvrecruiter.Model.CV;
-
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
@@ -100,7 +97,6 @@ public class ApplicantDetailActivity extends AppCompatActivity {
 
     private void setWidget(){
         apiService = ApiDashboardService.apiDashboardService;
-        // Initialize the views
         jobApplyingTextView = findViewById(R.id.name);
         nameTextView = findViewById(R.id.job_applying);
         introductionTextView = findViewById(R.id.introduction);
@@ -112,30 +108,24 @@ public class ApplicantDetailActivity extends AppCompatActivity {
         certificationTextView = findViewById(R.id.certification);
         resumeMessageButton = findViewById(R.id.resume_message);
         backButton = findViewById(R.id.back_button);
-
-        // Get the applicant ID from the Intent
         recruiterId = getIntent().getIntExtra("id_Recruiter", 0);
         applicantId = getIntent().getIntExtra("applicant_id", 0);
         userId = getIntent().getIntExtra("userId", 0);
-        Log.e("ApplicantDetailActivity","user id: "+userId);
-
         fetchCvForApplicant(applicantId, recruiterId);
     }
 
     private void finishWithSuccessResult() {
-        // Create an Intent to pass back the result
         Intent resultIntent = new Intent();
         resultIntent.putExtra("rateSuccess", rateSuccess);
-        setResult(RESULT_OK, resultIntent); // RESULT_OK indicates a successful result
-        finish(); // Close the activity
+        setResult(RESULT_OK, resultIntent);
+        finish();
     }
 
     private void finishWithFailResult() {
-        // Create an Intent to pass back the result
         Intent resultIntent = new Intent();
         resultIntent.putExtra("rateFail", rateFail);
-        setResult(RESULT_OK, resultIntent); // RESULT_OK indicates a successful result
-        finish(); // Close the activity
+        setResult(RESULT_OK, resultIntent);
+        finish();
     }
 
     private void updateAcceptanceStatus(int recruiterId, int applicantId, boolean isAccepted) {
