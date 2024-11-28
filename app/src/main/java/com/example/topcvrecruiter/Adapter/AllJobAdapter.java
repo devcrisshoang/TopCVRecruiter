@@ -6,13 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.topcvrecruiter.JobDetailActivity;
 import com.example.topcvrecruiter.R;
 import com.example.topcvrecruiter.Model.Job;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -22,8 +20,10 @@ public class AllJobAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private static final int VIEW_TYPE_ITEM = 0;
     private static final int VIEW_TYPE_LOADING = 1;
-    private Context context;
-    private List<Job> jobs;
+
+    private final Context context;
+
+    private final List<Job> jobs;
 
     public AllJobAdapter(Context context,List<Job> jobs) {
         this.jobs = jobs;
@@ -32,12 +32,12 @@ public class AllJobAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemViewType(int position) {
-        // Kiểm tra xem item có phải là "footer loading" không
         return (jobs.get(position) == null) ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_ITEM) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_job, parent, false);
             return new JobViewHolder(view);
@@ -49,21 +49,19 @@ public class AllJobAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof JobViewHolder) {
             Job job = jobs.get(position);
             JobViewHolder jobViewHolder = (JobViewHolder) holder;
             jobViewHolder.name.setText(job.getJob_Name());
             jobViewHolder.address.setText(job.getWorking_Address());
 
-            // Thiết lập sự kiện khi nhấn vào item
             holder.itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(context, JobDetailActivity.class);
-                intent.putExtra("jobId", job.getId()); // Truyền jobId
+                intent.putExtra("jobId", job.getId());
                 context.startActivity(intent);
             });
 
-            // Định dạng thời gian
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault());
             SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
 
@@ -103,7 +101,6 @@ public class AllJobAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return jobs != null ? jobs.size() : 0;
     }
 
-    // Thêm footer loading vào cuối RecyclerView
     public void addFooterLoading() {
         if (!jobs.contains(null)) {
             jobs.add(null);
@@ -111,7 +108,6 @@ public class AllJobAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    // Loại bỏ footer loading sau khi dữ liệu được tải
     public void removeFooterLoading() {
         int position = jobs.indexOf(null);
         if (position != -1) {
@@ -120,7 +116,6 @@ public class AllJobAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    // ViewHolder cho item bài viết
     public static class JobViewHolder extends RecyclerView.ViewHolder {
         TextView name, address;
         TextView createTime;
@@ -133,7 +128,6 @@ public class AllJobAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    // ViewHolder cho footer loading
     public static class LoadingViewHolder extends RecyclerView.ViewHolder {
         public LoadingViewHolder(View itemView) {
             super(itemView);

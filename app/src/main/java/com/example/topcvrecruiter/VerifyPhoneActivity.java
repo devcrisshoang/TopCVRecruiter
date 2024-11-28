@@ -3,18 +3,14 @@ package com.example.topcvrecruiter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
@@ -23,50 +19,65 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import java.util.concurrent.TimeUnit;
 
 public class VerifyPhoneActivity extends AppCompatActivity {
-    String phoneNumber;
-    Long timeoutSeconds = 60L;
-    String verificationCode;
-    PhoneAuthProvider.ForceResendingToken resendingToken;
 
-    EditText editTextCode;
-    Button buttonVerify;
-    TextView textViewTitle;
-    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private String phoneNumber;
+    private String verificationCode;
+    private String rawPhoneNumber;
+
+    Long timeoutSeconds = 60L;
+
+    private PhoneAuthProvider.ForceResendingToken resendingToken;
+
+    private EditText editTextCode;
+
+    private Button buttonVerify;
+
+    private TextView textViewTitle;
+
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify_phone);
 
+        setWidget();
+
+        setClick();
+
+    }
+
+    private void verifyButton(){
+        String enteredOtp = editTextCode.getText().toString();
+        if (!TextUtils.isEmpty(enteredOtp)) {
+            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationCode, enteredOtp);
+            signIn(credential);
+        } else {
+            Toast.makeText(VerifyPhoneActivity.this, "Please enter the verification code", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void setClick(){
+        buttonVerify.setOnClickListener(v -> verifyButton());
+    }
+
+    private void setWidget(){
+
         editTextCode = findViewById(R.id.editTextCode);
         buttonVerify = findViewById(R.id.buttonVerify);
         textViewTitle = findViewById(R.id.textViewTitle);
 
-        // Nhận số điện thoại từ Intent
-        String rawPhoneNumber = getIntent().getStringExtra("phone"); // Đảm bảo tên khóa đúng
+        rawPhoneNumber = getIntent().getStringExtra("phone");
 
-        // Định dạng số điện thoại
         phoneNumber = formatPhoneNumber(rawPhoneNumber);
 
-        // Kiểm tra hợp lệ của số điện thoại
         if (TextUtils.isEmpty(rawPhoneNumber) || TextUtils.isEmpty(phoneNumber)) {
-            Toast.makeText(this, "Số điện thoại không hợp lệ", Toast.LENGTH_SHORT).show();
-            finish(); // Kết thúc Activity nếu số điện thoại không hợp lệ
+            Log.e("VerifyPhoneActivity","Invalid phone number");
+            finish();
             return;
         }
 
-        // Gửi OTP
         sendOtp(phoneNumber, false);
-
-        buttonVerify.setOnClickListener(v -> {
-            String enteredOtp = editTextCode.getText().toString();
-            if (!TextUtils.isEmpty(enteredOtp)) {
-                PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationCode, enteredOtp);
-                signIn(credential);
-            } else {
-                Toast.makeText(VerifyPhoneActivity.this, "Please enter the verification code", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     void sendOtp(String phoneNumber, boolean isResend) {
@@ -117,32 +128,29 @@ public class VerifyPhoneActivity extends AppCompatActivity {
 
     void signIn(PhoneAuthCredential phoneAuthCredential) {
         setInProgress(true);
-        mAuth.signInWithCredential(phoneAuthCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                setInProgress(false);
-                if (task.isSuccessful()) {
-                    Intent intent = new Intent(VerifyPhoneActivity.this, MainActivity.class);
-                    intent.putExtra("phone", phoneNumber);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    Toast.makeText(getApplicationContext(), "OTP verification failed", Toast.LENGTH_SHORT).show();
-                }
+        mAuth.signInWithCredential(phoneAuthCredential).addOnCompleteListener(task -> {
+            setInProgress(false);
+            if (task.isSuccessful()) {
+                Intent intent = new Intent(VerifyPhoneActivity.this, MainActivity.class);
+                intent.putExtra("phone", phoneNumber);
+                startActivity(intent);
+                finish();
+            } else {
+                Toast.makeText(getApplicationContext(), "OTP verification failed", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private String formatPhoneNumber(String rawPhoneNumber) {
-        // Kiểm tra và định dạng số điện thoại
+
         if (rawPhoneNumber != null) {
             rawPhoneNumber = rawPhoneNumber.trim();
             if (rawPhoneNumber.startsWith("0")) {
-                return "+84" + rawPhoneNumber.substring(1); // Chuyển đổi từ 0 sang +84
+                return "+84" + rawPhoneNumber.substring(1);
             } else if (rawPhoneNumber.startsWith("+84")) {
-                return rawPhoneNumber; // Nếu đã có mã quốc gia
+                return rawPhoneNumber;
             }
         }
-        return rawPhoneNumber; // Trả về số gốc nếu không hợp lệ
+        return rawPhoneNumber;
     }
 }

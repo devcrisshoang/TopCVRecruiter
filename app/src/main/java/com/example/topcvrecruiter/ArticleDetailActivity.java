@@ -3,7 +3,6 @@ package com.example.topcvrecruiter;
 import com.bumptech.glide.Glide;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -15,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.topcvrecruiter.API.ApiPostingService;
 import com.example.topcvrecruiter.Model.Article;
 import com.example.topcvrecruiter.Utils.NotificationUtils;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -25,22 +23,55 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class ArticleDetailActivity extends AppCompatActivity {
+
     private int articleId;
+    private int id_Recruiter;
+
     private TextView articleName;
     private TextView content;
     private TextView createTime;
+
     private ImageButton backButton;
-    private Disposable disposable;
     private ImageButton editButton;
+
+    private Disposable disposable;
+
     private Button deleteButton;
+
     private ImageView articleImage;
-    private int id_Recruiter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_detail);
 
+        setWidget();
+
+        setClick();
+
+    }
+
+    private void editButton(){
+        String imagePath = articleImage.getTag() != null ? articleImage.getTag().toString() : "";
+        Intent intent = new Intent(ArticleDetailActivity.this, EditArticleActivity.class);
+        intent.putExtra("article_id", articleId);
+        intent.putExtra("id_Recruiter", id_Recruiter);
+        intent.putExtra("article_name", articleName.getText().toString());
+        intent.putExtra("content", content.getText().toString());
+        intent.putExtra("image_path", imagePath);
+        startActivity(intent);
+    }
+
+    private void setClick(){
+
+        editButton.setOnClickListener(v -> editButton());
+
+        backButton.setOnClickListener(v -> finish());
+
+        deleteButton.setOnClickListener(v -> showDeleteConfirmationDialog());
+    }
+
+    private void setWidget(){
         articleName = findViewById(R.id.article_Name);
         content = findViewById(R.id.content);
         createTime = findViewById(R.id.create_Time);
@@ -49,39 +80,14 @@ public class ArticleDetailActivity extends AppCompatActivity {
         editButton = findViewById(R.id.edit_button);
         articleImage = findViewById(R.id.image);
 
-        // Lấy article_id từ Intent
         articleId = getIntent().getIntExtra("article_id", -1);
         id_Recruiter = getIntent().getIntExtra("id_Recruiter", -1);
-        Log.e("ArticleDetailActivity","ID recruiter: " + id_Recruiter);
-        // Kiểm tra articleId có hợp lệ không
         if (articleId == -1) {
             Toast.makeText(this, "Invalid article ID", Toast.LENGTH_SHORT).show();
             finish();
         } else {
-            loadArticleDetail(articleId);  // Tải chi tiết bài viết từ API
+            loadArticleDetail(articleId);
         }
-
-        // Xử lý sự kiện nút Edit
-        // Xử lý sự kiện nút Edit
-        editButton.setOnClickListener(v -> {
-            // Truyền articleId, tên bài viết, nội dung, và đường dẫn ảnh
-            String imagePath = articleImage.getTag() != null ? articleImage.getTag().toString() : "";  // Kiểm tra null trước khi gọi toString()
-            Intent intent = new Intent(ArticleDetailActivity.this, EditArticleActivity.class);
-            intent.putExtra("article_id", articleId);
-            intent.putExtra("id_Recruiter", id_Recruiter);
-            intent.putExtra("article_name", articleName.getText().toString());
-            intent.putExtra("content", content.getText().toString());
-            intent.putExtra("image_path", imagePath);
-
-            startActivityForResult(intent, 1); // requestCode = 1
-        });
-
-
-        // Xử lý sự kiện nút Back
-        backButton.setOnClickListener(v -> finish());
-
-        // Xử lý sự kiện nút Delete
-        deleteButton.setOnClickListener(v -> showDeleteConfirmationDialog());
     }
 
     private void loadArticleDetail(int articleId) {
@@ -99,21 +105,18 @@ public class ArticleDetailActivity extends AppCompatActivity {
                         articleName.setText(article.getArticle_Name());
                         content.setText(article.getContent());
 
-                        // Tải hình ảnh vào ImageView bằng Glide
-                        String imagePath = article.getImage(); // Lấy đường dẫn ảnh từ API
+                        String imagePath = article.getImage();
                         if (imagePath != null && !imagePath.isEmpty()) {
                             Glide.with(ArticleDetailActivity.this)
-                                    .load(Uri.parse(imagePath))  // Tải ảnh từ đường dẫn file URI
+                                    .load(Uri.parse(imagePath))
                                     .into(articleImage);
-                            articleImage.setTag(imagePath);  // Lưu đường dẫn ảnh vào tag của ImageView
+                            articleImage.setTag(imagePath);
                         }else {
-                            // Nếu không có ảnh (null hoặc rỗng), hiển thị ảnh mặc định
                             Glide.with(ArticleDetailActivity.this)
-                                    .load(R.drawable.fpt_ic)  // Thay "account_ic" bằng ID ảnh mặc định của bạn
+                                    .load(R.drawable.fpt_ic)
                                     .into(articleImage);
                         }
 
-                        // Định dạng thời gian
                         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault());
                         SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
                         try {
@@ -157,7 +160,6 @@ public class ArticleDetailActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_OK) {
-            // Làm mới dữ liệu khi quay lại từ EditArticleActivity
             loadArticleDetail(articleId);
         }
     }
@@ -181,7 +183,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             Toast.makeText(ArticleDetailActivity.this, "Article deleted successfully", Toast.LENGTH_SHORT).show();
                             NotificationUtils.showNotification(ArticleDetailActivity.this, "You just deleted an article !");
-                            finish();  // Đóng activity sau khi xóa
+                            finish();
                         } else {
                             Toast.makeText(ArticleDetailActivity.this, "Failed to delete article", Toast.LENGTH_SHORT).show();
                         }
@@ -198,7 +200,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (disposable != null && !disposable.isDisposed()) {
-            disposable.dispose();  // Hủy subscription khi không cần dùng nữa
+            disposable.dispose();
         }
     }
 }

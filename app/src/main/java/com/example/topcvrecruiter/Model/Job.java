@@ -38,8 +38,6 @@ public class Job implements Serializable {
     @SerializedName("iD_Recruiter")
     private int iD_Recruiter;
 
-    // Getters và Setters
-
     public String getImage_Id() {
         return image_Id;
     }

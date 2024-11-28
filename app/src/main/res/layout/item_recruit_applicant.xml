@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_margin="5dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/edit_text_rounded_corner_green"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/applicant_avatar"
+        android:layout_width="60sp"
+        android:layout_height="60sp"
+        android:layout_gravity="center"
+        android:layout_marginRight="20sp"
+        android:layout_marginLeft="20sp"
+        android:layout_marginTop="20sp"
+        android:layout_margin="10sp"
+        android:background="@drawable/icon_rounded_corner"
+        android:padding="10sp"
+        android:src="@drawable/fpt_ic" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/ActionOfRecruiterTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:text="Hoang Ho Gia Khanh"
+            android:gravity="center"
+            android:textAlignment="center"/>
+
+        <TextView
+            android:id="@+id/ActionDetailsOfRecruiterTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mobile Intern"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:textSize="14sp"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            android:textAlignment="center"/>
+        <TextView
+            android:id="@+id/ActionDetailsOfEmailRecruiterTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:textSize="14sp"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            android:textAlignment="center"/>
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/TimeOfNotification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginRight="5dp"
+        android:text="10:10 PM" />
+</LinearLayout>

@@ -1,6 +1,5 @@
 package com.example.topcvrecruiter.Adapter;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -8,29 +7,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.topcvrecruiter.ArticleDetailActivity;
 import com.example.topcvrecruiter.R;
 import com.example.topcvrecruiter.Model.Article;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHolder> {
-    private List<Article> articles;
-    private Context context;
 
+    private final List<Article> articles;
+
+    private final Context context;
 
     public ArticleAdapter(Context context, List<Article> articles) {
         this.context = context;
         this.articles = articles;
     }
-
 
     @NonNull
     @Override
@@ -45,15 +38,12 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         holder.articleName.setText(article.getArticle_Name());
         holder.content.setText(article.getContent());
 
-        // Thiết lập sự kiện nhấn vào mỗi item
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ArticleDetailActivity.class);
-            intent.putExtra("article_id", article.getId()); // Chuyển article_id
+            intent.putExtra("article_id", article.getId());
             intent.putExtra("id_Recruiter", article.getiD_Recruiter());
-            Log.d("ArticleAdapter", "Article ID: " + article.getId()); // Log article_id
             context.startActivity(intent);
         });
-
 
         holder.createTime.setText("");
     }

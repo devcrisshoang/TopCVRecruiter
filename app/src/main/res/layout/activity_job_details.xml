@@ -182,7 +182,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/edit_text_rounded_corner"
-
+                android:hint="1, 2, 3, ..."
                 android:padding="10sp" />
 
         </LinearLayout>

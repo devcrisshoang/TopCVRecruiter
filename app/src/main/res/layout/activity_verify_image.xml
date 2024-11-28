@@ -6,10 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     tools:context=".VerifyImageActivity">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         android:orientation="horizontal">
         <ImageButton
             android:id="@+id/back_button"
@@ -52,19 +54,23 @@
             android:id="@+id/front_image"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:src="@drawable/viettel_ic"
+            android:layout_margin="10dp"
             android:scaleType="fitCenter"
-            android:layout_margin="10dp">
+            android:src="@drawable/before_side_ic">
 
         </ImageView>
+
         <Button
             android:id="@+id/select_front_image"
-            android:layout_width="wrap_content"
+            android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:text="Select front photo"
+            app:backgroundTint="@null"
+            android:background="@drawable/button_rounded_corner"
             android:layout_gravity="center">
 
         </Button>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -79,7 +85,7 @@
             android:id="@+id/back_image"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:src="@drawable/vnu"
+            android:src="@drawable/back_side_ic"
             android:scaleType="fitCenter"
             android:layout_margin="10dp">
 
@@ -87,19 +93,24 @@
 
         <Button
             android:id="@+id/select_back_image"
-            android:layout_width="wrap_content"
+            android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:text="Select back photo"
+            app:backgroundTint="@null"
+            android:background="@drawable/button_rounded_corner"
             android:layout_gravity="center">
 
         </Button>
+
     </LinearLayout>
 
     <Button
         android:id="@+id/apply"
-        android:layout_width="wrap_content"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        app:backgroundTint="@null"
+        android:background="@drawable/button_rounded_corner"
         android:layout_gravity="center"
         android:text="Apply">
 

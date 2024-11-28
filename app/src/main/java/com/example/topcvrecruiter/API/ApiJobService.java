@@ -1,6 +1,5 @@
 package com.example.topcvrecruiter.API;
 
-
 import com.example.topcvrecruiter.Model.Job;
 import com.example.topcvrecruiter.Model.JobDetails;
 

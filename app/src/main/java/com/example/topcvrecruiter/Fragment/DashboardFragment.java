@@ -4,35 +4,26 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.example.topcvrecruiter.API.ApiDashboardService;
-
-import com.example.topcvrecruiter.API.ApiRecruiterService;
 import com.example.topcvrecruiter.Adapter.DashboardApplicantAdapter;
 import com.example.topcvrecruiter.Adapter.PaginationScrollListener;
-import com.example.topcvrecruiter.ApplicantDetailActivity;
 import com.example.topcvrecruiter.Model.Job;
 import com.example.topcvrecruiter.NumberApplicantActivity;
 import com.example.topcvrecruiter.NumberJobOfRecruiterActivity;
 import com.example.topcvrecruiter.R;
 import com.example.topcvrecruiter.Model.ApplicantJob;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +31,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
-
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
@@ -48,8 +38,6 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class DashboardFragment extends Fragment {
-    private int id_Recruiter;
-    private int id_User;
 
     private TextView jobCountTextView;
     private TextView acceptedTextView;
@@ -64,16 +52,17 @@ public class DashboardFragment extends Fragment {
     private CardView jobCountCardView;
     private CardView acceptedCardView;
     private CardView rejectedCardView;
+
+    private boolean isLoading = false;
+    private boolean isLastPage;
+
     private int totalAccepted = 0;
     private int totalRejected = 0;
-
-    private boolean isLoading = false;//
-    private boolean isLastPage;//
-    private int totalPage;//
-    private int currentPage = 1;//
-    private int totalItemInPage = 10;//
-
-    private Bundle bundle;
+    private int totalPage;
+    private int currentPage = 1;
+    private int totalItemInPage = 10;
+    private int id_Recruiter;
+    private int id_User;
 
     private List<ApplicantJob> displayedList = new ArrayList<>();
     List<ApplicantJob> applicantList = new ArrayList<>();
@@ -87,14 +76,19 @@ public class DashboardFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
+
         setWidget(view);
+
         setTotalPage();
+
         setRecyclerViewPagination();
+
         setClick();
+
         return view;
     }
 
-    private void setRecyclerViewPagination(){
+    private void setRecyclerViewPagination() {
         applicantsRecyclerView.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
             @Override
             public void loadMoreItem() {
@@ -115,20 +109,18 @@ public class DashboardFragment extends Fragment {
         });
     }
 
-    private void setTotalPage(){
-        if(applicantList.size() <= totalItemInPage){
+    private void setTotalPage() {
+        if (applicantList.size() <= totalItemInPage) {
             totalPage = 1;
-        }
-        else if(applicantList.size() % totalItemInPage == 0){
-            totalPage = applicantList.size()/totalItemInPage;
-        }
-        else if(applicantList.size() % totalItemInPage != 0){
-            totalPage = applicantList.size()/totalItemInPage +1;
+        } else if (applicantList.size() % totalItemInPage == 0) {
+            totalPage = applicantList.size() / totalItemInPage;
+        } else if (applicantList.size() % totalItemInPage != 0) {
+            totalPage = applicantList.size() / totalItemInPage + 1;
         }
     }
 
-    private void setClick(){
-        fetchDashboardData(id_Recruiter);
+    private void setClick() {
+
         jobCountCardView.setOnClickListener(view1 -> fetchListJobs(id_Recruiter));
         acceptedCardView.setOnClickListener(view1 -> fetchListAccepted(id_Recruiter));
         rejectedCardView.setOnClickListener(view1 -> fetchListRejected(id_Recruiter));
@@ -140,14 +132,13 @@ public class DashboardFragment extends Fragment {
         fetchDashboardData(id_Recruiter);
     }
 
-    private void setWidget(View view){
-        //Card View TextView
+    private void setWidget(View view) {
+
         jobCountTextView = view.findViewById(R.id.electricity_amount);
         acceptedTextView = view.findViewById(R.id.job_count);
         rateSuccessTextView = view.findViewById(R.id.recruiting_rate);
         rejectedTextView = view.findViewById(R.id.resume_amount);
 
-        //Card View onclick view
         jobCountCardView = view.findViewById(R.id.applicant_cardView);
         acceptedCardView = view.findViewById(R.id.job_cardView);
         rejectedCardView = view.findViewById((R.id.resume_cardView));
@@ -164,24 +155,22 @@ public class DashboardFragment extends Fragment {
                     }
                 }
         );
-        bundle = getArguments();
-        if (bundle != null) {
-            id_User = bundle.getInt("user_id", 0);  // 0 là giá trị mặc định
-        }
+        id_User = getArguments().getInt("user_id", 0);
         apiDashboardService = ApiDashboardService.apiDashboardService;
 
-        id_Recruiter = getArguments().getInt("id_Recruiter",0);
+        id_Recruiter = getArguments().getInt("id_Recruiter", 0);
+        Log.e("DashboardFragment", "ID: " + id_Recruiter);
         fetchDashboardData(id_Recruiter);
-        dashboardAdapter = new DashboardApplicantAdapter(applicantDetailLauncher, id_Recruiter);
+        dashboardAdapter = new DashboardApplicantAdapter(applicantDetailLauncher, id_Recruiter, id_User);
         applicantsRecyclerView.setAdapter(dashboardAdapter);
     }
 
     private void calculateAndDisplayRate() {
-        if (totalAccepted + totalRejected > 0) { // Kiểm tra tránh chia cho 0
+        if (totalAccepted + totalRejected > 0) {
             float rate = (float) totalAccepted / (totalAccepted + totalRejected);
-            rateSuccessTextView.setText(String.format(Locale.getDefault(), "%.2f%%", rate * 100)); // Cập nhật tỷ lệ vào TextView
+            rateSuccessTextView.setText(String.format(Locale.getDefault(), "%.2f%%", rate * 100));
         } else {
-            rateSuccessTextView.setText("0%"); // Nếu không có ứng viên nào
+            rateSuccessTextView.setText("0%");
         }
     }
 
@@ -199,7 +188,6 @@ public class DashboardFragment extends Fragment {
                     public void onNext(List<Job> jobs) {
                         Map<Integer, Integer> applicantCounts = new HashMap<>();
 
-                        // Dùng CountDownLatch để chờ tất cả các API hoàn thành
                         CountDownLatch latch = new CountDownLatch(jobs.size());
                         for (Job job : jobs) {
                             int jobId = job.getId();
@@ -210,11 +198,11 @@ public class DashboardFragment extends Fragment {
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribe(new Observer<List<ApplicantJob>>() {
                                         @Override
-                                        public void onSubscribe(Disposable d) {}
+                                        public void onSubscribe(Disposable d) {
+                                        }
 
                                         @Override
                                         public void onNext(List<ApplicantJob> applicantList) {
-                                            // Lưu số lượng ứng viên vào Map
                                             applicantCounts.put(jobId, applicantList.size());
                                         }
 
@@ -225,19 +213,18 @@ public class DashboardFragment extends Fragment {
 
                                         @Override
                                         public void onComplete() {
-                                            // Giảm latch khi API hoàn thành
                                             latch.countDown();
                                         }
                                     });
                         }
                         new Thread(() -> {
                             try {
-                                latch.await(); // Chờ cho đến khi latch về 0
+                                latch.await();
                                 Intent intent = new Intent(getContext(), NumberJobOfRecruiterActivity.class);
 
                                 Bundle bundle = new Bundle();
-                                bundle.putSerializable("jobsList", new ArrayList<>(jobs)); // Truyền danh sách Job
-                                bundle.putSerializable("applicantCounts", (Serializable) applicantCounts); // Truyền Map
+                                bundle.putSerializable("jobsList", new ArrayList<>(jobs));
+                                bundle.putSerializable("applicantCounts", (Serializable) applicantCounts);
                                 bundle.putInt("id_Recruiter", id_Recruiter);
                                 intent.putExtras(bundle);
                                 startActivity(intent);
@@ -258,7 +245,7 @@ public class DashboardFragment extends Fragment {
                     }
 
                 });
-    };
+    }
 
     private void fetchListAccepted(int recruiterId) {
         apiDashboardService.getAcceptedApplicants(recruiterId)
@@ -288,7 +275,6 @@ public class DashboardFragment extends Fragment {
                     public void onComplete() {
                     }
                 });
-
 
     }
 
@@ -326,45 +312,36 @@ public class DashboardFragment extends Fragment {
 
     @SuppressLint("CheckResult")
     private void fetchDashboardData(int recruiterId) {
-        //------------------Job------------------------//
         apiDashboardService.getListJobs(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(jobs -> {
-                    int jobCount = jobs.size(); // Đếm số lượng item trong danh sách
-                    jobCountTextView.setText(String.valueOf(jobCount)); // Hiển thị số lượng ứng viên lên TextView
+                    int jobCount = jobs.size();
+                    jobCountTextView.setText(String.valueOf(jobCount));
                 }, throwable -> {
-                    // Xử lý lỗi nếu có
                     Log.e("API Error", "Error fetching applicants", throwable);
                 });
 
-
-        //------------------Accepted--------------------------//
         apiDashboardService.getAcceptedApplicants(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(accepted -> {
-                    totalAccepted = accepted.size(); // Đếm số lượng item trong danh sách
+                    totalAccepted = accepted.size();
                     acceptedTextView.setText(String.valueOf(totalAccepted));
                     calculateAndDisplayRate();
                 }, throwable -> {
-                    // Xử lý lỗi nếu có
                     Log.e("API Error", "Error fetching applicants", throwable);
                 });
-        //------------------Rejected--------------------------//
         apiDashboardService.getRejectedApplicants(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(rejected -> {
-                    totalRejected = rejected.size(); // Đếm số lượng item trong danh sách
+                    totalRejected = rejected.size();
                     rejectedTextView.setText(String.valueOf(totalRejected));
                     calculateAndDisplayRate();
                 }, throwable -> {
-                    // Xử lý lỗi nếu có
                     Log.e("API Error", "Error fetching applicants", throwable);
                 });
-
-        //------------------Suggest------------------------//
         apiDashboardService.getListSuggestedApplicants(recruiterId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -392,46 +369,19 @@ public class DashboardFragment extends Fragment {
                 });
     }
 
-//    void fetchListApplicantsForJob(int recruiterId, int jobId) {
-//        apiDashboardService.getListApplicantsForJob(recruiterId, jobId)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Observer<List<ApplicantJob>>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {}
-//
-//                    @Override
-//                    public void onNext(List<ApplicantJob> applicantList) {
-//                        // Lưu số lượng ứng viên vào Map
-//                        applicantCounts.put(jobId, applicantList.size());
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        Log.e("DashboardFragment", "Error fetching applicants for job: " + jobId, e);
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//                        // Giảm latch khi API hoàn thành
-//                        latch.countDown();
-//                    }
-//                });
-//    }
-
-    private void setFirstData(){
+    private void setFirstData() {
 
         displayedList = getList();
         dashboardAdapter.setListApplicant(displayedList);
 
-        if (currentPage < totalPage){
+        if (currentPage < totalPage) {
             dashboardAdapter.addFooterLoading();
         } else {
             isLastPage = true;
         }
     }
 
-    private void loadNextPage(){
+    private void loadNextPage() {
         new Handler().postDelayed(() -> {
             dashboardAdapter.removeFooterLoading();
             List<ApplicantJob> nextPageList = getList();
@@ -442,22 +392,21 @@ public class DashboardFragment extends Fragment {
 
             if (currentPage < totalPage) {
                 dashboardAdapter.addFooterLoading();
-            }
-            else {
+            } else {
                 isLastPage = true;
             }
         }, 2000);
     }
 
-    private List<ApplicantJob> getList(){
+    private List<ApplicantJob> getList() {
         //Toast.makeText(getContext(), "Load data page: " + currentPage, Toast.LENGTH_SHORT).show();
         List<ApplicantJob> list = new ArrayList<>();
 
-        int start = (currentPage - 1) * totalItemInPage; // Tính chỉ số bắt đầu
-        int end = Math.min(start + totalItemInPage, applicantList.size()); // Tính chỉ số kết thúc
+        int start = (currentPage - 1) * totalItemInPage;
+        int end = Math.min(start + totalItemInPage, applicantList.size());
 
         if (start < applicantList.size()) {
-            list.addAll(applicantList.subList(start, end)); // Thêm các phần tử từ workList vào danh sách
+            list.addAll(applicantList.subList(start, end));
         }
 
         return list;

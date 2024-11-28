@@ -7,10 +7,8 @@ public class CompanyInformationDetails {
     private String dateFounded;
     private int idCompany;
 
-    // Constructor không tham số
     public CompanyInformationDetails() {}
 
-    // Constructor với các tham số
     public CompanyInformationDetails(int idCompanyInformationDetails, String website, int taxID, String dateFounded, int idCompany) {
         this.idCompanyInformationDetails = idCompanyInformationDetails;
         this.website = website;
@@ -19,7 +17,6 @@ public class CompanyInformationDetails {
         this.idCompany = idCompany;
     }
 
-    // Getter và Setter
     public int getIdCompanyInformationDetails() {
         return idCompanyInformationDetails;
     }

@@ -1,17 +1,14 @@
 package com.example.topcvrecruiter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Toast;
-
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -19,17 +16,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
 import com.example.topcvrecruiter.API.ApiCompanyService;
-import com.example.topcvrecruiter.API.ApiRecruiterService;
 import com.example.topcvrecruiter.Model.Company;
-import com.example.topcvrecruiter.Model.Recruiter;
 import com.github.dhaval2404.imagepicker.ImagePicker;
-
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class CompanyInformationActivity extends AppCompatActivity {
+
     private int recruiter_id;
     private int user_id;
 
@@ -39,11 +33,14 @@ public class CompanyInformationActivity extends AppCompatActivity {
     private EditText editTextField;
 
     private ImageButton image;
+    private ImageButton back_button;
+
     private Button Submit;
+
     private ActivityResultLauncher<Intent> ImagePickerLauncher;
+
     private Uri ImageUri;
 
-    private ImageButton back_button;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,11 +51,14 @@ public class CompanyInformationActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        recruiter_id = getIntent().getIntExtra("id_Recruiter",0);
-        Log.e("CompanyInformationActivity", "Id Recruiter: " + recruiter_id);
-        user_id = getIntent().getIntExtra("user_id",0);
-        back_button = findViewById(R.id.back_button);
+
         setWidget();
+
+        setClick();
+
+    }
+
+    private void setClick(){
         Submit.setOnClickListener(view -> {
             CreateCompany(recruiter_id);
         });
@@ -106,23 +106,64 @@ public class CompanyInformationActivity extends AppCompatActivity {
         editTextField = findViewById(R.id.editTextField);
         image = findViewById(R.id.image);
         Submit = findViewById(R.id.Submit);
+
+        recruiter_id = getIntent().getIntExtra("id_Recruiter",0);
+        user_id = getIntent().getIntExtra("user_id",0);
+        back_button = findViewById(R.id.back_button);
     }
 
+    @SuppressLint("CheckResult")
     private void CreateCompany(int id) {
         if (id <= 0) {
             Toast.makeText(this, "ID người dùng không hợp lệ", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // Lấy dữ liệu từ các trường nhập liệu
+        String name = editTextName.getText().toString().trim();
+        String address = editTextAddress.getText().toString().trim();
+        String hotline = editTextHotline.getText().toString().trim();
+        String field = editTextField.getText().toString().trim();
+        String image = (ImageUri != null) ? ImageUri.toString().trim() : "";
+
+        // Danh sách lỗi
+        StringBuilder errors = new StringBuilder();
+
+        if (name.isEmpty()) {
+            errors.append("- Tên công ty không được để trống\n");
+        }
+        if (address.isEmpty()) {
+            errors.append("- Địa chỉ không được để trống\n");
+        }
+        if (hotline.isEmpty()) {
+            errors.append("- Số hotline không được để trống\n");
+        } else if (!hotline.matches("\\d{8,15}")) { // Kiểm tra số điện thoại
+            errors.append("- Số hotline phải là số từ 10 đến 15 chữ số\n");
+        }
+        if (field.isEmpty()) {
+            errors.append("- Lĩnh vực hoạt động không được để trống\n");
+        }
+        if (image.isEmpty()) {
+            errors.append("- Hình ảnh không được để trống\n");
+        }
+
+        // Nếu có lỗi, hiển thị Toast và dừng thực hiện
+        if (errors.length() > 0) {
+            Toast.makeText(this, "Vui lòng điền đầy đủ thông tin:\n" + errors.toString(), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // Nếu không có lỗi, tiếp tục tạo đối tượng Company
         Company company = new Company();
-        company.setName(editTextName.getText().toString());
-        company.setAddress(editTextAddress.getText().toString());
-        company.setHotline(editTextHotline.getText().toString());
-        company.setField(editTextField.getText().toString());
-        company.setImage(ImageUri.toString());
+        company.setName(name);
+        company.setAddress(address);
+        company.setHotline(hotline);
+        company.setField(field);
+        company.setImage(image);
         company.setGreen_Badge(false);
 
-        ApiCompanyService.ApiCompanyService.createCompanyForRecruiter(id,company)
+        // Gọi API để tạo công ty
+        ApiCompanyService.ApiCompanyService.createCompanyForRecruiter(id, company)
                 .subscribeOn(Schedulers.io())  // Chạy trên luồng nền
                 .observeOn(AndroidSchedulers.mainThread())  // Quan sát kết quả trên luồng chính
                 .subscribe(
@@ -131,15 +172,13 @@ public class CompanyInformationActivity extends AppCompatActivity {
                             Toast.makeText(this, "CompanyInformation đã được tạo thành công!", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(this, CompanyDetailActivity.class);
                             intent.putExtra("id_Recruiter", recruiter_id);
-                            intent.putExtra("user_id",user_id);
+                            intent.putExtra("user_id", user_id);
                             startActivity(intent);
-                            //finish();
                         },
                         throwable -> {
                             // Xử lý khi có lỗi
                             Toast.makeText(this, "Có lỗi xảy ra: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                 );
-        //finish();
     }
 }

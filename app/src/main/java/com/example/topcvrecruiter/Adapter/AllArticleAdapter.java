@@ -1,5 +1,6 @@
 package com.example.topcvrecruiter.Adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -7,13 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.topcvrecruiter.ArticleDetailActivity;
 import com.example.topcvrecruiter.R;
 import com.example.topcvrecruiter.Model.Article;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -23,8 +22,10 @@ public class AllArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private static final int VIEW_TYPE_ITEM = 0;
     private static final int VIEW_TYPE_LOADING = 1;
-    private Context context;
-    private List<Article> articles;
+
+    private final Context context;
+
+    private final List<Article> articles;
 
     public AllArticleAdapter(Context context, List<Article> articles) {
         this.articles = articles;
@@ -33,24 +34,24 @@ public class AllArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        // Kiểm tra xem item có phải là "footer loading" không
         return (articles.get(position) == null) ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_ITEM) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_article, parent, false);
             return new ArticleViewHolder(view);
         } else {
-            // "footer loading" item
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_loading, parent, false);
             return new LoadingViewHolder(view);
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         if (holder instanceof ArticleViewHolder) {
             Article article = articles.get(position);
@@ -58,20 +59,19 @@ public class AllArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             articleViewHolder.title.setText(article.getArticle_Name());
             articleViewHolder.content.setText(article.getContent());
 
-            // Thiết lập sự kiện nhấn vào mỗi item
             holder.itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(context, ArticleDetailActivity.class);
-                intent.putExtra("article_id", article.getId()); // Chuyển article_id
-                Log.d("ArticleAdapter", "Article ID: " + article.getId()); // Log article_id
+                intent.putExtra("article_id", article.getId());
+                Log.d("ArticleAdapter", "Article ID: " + article.getId());
                 context.startActivity(intent);
             });
 
-            // Định dạng thời gian
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault());
             SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
 
             try {
                 Date createDate = inputFormat.parse(article.getCreate_Time());
+                assert createDate != null;
                 long createTimeInMillis = createDate.getTime();
                 long currentTimeInMillis = System.currentTimeMillis();
 
@@ -106,7 +106,6 @@ public class AllArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return articles != null ? articles.size() : 0;
     }
 
-    // Thêm footer loading vào cuối RecyclerView
     public void addFooterLoading() {
         if (!articles.contains(null)) {
             articles.add(null);
@@ -114,7 +113,6 @@ public class AllArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    // Loại bỏ footer loading sau khi dữ liệu được tải
     public void removeFooterLoading() {
         int position = articles.indexOf(null);
         if (position != -1) {
@@ -123,7 +121,6 @@ public class AllArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    // ViewHolder cho item bài viết
     public static class ArticleViewHolder extends RecyclerView.ViewHolder {
         TextView title, content;
         TextView createTime;
@@ -136,7 +133,6 @@ public class AllArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    // ViewHolder cho footer loading
     public static class LoadingViewHolder extends RecyclerView.ViewHolder {
         public LoadingViewHolder(View itemView) {
             super(itemView);

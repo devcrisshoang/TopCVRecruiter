@@ -1,5 +1,6 @@
 package com.example.topcvrecruiter.Fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,7 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.topcvrecruiter.API.ApiMessageService;
 import com.example.topcvrecruiter.Adapter.MessengerAdapter;
@@ -28,8 +28,11 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class MessengerFragment extends Fragment {
 
     private RecyclerView messageRecyclerView;
+
     private MessengerAdapter messageAdapter;
+
     private List<User> userList = new ArrayList<>();
+
     private int id_User;
 
     @Nullable
@@ -37,35 +40,38 @@ public class MessengerFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_messenger, container, false);
         messageRecyclerView = view.findViewById(R.id.MessageRecyclerView);
-        messageRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Khởi tạo adapter ngay lập tức
-        messageAdapter = new MessengerAdapter(userList, getContext());
-        messageRecyclerView.setAdapter(messageAdapter);
-        id_User = getArguments().getInt("user_id", -1);
+        setWidget();
 
-        // Fetch data để hiển thị trong RecyclerView
-        int userId = id_User; // Giả sử đây là ID của người dùng đã đăng nhập
-        getChatPartners(userId);
         return view;
     }
+
+    private void setWidget() {
+        id_User = getArguments().getInt("user_id", -1);
+        //Log.e("MessageFragment","User ID: " + id_User);
+        messageRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        messageAdapter = new MessengerAdapter(userList, getContext(),id_User);
+        messageRecyclerView.setAdapter(messageAdapter);
+        assert getArguments() != null;
+        getChatPartners(id_User);
+    }
+
+    @SuppressLint("CheckResult")
     private void getChatPartners(int userId) {
         ApiMessageService.apiMessageService.getAllChatPartnersByUserId(userId)
                 .subscribeOn(Schedulers.io()) // Thực hiện trên thread background
                 .observeOn(AndroidSchedulers.mainThread()) // Quan sát trên thread UI
                 .subscribe(
                         users -> {
-                            userList.clear(); // Xóa danh sách cũ nếu có
-                            userList.addAll(users); // Thêm tất cả người dùng vào danh sách
+                            userList.clear();
+                            userList.addAll(users);
 
-                            // Cập nhật lại RecyclerView sau khi dữ liệu thay đổi
                             if (messageAdapter != null) {
                                 messageAdapter.notifyDataSetChanged();
                             }
                         },
                         throwable -> {
                             Log.e("MessengerFragment", "Error fetching chat partners: " + throwable.getMessage());
-                            Toast.makeText(getContext(), "Failed to load chat partners", Toast.LENGTH_SHORT).show();
                         }
                 );
     }

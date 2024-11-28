@@ -1,5 +1,6 @@
 package com.example.topcvrecruiter.Fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -13,14 +14,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-
 import com.bumptech.glide.Glide;
 import com.example.topcvrecruiter.AboutActicity;
 import com.example.topcvrecruiter.ChangePasswordActivity;
@@ -34,28 +33,34 @@ import com.example.topcvrecruiter.API.ApiCompanyService;
 import com.example.topcvrecruiter.Model.Company;
 import com.example.topcvrecruiter.Model.User;
 import com.github.dhaval2404.imagepicker.ImagePicker;
-
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class AccountFragment extends Fragment {
+
     private Button about_application_button;
     private Button term_of_services_button;
     private Button privacy_policy_button;
     private Button sign_out_button;
     private Button change_background_button;
+    private Button change_password_button;
+    private Button edt_field;
+    private Button edt_company;
+
     private ImageView background;
     private ImageView avatar;
     private ImageView change_avatar;
-    private Button change_password_button;
 
     private ActivityResultLauncher<Intent> imagePickerLauncherBackground;
     private ActivityResultLauncher<Intent> imagePickerLauncherAvatar;
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private int id_User;
     private int id_Recruiter;
+    private int companyId ;
+
     private String username;
     private String password;
     private String currentAvatarUrl;
@@ -63,36 +68,20 @@ public class AccountFragment extends Fragment {
 
     private Uri backgroundImageUri;
     private Uri avatarImageUri;
+
     private TextView recruiter_name;
     private TextView email_address;
     private TextView ac_company_name;
     private TextView ac_field;
-    private Button edt_field;
-    private Button edt_company;
-    private int companyId ;  // Đặt giá trị mặc định là -1 nếu chưa có công ty
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_account, container, false);
         setWidget(view);
-        if (getArguments() != null) {
-            id_User = getArguments().getInt("user_id", -1);
-            Log.e("ID","ID: "+id_User);
-        }
 
-        if (getArguments() != null) {
-            id_Recruiter = getArguments().getInt("id_Recruiter", 0);
-        }
-        // Gọi hàm lấy thông tin người dùng với id cố định
-        getUserById(id_User);
-        // Gọi hàm lấy thông tin Recruiter với ID cứng
-        getRecruiterById(id_User);  // Giả sử ID người tuyển dụng là 1
-        //Log.e("AccountFragment","ID: " + id_Recruiter);
-        // Khởi tạo ActivityResultLauncher cho việc chọn ảnh
         initImagePicker();
 
-        // Khởi tạo sự kiện cho các nút
         initListeners();
 
         return view;
@@ -114,6 +103,12 @@ public class AccountFragment extends Fragment {
         ac_field = view.findViewById(R.id.ac_field);
         edt_company = view.findViewById(R.id.edt_company);
         edt_field = view.findViewById(R.id.edt_field);
+        assert getArguments() != null;
+        id_User = getArguments().getInt("user_id", 0);
+        id_Recruiter = getArguments().getInt("id_Recruiter", 0);
+
+        getUserById(id_User);
+        getRecruiterById(id_User);
     }
 
     private void initListeners() {
@@ -122,13 +117,13 @@ public class AccountFragment extends Fragment {
         term_of_services_button.setOnClickListener(view -> startActivity(new Intent(getContext(), TermOfServiceActivity.class)));
 
         sign_out_button.setOnClickListener(view -> new AlertDialog.Builder(getContext())
-                .setTitle("Xác nhận đăng xuất")
-                .setMessage("Bạn có chắc chắn muốn đăng xuất không?")
-                .setPositiveButton("Có", (dialog, which) -> {
+                .setTitle("Confirm")
+                .setMessage("Are you sure you want to log out?")
+                .setPositiveButton("Yes", (dialog, which) -> {
                     startActivity(new Intent(getContext(), LoginActivity.class));
                     if (getActivity() != null) getActivity().finish();
                 })
-                .setNegativeButton("Không", (dialog, which) -> dialog.dismiss())
+                .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
                 .show());
 
         change_background_button.setOnClickListener(view -> {
@@ -155,22 +150,21 @@ public class AccountFragment extends Fragment {
 
         change_password_button.setOnClickListener(view -> {
             Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
-            intent.putExtra("user_id", id_User);  // Truyền ID người dùng vào Activity thay đổi mật khẩu
+            intent.putExtra("user_id", id_User);
             startActivity(intent);
         });
 
         edt_company.setOnClickListener(v -> {
             String companyName = ac_company_name.getText().toString();
-            showEditDialog("Tên công ty", companyName, newName -> {
+            showEditDialog("Company name", companyName, newName -> {
                 ac_company_name.setText(newName);
                 updateCompanyInfo(newName, ac_field.getText().toString());
             });
         });
 
-        // Cài đặt sự kiện cho nút chỉnh sửa lĩnh vực
         edt_field.setOnClickListener(v -> {
             String field = ac_field.getText().toString();
-            showEditDialog("Lĩnh vực", field, newField -> {
+            showEditDialog("Field", field, newField -> {
                 ac_field.setText(newField);
                 updateCompanyInfo(ac_company_name.getText().toString(), newField);
             });
@@ -179,20 +173,19 @@ public class AccountFragment extends Fragment {
 
     private void showEditDialog(String title, String currentValue, OnSaveListener onSaveListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Chỉnh sửa " + title);
+        builder.setTitle("Edit " + title);
         View customView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_edit, null);
         EditText editText = customView.findViewById(R.id.edit_value);
         editText.setText(currentValue);
         builder.setView(customView);
         builder.setPositiveButton("Lưu", (dialog, which) -> {
             String newValue = editText.getText().toString();
-            onSaveListener.onSave(newValue);  // Lưu giá trị mới
+            onSaveListener.onSave(newValue);
         });
-        builder.setNegativeButton("Hủy", null);
+        builder.setNegativeButton("Cancel", null);
         builder.show();
     }
 
-    // Giao diện listener để lưu giá trị khi chỉnh sửa
     public interface OnSaveListener {
         void onSave(String newValue);
     }
@@ -206,7 +199,7 @@ public class AccountFragment extends Fragment {
                         background.setImageURI(backgroundImageUri);
                         updateBackground(backgroundImageUri);
                     } else {
-                        Toast.makeText(getContext(), "Chưa chọn hình ảnh", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "No image selected", Toast.LENGTH_SHORT).show();
                     }
                 }
         );
@@ -219,12 +212,13 @@ public class AccountFragment extends Fragment {
                         avatar.setImageURI(avatarImageUri);
                         updateAvatar(avatarImageUri);
                     } else {
-                        Toast.makeText(getContext(), "Chưa chọn hình ảnh", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "No image selected", Toast.LENGTH_SHORT).show();
                     }
                 }
         );
     }
 
+    @SuppressLint("CheckResult")
     private void getUserById(int userId) {
         ApiUserService.apiUserService.getUserById(userId)
                 .subscribeOn(Schedulers.io())
@@ -248,6 +242,7 @@ public class AccountFragment extends Fragment {
                 );
     }
 
+    @SuppressLint("CheckResult")
     private void updateAvatar(Uri avatarUri) {
         String avatarUrl = (avatarUri != null) ? avatarUri.toString() : (currentAvatarUrl != null ? currentAvatarUrl : "");
 
@@ -280,6 +275,7 @@ public class AccountFragment extends Fragment {
                 );
     }
 
+    @SuppressLint("CheckResult")
     private void updateBackground(Uri backgroundUri) {
         String backgroundUrl = (backgroundUri != null) ? backgroundUri.toString() : (currentBackgroundUrl != null ? currentBackgroundUrl : "");
 
@@ -334,7 +330,7 @@ public class AccountFragment extends Fragment {
         }
     }
 
-    // Hàm để gọi API lấy thông tin của Recruiter
+    @SuppressLint("CheckResult")
     private void getRecruiterById(int userId) {
         ApiRecruiterService.ApiRecruiterService.getRecruiterById(id_Recruiter)
                 .subscribeOn(Schedulers.io())
@@ -357,6 +353,7 @@ public class AccountFragment extends Fragment {
                 );
     }
 
+    @SuppressLint({"CheckResult", "SetTextI18n"})
     private void getCompanyByRecruiterId(int recruiterId) {
         ApiCompanyService.ApiCompanyService.getCompanyByRecruiterId(recruiterId)
                 .subscribeOn(Schedulers.io())
@@ -364,14 +361,13 @@ public class AccountFragment extends Fragment {
                 .subscribe(
                         company -> {
                             if (company != null) {
-                                ac_company_name.setText(company.getName() != null ? company.getName() : "Chưa cập nhật");
-                                ac_field.setText(company.getField() != null ? company.getField() : "Chưa cập nhật");
-                                companyId = company.getId(); // Lưu ID công ty
+                                ac_company_name.setText(company.getName() != null ? company.getName() : "Not updated yet");
+                                ac_field.setText(company.getField() != null ? company.getField() : "Not updated yet");
+                                companyId = company.getId();
                             } else {
-                                // Gán giá trị mặc định nếu không tìm thấy công ty
-                                ac_company_name.setText("Chưa có công ty");
-                                ac_field.setText("Chưa có lĩnh vực");
-                                companyId = -1; // Đảm bảo companyId không bị lỗi
+                                ac_company_name.setText("No company yet");
+                                ac_field.setText("No field yet");
+                                companyId = -1;
                             }
                         },
                         throwable -> {
@@ -384,35 +380,27 @@ public class AccountFragment extends Fragment {
                 );
     }
 
-
+    @SuppressLint("CheckResult")
     private void updateCompanyInfo(String companyName, String field) {
         if (companyId == -1) {
-            // Không có ID công ty, thông báo lỗi
-            Toast.makeText(getContext(), "Không thể cập nhật vì chưa có thông tin công ty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Cannot update because there is no company information yet.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Tạo đối tượng Company với thông tin mới
         Company company = new Company(companyName, "", "", field, "", false);
 
         ApiCompanyService.ApiCompanyService.updateCompanyById(companyId, company)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        () -> {
-                            Toast.makeText(getContext(), "Cập nhật công ty thành công", Toast.LENGTH_SHORT).show();
-                        },
-                        throwable -> {
-                            Log.e("AccountFragment", "Error updating company: " + throwable.getMessage());
-                            Toast.makeText(getContext(), "Lỗi khi cập nhật công ty", Toast.LENGTH_SHORT).show();
-                        }
+                        () -> Toast.makeText(getContext(), "Company update successful", Toast.LENGTH_SHORT).show(),
+                        throwable -> Log.e("AccountFragment", "Error updating company: " + throwable.getMessage())
                 );
     }
-
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        compositeDisposable.clear(); // Giải phóng tài nguyên
+        compositeDisposable.clear();
     }
 }

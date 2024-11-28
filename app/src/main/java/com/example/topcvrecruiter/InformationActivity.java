@@ -1,19 +1,19 @@
 package com.example.topcvrecruiter;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import com.example.topcvrecruiter.API.ApiRecruiterService;
 import com.example.topcvrecruiter.Model.Recruiter;
-
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -21,37 +21,51 @@ public class InformationActivity extends AppCompatActivity {
 
     private EditText nameEditText;
     private EditText phoneEditText;
-    private Button submitButton;
     private EditText editTextEmail;
 
-    private int id_User; // Biến lưu ID người dùng
-    private int id_Recruiter;
-    private String username; // Biến lưu tên người dùng
+    private Button submitButton;
 
     private ImageButton back_button;
+
+    private int id_User;
+    private int id_Recruiter;
+
+    private String username;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_information);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
+        setWidget();
+
+        setClick();
+    }
+
+    private void setClick(){
+        submitButton.setOnClickListener(v -> submitApplicant());
+        back_button.setOnClickListener(view -> finish());
+    }
+
+    private void setWidget(){
         nameEditText = findViewById(R.id.editTextName);
         phoneEditText = findViewById(R.id.editTextPhone);
         submitButton = findViewById(R.id.Submit);
         editTextEmail = findViewById(R.id.editTextEmail);
         back_button = findViewById(R.id.back_button);
 
-        // Nhận dữ liệu từ Intent
-        Intent intent = getIntent();
-        username = intent.getStringExtra("username"); // Tên tài khoản
-        id_User = intent.getIntExtra("user_id", -1); // Nhận ID người dùng
-        id_Recruiter = intent.getIntExtra("id_Recruiter", -1);
-        // Điền dữ liệu vào EditText nếu cần
+        username = getIntent().getStringExtra("username");
+        id_User = getIntent().getIntExtra("user_id", -1);
+        id_Recruiter = getIntent().getIntExtra("id_Recruiter", -1);
+        //Log.e("InformationActivity","id_Recruiter" + id_Recruiter);
         if (username != null) {
             nameEditText.setText(username);
         }
-
-        submitButton.setOnClickListener(v -> submitApplicant());
-        back_button.setOnClickListener(view -> finish());
     }
 
     private void submitApplicant() {
@@ -65,17 +79,40 @@ public class InformationActivity extends AppCompatActivity {
         }
 
         Log.d("Applicant Info", "Name: " + name + ", Phone: " + phone);
-
-        // Gửi thông tin đến server và chuyển Activity khi thành công
         sendApplicantData(name, phone, email);
     }
 
+    @SuppressLint("CheckResult")
     private void sendApplicantData(String name, String phone, String email) {
         if (id_User <= 0) {
             Toast.makeText(this, "ID người dùng không hợp lệ", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // Kiểm tra các trường dữ liệu
+        StringBuilder errors = new StringBuilder();
+
+        if (name == null || name.trim().isEmpty()) {
+            errors.append("- Tên không được để trống\n");
+        }
+        if (phone == null || phone.trim().isEmpty()) {
+            errors.append("- Số điện thoại không được để trống\n");
+        } else if (!phone.matches("\\d{10,15}")) { // Kiểm tra số điện thoại hợp lệ
+            errors.append("- Số điện thoại phải là số từ 10 đến 15 chữ số\n");
+        }
+        if (email == null || email.trim().isEmpty()) {
+            errors.append("- Email không được để trống\n");
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) { // Kiểm tra định dạng email
+            errors.append("- Email không hợp lệ\n");
+        }
+
+        // Nếu có lỗi, hiển thị thông báo và dừng xử lý
+        if (errors.length() > 0) {
+            Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin:\n" + errors.toString(), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // Tạo đối tượng Recruiter
         Recruiter recruiter = new Recruiter();
         recruiter.setRecruiterName(name);
         recruiter.setPhoneNumber(phone);
@@ -86,19 +123,18 @@ public class InformationActivity extends AppCompatActivity {
         recruiter.setIs_Confirm(false);
         recruiter.setIdUser(id_User);
         recruiter.setIdCompany(0);
+
+        // Gọi API để gửi dữ liệu
         ApiRecruiterService.ApiRecruiterService.createRecruiter(recruiter)
-                .subscribeOn(Schedulers.io())  // Chạy trên luồng nền
-                .observeOn(AndroidSchedulers.mainThread())  // Quan sát kết quả trên luồng chính
-                // Giả sử response trả về là một đối tượng JSON có trường id_Recruiter
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> {
-                            int id_Recruiter = response.getId(); // Nhận id_Recruiter từ response
+                            int id_Recruiter = response.getId();
                             Log.d("Recruiter", "ID Recruiter: " + id_Recruiter);
-
-                            // Chuyển sang VerifyImageActivity với id_Recruiter
                             Intent intent = new Intent(this, VerifyImageActivity.class);
                             intent.putExtra("user_id", id_User);
-                            intent.putExtra("id_Recruiter", id_Recruiter); // Truyền id_Recruiter
+                            intent.putExtra("id_Recruiter", id_Recruiter);
                             intent.putExtra("name", name);
                             intent.putExtra("phone", phone);
                             intent.putExtra("email", email);
@@ -108,7 +144,6 @@ public class InformationActivity extends AppCompatActivity {
                             Toast.makeText(this, "Có lỗi xảy ra: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                 );
-
-        //finish();
     }
+
 }

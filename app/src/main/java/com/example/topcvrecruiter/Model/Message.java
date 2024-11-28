@@ -30,7 +30,10 @@ public class Message {
         this.send_Time = send_Time;
     }
 
-    // Getters and setters
+    public Message() {
+
+    }
+
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

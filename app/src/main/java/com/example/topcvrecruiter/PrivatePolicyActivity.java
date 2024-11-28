@@ -1,7 +1,7 @@
 package com.example.topcvrecruiter;
+
 import android.os.Bundle;
 import android.widget.ImageButton;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -20,10 +20,18 @@ public class PrivatePolicyActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        policy_back_button = findViewById(R.id.policy_back_button);
-        policy_back_button.setOnClickListener(view -> {
-            finish();
-        });
 
+        setWidget();
+
+        setClick();
+
+    }
+
+    private void setWidget(){
+        policy_back_button = findViewById(R.id.policy_back_button);
+    }
+
+    private  void setClick(){
+        policy_back_button.setOnClickListener(view -> finish());
     }
 }

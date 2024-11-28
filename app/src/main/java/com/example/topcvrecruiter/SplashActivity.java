@@ -3,7 +3,6 @@ package com.example.topcvrecruiter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -22,18 +21,15 @@ public class SplashActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-//                if(FirebaseUtil.isLoggedIn()){
-//                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
-//                }
-//                else {
-//                    startActivity(new Intent(SplashActivity.this, LoginPhoneNumberActivity.class));
-//                }
-                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                finish();
-            }
+
+        run();
+
+    }
+
+    private void run(){
+        new Handler().postDelayed(() -> {
+            startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+            finish();
         }, 1000);
     }
 }

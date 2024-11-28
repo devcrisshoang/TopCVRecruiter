@@ -1,5 +1,6 @@
 package com.example.topcvrecruiter;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -8,14 +9,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
 import com.example.topcvrecruiter.API.ApiRecruiterService;
 import com.example.topcvrecruiter.API.ApiUserService;
 import com.example.topcvrecruiter.Model.User;
@@ -36,7 +35,6 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -47,9 +45,15 @@ public class LoginActivity extends AppCompatActivity {
     private GoogleSignInClient googleSignInClient;
     private CallbackManager callbackManager;
 
-    private EditText usernameInput, passwordInput;
-    private Button loginButton, Register_Button;
-    private ImageButton facebookButton, googleButton;
+    private EditText usernameInput;
+    private EditText passwordInput;
+
+    private Button loginButton;
+    private Button Register_Button;
+
+    private ImageButton facebookButton;
+    private ImageButton googleButton;
+
     private int id_Recruiter;
 
     @Override
@@ -57,29 +61,32 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            // Sử dụng WindowInsetsCompat để lấy các giá trị Insets
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
         setWidget();
+
         setClick();
     }
 
     private void setClick(){
-        // Xử lý nút đăng nhập
+
         loginButton.setOnClickListener(view -> loginUser());
-        // Xử lý nút đăng nhập bằng Facebook
+
         facebookButton.setOnClickListener(view -> loginWithFacebook());
-        // Xử lý nút đăng nhập bằng Google
+
         googleButton.setOnClickListener(view -> signInWithGoogle());
-        // Xử lý nút đăng ký
-        Register_Button.setOnClickListener(view -> {
-            Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-            intent.putExtra("isSignUpButtonClicked", true);
-            startActivity(intent);
-            finish();
-        });
+
+        Register_Button.setOnClickListener(view -> registerButton());
+    }
+
+    private void registerButton(){
+        Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+        intent.putExtra("isSignUpButtonClicked", true);
+        startActivity(intent);
+        finish();
     }
 
     private void setWidget(){
@@ -96,24 +103,19 @@ public class LoginActivity extends AppCompatActivity {
                 .requestEmail()
                 .build();
         googleSignInClient = GoogleSignIn.getClient(this, gso);
-        // Kích hoạt Edge-to-Edge
         EdgeToEdge.enable(this);
     }
 
-    private void getRecruiterById(int userId) {
-
-    }
-
+    @SuppressLint("CheckResult")
     private void loginUser() {
         String username = usernameInput.getText().toString().trim();
         String password = passwordInput.getText().toString().trim();
 
         if (username.isEmpty() || password.isEmpty()) {
-            Toast.makeText(LoginActivity.this, "Vui lòng nhập tên đăng nhập và mật khẩu", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, "Please enter your username and password!", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Lấy tất cả người dùng
         ApiUserService.apiUserService.getAllUser()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -125,29 +127,30 @@ public class LoginActivity extends AppCompatActivity {
                             isValidUser = true;
 
                             if (!user.getPassword().equals(password)) {
-                                Toast.makeText(LoginActivity.this, "Tên đăng nhập hoặc mật khẩu không đúng.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, "Incorrect username or password!", Toast.LENGTH_SHORT).show();
                                 return;
                             }
 
                             int userId = user.getId();
 
-                            if(user.isRecruiter() == true){
+                            if(user.isRecruiter()){
                                 ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(userId)
                                         .subscribeOn(Schedulers.io())
                                         .observeOn(AndroidSchedulers.mainThread())
                                         .subscribe(response -> {
-                                            if (response.isIs_Registered() == true) {
-                                                // Nếu tồn tại Applicant, chuyển đến MainActivity
+                                            if (response.isIs_Confirm()) {
                                                 navigateToMainActivity(userId, response.getRecruiterName(), response.getPhoneNumber());
-                                            } else if(response.isIs_Registered() == false || response == null){
-                                                // Nếu không tồn tại Applicant, chuyển đến InformationActivity
+                                            }
+                                            else if (!response.isIs_Confirm() && response.isIs_Registered()){
+                                                navigateToWaitingConfirmActivity(userId, response.getRecruiterName(), response.getPhoneNumber());
+                                            }
+                                            else if(!response.isIs_Registered()){
                                                 navigateToInformationActivity(userId);
                                             } else {
-                                                Toast.makeText(this, "This account is invalid", Toast.LENGTH_SHORT).show();
+                                                navigateToInformationActivity(userId);
                                             }
                                         }, throwable -> {
                                             Log.e("API Error", "Error fetching applicant: " + throwable.getMessage());
-                                            Toast.makeText(LoginActivity.this, "Không tìm thấy Applicant, chuyển đến trang Information.", Toast.LENGTH_SHORT).show();
                                             navigateToInformationActivity(userId);
                                         });
                                 return;
@@ -159,13 +162,37 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     if (!isValidUser) {
-                        Toast.makeText(LoginActivity.this, "Tên đăng nhập không tồn tại", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Username does not exist!", Toast.LENGTH_SHORT).show();
                     }
-                }, throwable -> {
-                    Toast.makeText(LoginActivity.this, "Lỗi kết nối đến server: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+                }, throwable -> Toast.makeText(LoginActivity.this, "Error connecting to server: " + throwable.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
+    @SuppressLint("CheckResult")
+    private void navigateToWaitingConfirmActivity(int id_User, String recruiterName, String phoneNumber){
+        ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(id_User)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        recruiter -> {
+                            if (recruiter != null) {
+                                id_Recruiter = recruiter.getId();
+                                Intent intent = new Intent(LoginActivity.this, WaitingConfirmActivity.class);
+                                intent.putExtra("user_id", id_User);
+                                intent.putExtra("recruiterName", recruiterName);
+                                intent.putExtra("phoneNumber", phoneNumber);
+                                intent.putExtra("id_Recruiter", id_Recruiter);
+                                Log.e("LoginActivity","ID: "+ id_Recruiter);
+                                startActivity(intent);
+                            } else {
+                                Log.e("AccountFragment", "Recruiter not found");
+                            }
+                        },
+                        throwable -> Log.e("AccountFragment", "Error fetching recruiter: " + throwable.getMessage())
+                );
+        finish();
+    }
+
+    @SuppressLint("CheckResult")
     private void navigateToInformationActivity(int id_User) {
         ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(id_User)
                 .subscribeOn(Schedulers.io())
@@ -189,6 +216,7 @@ public class LoginActivity extends AppCompatActivity {
                 );
     }
 
+    @SuppressLint("CheckResult")
     private void navigateToMainActivity(int id_User, String recruiterName, String phoneNumber) {
         ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(id_User)
                 .subscribeOn(Schedulers.io())
@@ -312,4 +340,5 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
+
 }

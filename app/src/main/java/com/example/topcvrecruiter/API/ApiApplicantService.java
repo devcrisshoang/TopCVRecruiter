@@ -42,6 +42,9 @@ public interface ApiApplicantService {
     @GET("api/Applicant/user/{id}")
     Observable <Applicant> getApplicantByUserId(@Path("id") int id);
 
+    @GET("api/Applicant/{id}")
+    Observable <Applicant> getApplicantById(@Path("id") int id);
+
     @POST("api/Applicant")
     Observable<Applicant> createApplicant(@Body Applicant applicant);
 

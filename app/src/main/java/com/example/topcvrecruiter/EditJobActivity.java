@@ -1,49 +1,94 @@
 package com.example.topcvrecruiter;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.bumptech.glide.Glide;
 import com.example.topcvrecruiter.API.ApiJobService;
 import com.example.topcvrecruiter.Model.Job;
 import com.example.topcvrecruiter.Model.JobDetails;
 import com.github.dhaval2404.imagepicker.ImagePicker;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class EditJobActivity extends AppCompatActivity {
-    private EditText jobName, workLocation, experienceRequire, workMethod, genderRequire, workPosition, applyDate, jobDescription, skillRequire, benefit, workingTime, Salary, numberofpeople, companyName;
+
+    private EditText jobName;
+    private EditText workLocation;
+    private EditText experienceRequire;
+    private EditText workMethod ;
+    private EditText genderRequire;
+    private EditText workPosition;
+    private EditText applyDate;
+    private EditText jobDescription;
+    private EditText skillRequire;
+    private EditText benefit;
+    private EditText workingTime;
+    private EditText Salary;
+    private EditText numberOfPeople;
+    private EditText companyName;
+
     private Button saveButton;
-    private int jobId, jobDetailsId;
-    private ImageView avatar, change_avatar;
-    private ActivityResultLauncher<Intent> imagePickerLauncherAvatar;
-    private Uri uri;
-    private String currentImagePath;  // To store the current image path (original one)
+
     private ImageButton backButton;
 
+    private int jobId;
+    private int jobDetailsId;
+
+    private ImageView avatar;
+    private ImageView change_avatar;
+
+    private ActivityResultLauncher<Intent> imagePickerLauncherAvatar;
+
+    private Uri uri;
+
+    private String currentImagePath;
+
     private int id_Recruiter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_job);
 
-        // Bind views
+        setWidget();
+
+        setClick();
+
+    }
+
+    private void setClick(){
+
+        saveButton.setOnClickListener(v -> showConfirmationDialog());
+
+        backButton.setOnClickListener(v -> finish());
+
+        change_avatar.setOnClickListener(view -> changAvatarButton());
+    }
+
+    private void changAvatarButton(){
+        ImagePicker.with(this)
+                .crop()
+                .compress(1024)
+                .maxResultSize(1080, 1080)
+                .createIntent(intent -> {
+                    imagePickerLauncherAvatar.launch(intent);
+                    return null;
+                });
+    }
+
+    private void setWidget(){
         jobName = findViewById(R.id.job_name);
         Salary = findViewById(R.id.et_salary);
         companyName = findViewById(R.id.et_companyName);
@@ -57,14 +102,12 @@ public class EditJobActivity extends AppCompatActivity {
         skillRequire = findViewById(R.id.conditions);
         benefit = findViewById(R.id.interesting);
         workingTime = findViewById(R.id.working_time);
-        numberofpeople = findViewById(R.id.et_numberpeople);
-
+        numberOfPeople = findViewById(R.id.et_numberpeople);
         saveButton = findViewById(R.id.save_button);
-        backButton = findViewById(R.id.job_edit_back_button);
         avatar = findViewById(R.id.avatar);
         change_avatar = findViewById(R.id.change_avatar);
+        backButton = findViewById(R.id.job_edit_back_button);
 
-        // Get data from Intent
         jobId = getIntent().getIntExtra("jobId", -1);
         id_Recruiter = getIntent().getIntExtra("id_Recruiter", -1);
         jobDetailsId = getIntent().getIntExtra("jobDetailsId", -1);
@@ -81,67 +124,39 @@ public class EditJobActivity extends AppCompatActivity {
         skillRequire.setText(getIntent().getStringExtra("skillRequire"));
         benefit.setText(getIntent().getStringExtra("benefit"));
         workingTime.setText(getIntent().getStringExtra("workingTime"));
-        numberofpeople.setText(getIntent().getStringExtra("numberOfPeople"));
-
-        // Get image path from Intent
+        numberOfPeople.setText(getIntent().getStringExtra("numberOfPeople"));
         currentImagePath = getIntent().getStringExtra("imagePath");
-        if (currentImagePath != null && !currentImagePath.isEmpty()) {
-            Glide.with(this)
-                    .load(Uri.parse(currentImagePath))  // Use Glide to load the image from the URI
-                    .into(avatar);
-        }
 
-        // Set save button listener
-        saveButton.setOnClickListener(v -> showConfirmationDialog());
-
-        ImageButton backButton = findViewById(R.id.job_edit_back_button);
-
-        // Đặt sự kiện click cho nút back
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Xử lý sự kiện quay lại khi nhấn nút back
-                onBackPressed();  // gọi phương thức quay lại
-            }
-        });
-        // Set change avatar listener
-        change_avatar.setOnClickListener(view -> {
-            ImagePicker.with(this)
-                    .crop()                // Crop image (optional)
-                    .compress(1024)        // Compress image (optional)
-                    .maxResultSize(1080, 1080)  // Limit the image size (optional)
-                    .createIntent(intent -> {
-                        imagePickerLauncherAvatar.launch(intent);  // Launch the image picker
-                        return null;
-                    });
-        });
-
-        // Initialize image picker result launcher
         imagePickerLauncherAvatar = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                         uri = result.getData().getData();
-                        avatar.setImageURI(uri);  // Display the selected image in ImageView
+                        avatar.setImageURI(uri);
                     } else {
                         Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
                     }
                 }
         );
+
+        if (currentImagePath != null && !currentImagePath.isEmpty()) {
+            Glide.with(this)
+                    .load(Uri.parse(currentImagePath))
+                    .into(avatar);
+        }
+
     }
 
     private void showConfirmationDialog() {
-        // Create a confirmation dialog
         new AlertDialog.Builder(EditJobActivity.this)
                 .setTitle("Confirmation")
                 .setMessage("Are you sure you want to update this job?")
                 .setPositiveButton("Yes", (dialog, which) -> updateJob())
-                .setNegativeButton("No", null) // If the user clicks "No", just close the dialog
+                .setNegativeButton("No", null)
                 .show();
     }
 
     private void updateJob() {
-        // Get values from EditTexts
         String name = jobName.getText().toString();
         int salary = Integer.parseInt(Salary.getText().toString());
         String company = companyName.getText().toString();
@@ -155,31 +170,25 @@ public class EditJobActivity extends AppCompatActivity {
         String skill = skillRequire.getText().toString();
         String benefitText = benefit.getText().toString();
         String time = workingTime.getText().toString();
-        String numberPeople = numberofpeople.getText().toString();
+        String numberPeople = numberOfPeople.getText().toString();
 
-        // If no image selected, use the current image path
         String image = (uri != null) ? uri.toString() : currentImagePath;
 
-
-
-        // Create Job and JobDetails objects with updated data
-        Job updatedJob = new Job(image, name, company, experience, location, salary, date, id_Recruiter); // Assuming recruiterId is 1
+        Job updatedJob = new Job(image, name, company, experience, location, salary, date, id_Recruiter);
         JobDetails updatedJobDetails = new JobDetails(description, skill, benefitText, gender, time, method, position, numberPeople, jobId);
 
-        // Call API to update Job
         ApiJobService.apiService.updateJob(jobId, updatedJob).enqueue(new Callback<Job>() {
             @Override
             public void onResponse(Call<Job> call, Response<Job> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(EditJobActivity.this, "Updated Job Success!", Toast.LENGTH_SHORT).show();
 
-                    // Call API to update JobDetails
                     ApiJobService.apiService.putJobDetails(jobDetailsId, updatedJobDetails).enqueue(new Callback<JobDetails>() {
                         @Override
                         public void onResponse(Call<JobDetails> call, Response<JobDetails> response) {
                             if (response.isSuccessful()) {
-                                setResult(RESULT_OK);  // Return result to calling activity
-                                finish();  // Close the activity
+                                setResult(RESULT_OK);
+                                finish();
                             } else {
                                 Toast.makeText(EditJobActivity.this, "Error Update JobDetails", Toast.LENGTH_SHORT).show();
                             }

@@ -1,17 +1,15 @@
 package com.example.topcvrecruiter.Adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.topcvrecruiter.ApplicantDetailActivity;
 import com.example.topcvrecruiter.R;
 import com.example.topcvrecruiter.Model.ApplicantJob;
@@ -19,19 +17,26 @@ import com.example.topcvrecruiter.Model.ApplicantJob;
 import java.util.List;
 
 public class DashboardApplicantAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+
     private static final int TYPE_ITEM = 1;
     private static final int TYPE_LOADING = 2;
 
     private List<ApplicantJob> listApplicant;
-    private ActivityResultLauncher<Intent> applicantDetailLauncher;
-    private boolean isLoadingAdd;
-    private int recruiterId;
 
-    public DashboardApplicantAdapter(ActivityResultLauncher<Intent> applicantDetailLauncher, int recruiterId){
+    private final ActivityResultLauncher<Intent> applicantDetailLauncher;
+
+    private boolean isLoadingAdd;
+
+    private final int recruiterId;
+    private final int userId;
+
+    public DashboardApplicantAdapter(ActivityResultLauncher<Intent> applicantDetailLauncher, int recruiterId, int userId){
         this.applicantDetailLauncher = applicantDetailLauncher;
         this.recruiterId = recruiterId;
+        this.userId = userId;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setListApplicant(List<ApplicantJob> listApplicant) {
         this.listApplicant = listApplicant;
         notifyDataSetChanged();
@@ -39,7 +44,7 @@ public class DashboardApplicantAdapter extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public int getItemViewType(int position) {
-        if (listApplicant != null && position == listApplicant.size()-1 && isLoadingAdd == true){
+        if (listApplicant != null && position == listApplicant.size()-1 && isLoadingAdd){
             return TYPE_LOADING;
         }
         return TYPE_ITEM;
@@ -61,7 +66,6 @@ public class DashboardApplicantAdapter extends RecyclerView.Adapter<RecyclerView
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (getItemViewType(position) == TYPE_ITEM){
 
-
         ApplicantJob applicant = listApplicant.get(position);
         if (applicant == null) return;
 
@@ -75,12 +79,10 @@ public class DashboardApplicantAdapter extends RecyclerView.Adapter<RecyclerView
             Intent intent = new Intent(holder.itemView.getContext(), ApplicantDetailActivity.class);
             intent.putExtra("id_Recruiter", recruiterId);
             intent.putExtra("applicant_id", applicant.getId());
-            intent.putExtra("isAccepted", applicant.isAccepted());
-            intent.putExtra("isRejected", applicant.isRejected());
+            intent.putExtra("userId", userId);
             applicantDetailLauncher.launch(intent);
-        });
-
-    }
+            });
+        }
     }
 
     @Override
@@ -89,12 +91,12 @@ public class DashboardApplicantAdapter extends RecyclerView.Adapter<RecyclerView
         return 0;
     }
 
-    public class DashboardViewHolder extends RecyclerView.ViewHolder{
+    public static class DashboardViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView applicantNameTextView;
-        private TextView applicantPhoneTextView;
-        private TextView applicantEmailTextView;
-        private TextView applicantTimeTextView;
+        private final TextView applicantNameTextView;
+        private final TextView applicantPhoneTextView;
+        private final TextView applicantEmailTextView;
+        private final TextView applicantTimeTextView;
         public DashboardViewHolder(@NonNull View itemView) {
             super(itemView);
             applicantNameTextView = itemView.findViewById(R.id.ActionOfRecruiterTextView);
@@ -104,18 +106,17 @@ public class DashboardApplicantAdapter extends RecyclerView.Adapter<RecyclerView
         }
     }
 
-    public class LoadingViewHolder extends RecyclerView.ViewHolder{
-        private ProgressBar progressBar;
+    public static class LoadingViewHolder extends RecyclerView.ViewHolder{
         public LoadingViewHolder(@NonNull View itemView) {
             super(itemView);
-            progressBar = itemView.findViewById(R.id.progress_bar);
+            ProgressBar progressBar = itemView.findViewById(R.id.progress_bar);
         }
     }
 
     public void addFooterLoading() {
         isLoadingAdd = true;
-        listApplicant.add(new ApplicantJob(0, "", "", "", "", "", "", false, "")); // Thêm một đối tượng ApplicantJob trống vào danh sách
-        notifyItemInserted(listApplicant.size() - 1); // Thông báo rằng có một item mới được thêm
+        listApplicant.add(new ApplicantJob(0, "", "", "", "", "", "", false, ""));
+        notifyItemInserted(listApplicant.size() - 1);
     }
 
     public void removeFooterLoading() {
@@ -126,7 +127,7 @@ public class DashboardApplicantAdapter extends RecyclerView.Adapter<RecyclerView
         ApplicantJob applicantJob = listApplicant.get(position);
         if (applicantJob != null) {
             listApplicant.remove(position);
-            notifyItemRemoved(position); // Thông báo rằng item đã bị xóa
+            notifyItemRemoved(position);
         }
     }
 

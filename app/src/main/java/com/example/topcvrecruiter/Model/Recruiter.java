@@ -114,11 +114,9 @@ public class Recruiter {
         this.is_Confirm = is_Confirm;
     }
 
-    // Constructor mặc định
     public Recruiter() {
     }
 
-    // Constructor có tham số
     public Recruiter(int id, String recruiterName, String phoneNumber, int idCompany, String emailAddress, int idUser, String frontImage, String backImage) {
         this.id = id;
         this.recruiterName = recruiterName;

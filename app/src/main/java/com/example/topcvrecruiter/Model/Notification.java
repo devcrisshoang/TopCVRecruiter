@@ -5,16 +5,16 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Calendar;
 
 public class Notification {
-    @SerializedName("id")  // ánh xạ với "id" trong JSON
+    @SerializedName("id")
     private int ID;
 
-    @SerializedName("content")  // ánh xạ với "content" trong JSON
+    @SerializedName("content")
     private String Content;
 
-    @SerializedName("time")  // ánh xạ với "time" trong JSON
+    @SerializedName("time")
     private String Time;
 
-    @SerializedName("iD_User")  // ánh xạ với "iD_User" trong JSON
+    @SerializedName("iD_User")
     private int ID_User;
 
     public Notification(int ID, String content, String time, int ID_User) {
