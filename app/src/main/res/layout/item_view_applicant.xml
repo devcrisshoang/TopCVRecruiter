@@ -66,9 +66,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginRight="10dp"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="@color/red"
-        android:text="1" />
+        android:layout_marginRight="5dp"
+        android:text="10:10 PM" />
 </LinearLayout>

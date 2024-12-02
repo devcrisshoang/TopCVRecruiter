@@ -2,6 +2,7 @@ package com.example.topcvrecruiter.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +12,19 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.topcvrecruiter.ApplicantDetailActivity;
-import com.example.topcvrecruiter.R;
+
+import com.example.topcvrecruiter.API.ApiApplicantService;
 import com.example.topcvrecruiter.Model.ApplicantJob;
+import com.example.topcvrecruiter.R;
+import com.example.topcvrecruiter.ResumeActivity;
+import com.example.topcvrecruiter.Utils.DateTimeUtils;
 
 import java.util.List;
 
-public class DashboardApplicantAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
+public class DashboardViewApplicantAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private static final int TYPE_ITEM = 1;
     private static final int TYPE_LOADING = 2;
@@ -30,11 +37,15 @@ public class DashboardApplicantAdapter extends RecyclerView.Adapter<RecyclerView
 
     private final int recruiterId;
     private final int userId;
+    private int applicantUserId;
 
-    public DashboardApplicantAdapter(ActivityResultLauncher<Intent> applicantDetailLauncher, int recruiterId, int userId){
+    private String jobName;
+
+    public DashboardViewApplicantAdapter(ActivityResultLauncher<Intent> applicantDetailLauncher, int recruiterId, int userId, String jobName){
         this.applicantDetailLauncher = applicantDetailLauncher;
         this.recruiterId = recruiterId;
         this.userId = userId;
+        this.jobName = jobName;
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -55,7 +66,7 @@ public class DashboardApplicantAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_ITEM) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_applicant, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_view_applicant, parent, false);
             return new DashboardViewHolder(view);
         } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_loading, parent, false);
@@ -63,6 +74,7 @@ public class DashboardApplicantAdapter extends RecyclerView.Adapter<RecyclerView
         }
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (getItemViewType(position) == TYPE_ITEM){
@@ -74,15 +86,34 @@ public class DashboardApplicantAdapter extends RecyclerView.Adapter<RecyclerView
         dashboardViewHolder.applicantNameTextView.setText(applicant.getApplicant_Name());
         dashboardViewHolder.applicantPhoneTextView.setText(applicant.getPhone_Number());
         dashboardViewHolder.applicantEmailTextView.setText(applicant.getEmail());
-        dashboardViewHolder.applicantTimeTextView.setText(applicant.getTime());
         dashboardViewHolder.applicant_avatar.setImageResource(R.drawable.account_ic);
+        String time = DateTimeUtils.formatTimeAgo(applicant.getTime());
+        dashboardViewHolder.applicantTimeTextView.setText(time);
 
         dashboardViewHolder.itemView.setOnClickListener(view -> {
-            Intent intent = new Intent(holder.itemView.getContext(), ApplicantDetailActivity.class);
-            intent.putExtra("id_Recruiter", recruiterId);
-            intent.putExtra("applicant_id", applicant.getId());
-            intent.putExtra("userId", userId);
-            applicantDetailLauncher.launch(intent);
+            ApiApplicantService.ApiApplicantService.getApplicantById(applicant.getId())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            applicants -> {
+                                if (applicants != null) {
+                                    applicantUserId = applicants.getiD_User();
+                                    Intent intent = new Intent(holder.itemView.getContext(), ResumeActivity.class);
+                                    intent.putExtra("id_Recruiter", recruiterId);
+                                    intent.putExtra("applicant_id", applicant.getId());
+                                    intent.putExtra("userId", userId);
+                                    intent.putExtra("applicantUserId",applicants.getiD_User());
+                                    intent.putExtra("jobName",jobName);
+                                    applicantDetailLauncher.launch(intent);
+                                    Log.e("ApplicantDetailActivity","applicantUserId: " + applicantUserId);
+                                } else {
+                                    Log.e("ApplicantDetailActivity","Recruiter not found");
+                                }
+                            },
+                            throwable -> {
+                                Log.e("ApplicantDetailActivity", "Error fetching recruiter: " + throwable.getMessage());
+                            }
+                    );
             });
         }
     }
@@ -94,7 +125,6 @@ public class DashboardApplicantAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     public static class DashboardViewHolder extends RecyclerView.ViewHolder{
-
         private ImageView applicant_avatar;
         private final TextView applicantNameTextView;
         private final TextView applicantPhoneTextView;

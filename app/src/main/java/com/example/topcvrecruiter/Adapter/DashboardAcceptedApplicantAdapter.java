@@ -5,19 +5,22 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.topcvrecruiter.ApplicantDetailActivity;
-import com.example.topcvrecruiter.R;
 import com.example.topcvrecruiter.Model.ApplicantJob;
+import com.example.topcvrecruiter.R;
+import com.example.topcvrecruiter.ResumeActivity;
+import com.example.topcvrecruiter.Utils.DateTimeUtils;
 
 import java.util.List;
 
-public class DashboardApplicantAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class DashboardAcceptedApplicantAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private static final int TYPE_ITEM = 1;
     private static final int TYPE_LOADING = 2;
@@ -31,7 +34,7 @@ public class DashboardApplicantAdapter extends RecyclerView.Adapter<RecyclerView
     private final int recruiterId;
     private final int userId;
 
-    public DashboardApplicantAdapter(ActivityResultLauncher<Intent> applicantDetailLauncher, int recruiterId, int userId){
+    public DashboardAcceptedApplicantAdapter(ActivityResultLauncher<Intent> applicantDetailLauncher, int recruiterId, int userId){
         this.applicantDetailLauncher = applicantDetailLauncher;
         this.recruiterId = recruiterId;
         this.userId = userId;
@@ -55,7 +58,7 @@ public class DashboardApplicantAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_ITEM) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_applicant, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_view_applicant, parent, false);
             return new DashboardViewHolder(view);
         } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_loading, parent, false);
@@ -74,14 +77,15 @@ public class DashboardApplicantAdapter extends RecyclerView.Adapter<RecyclerView
         dashboardViewHolder.applicantNameTextView.setText(applicant.getApplicant_Name());
         dashboardViewHolder.applicantPhoneTextView.setText(applicant.getPhone_Number());
         dashboardViewHolder.applicantEmailTextView.setText(applicant.getEmail());
-        dashboardViewHolder.applicantTimeTextView.setText(applicant.getTime());
-        dashboardViewHolder.applicant_avatar.setImageResource(R.drawable.account_ic);
+        String time = DateTimeUtils.formatTimeAgo(applicant.getTime());
+        dashboardViewHolder.applicantTimeTextView.setText(time);
 
         dashboardViewHolder.itemView.setOnClickListener(view -> {
             Intent intent = new Intent(holder.itemView.getContext(), ApplicantDetailActivity.class);
             intent.putExtra("id_Recruiter", recruiterId);
             intent.putExtra("applicant_id", applicant.getId());
             intent.putExtra("userId", userId);
+            intent.putExtra("check",true);
             applicantDetailLauncher.launch(intent);
             });
         }
@@ -95,7 +99,6 @@ public class DashboardApplicantAdapter extends RecyclerView.Adapter<RecyclerView
 
     public static class DashboardViewHolder extends RecyclerView.ViewHolder{
 
-        private ImageView applicant_avatar;
         private final TextView applicantNameTextView;
         private final TextView applicantPhoneTextView;
         private final TextView applicantEmailTextView;
@@ -106,7 +109,6 @@ public class DashboardApplicantAdapter extends RecyclerView.Adapter<RecyclerView
             applicantPhoneTextView = itemView.findViewById(R.id.ActionDetailsOfRecruiterTextView);
             applicantEmailTextView = itemView.findViewById(R.id.ActionDetailsOfEmailRecruiterTextView);
             applicantTimeTextView = itemView.findViewById(R.id.TimeOfNotification);
-            applicant_avatar = itemView.findViewById(R.id.applicant_avatar);
         }
     }
 
@@ -134,5 +136,4 @@ public class DashboardApplicantAdapter extends RecyclerView.Adapter<RecyclerView
             notifyItemRemoved(position);
         }
     }
-
 }

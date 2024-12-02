@@ -44,6 +44,7 @@ public class MessageActivity extends AppCompatActivity {
     private int mainUserId;
     private int applicantUserId;
     private int userIdContact;
+    private int recruiterUserId;
 
     private TextView friend_name;
 
@@ -80,6 +81,7 @@ public class MessageActivity extends AppCompatActivity {
         messenger_send_button = findViewById(R.id.messenger_send_button);
         input_message_edittext = findViewById(R.id.input_message_edittext);
         friend_name = findViewById(R.id.friend_name);
+
         mainUserId = getIntent().getIntExtra("mainUserId", 0);
         applicantUserId = getIntent().getIntExtra("applicantUserId",0);
         applicantName = getIntent().getStringExtra("applicantName");
@@ -87,6 +89,8 @@ public class MessageActivity extends AppCompatActivity {
         applicantNameContact = getIntent().getStringExtra("applicantNameContact");
         userIdContact = getIntent().getIntExtra("userIdContact",0);
         userIdRecruiter = getIntent().getIntExtra("userIdRecruiter",0);
+
+        recruiterUserId = getIntent().getIntExtra("recruiterUserId",0);
 
         if(getIntent().getIntExtra("mainUserId", 0) == 0){
             friend_name.setText(applicantNameContact);

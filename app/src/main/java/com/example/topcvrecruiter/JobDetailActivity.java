@@ -19,6 +19,8 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.topcvrecruiter.API.ApiJobService;
 import com.example.topcvrecruiter.Model.Job;
 import com.example.topcvrecruiter.Model.JobDetails;
+import com.example.topcvrecruiter.Utils.DateTimeUtils;
+
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -60,6 +62,7 @@ public class JobDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_job_detail);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -80,7 +83,6 @@ public class JobDetailActivity extends AppCompatActivity {
     }
 
     private void setWidget(){
-        setContentView(R.layout.activity_job_detail);
         id_Recruiter = getIntent().getIntExtra("id_Recruiter",0);
         back_button = findViewById(R.id.information_back_button);
         edit_button = findViewById(R.id.edit_button);
@@ -234,7 +236,8 @@ public class JobDetailActivity extends AppCompatActivity {
         workLocation.setText(job.getWorking_Address());
         experienceRequire.setText(job.getWorking_Experience_Require());
         experience.setText(job.getWorking_Experience_Require());
-        applyDate.setText(job.getApplication_Date());
+        String time = DateTimeUtils.getRemainingDaysMessage(job.getApplication_Date());
+        applyDate.setText(time);
 
         String imagePath = job.getImage_Id();
         if (imagePath != null && !imagePath.isEmpty()) {

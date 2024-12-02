@@ -8,6 +8,47 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class DateTimeUtils {
+
+    public static String getRemainingDaysMessage(String inputDate) {
+        if (inputDate == null || inputDate.isEmpty()) {
+            return "Invalid date";
+        }
+
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+        Calendar calendar = Calendar.getInstance();
+        Date parsedDate;
+
+        try {
+            parsedDate = inputFormat.parse(inputDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "Invalid date format. Expected format is yyyy-MM-dd'T'HH:mm:ss";
+        }
+
+        // Thêm 30 ngày vào ngày truyền vào
+        calendar.setTime(parsedDate);
+        calendar.add(Calendar.DAY_OF_YEAR, 30);
+        Date targetDate = calendar.getTime();
+
+        // Lấy ngày hiện tại
+        Date currentDate = new Date();
+
+        // Tính số ngày còn lại
+        long timeDifferenceMillis = targetDate.getTime() - currentDate.getTime();
+        long daysRemaining = TimeUnit.MILLISECONDS.toDays(timeDifferenceMillis);
+
+        // Đảm bảo không trả về số âm
+        daysRemaining = Math.max(daysRemaining, 0);
+
+        // Xử lý chuỗi kết quả
+        if (daysRemaining == 1) {
+            return "Remaining " + daysRemaining + " day";
+        } else {
+            return "Remaining " + daysRemaining + " days";
+        }
+    }
+
+
     public static String getCurrentTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
         Date now = new Date();

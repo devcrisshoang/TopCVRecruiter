@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ImageButton;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
@@ -14,18 +15,20 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.topcvrecruiter.Adapter.DashboardApplicantAdapter;
+
+import com.example.topcvrecruiter.Adapter.DashboardAcceptedApplicantAdapter;
 import com.example.topcvrecruiter.Adapter.DashboardViewApplicantAdapter;
 import com.example.topcvrecruiter.Adapter.PaginationScrollListener;
 import com.example.topcvrecruiter.Model.ApplicantJob;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class NumberApplicantActivity extends AppCompatActivity {
+public class NumberAcceptedApplicantActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
 
-    private DashboardViewApplicantAdapter applicantAdapter;
+    private DashboardAcceptedApplicantAdapter applicantAdapter;
 
     private List<ApplicantJob> applicantList;
 
@@ -39,8 +42,6 @@ public class NumberApplicantActivity extends AppCompatActivity {
     private int totalItemInPage = 10;
     private int id_Recruiter;
     private int id_User;
-
-    private String jobName;
 
     private ImageButton backButton;
 
@@ -109,7 +110,6 @@ public class NumberApplicantActivity extends AppCompatActivity {
         applicantList = (List<ApplicantJob>) getIntent().getSerializableExtra("applicantList");
         id_Recruiter = getIntent().getIntExtra("id_Recruiter", -1);
         id_User = getIntent().getIntExtra("id_User", -1);
-        jobName = getIntent().getStringExtra("jobName");
         recyclerView = findViewById(R.id.number_applicant_Recycler_View);
 
         linearLayoutManager = new LinearLayoutManager(this);
@@ -123,7 +123,7 @@ public class NumberApplicantActivity extends AppCompatActivity {
                     }
                 }
         );
-        applicantAdapter = new DashboardViewApplicantAdapter(applicantDetailLauncher, id_Recruiter, id_User, jobName);
+        applicantAdapter = new DashboardAcceptedApplicantAdapter(applicantDetailLauncher, id_Recruiter, id_User);
         recyclerView.setAdapter(applicantAdapter);
     }
 

@@ -18,10 +18,8 @@ import com.example.topcvrecruiter.Model.CV;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
-import io.reactivex.rxjava3.core.SingleObserver;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import retrofit2.Response;
 
 public class ApplicantDetailActivity extends AppCompatActivity {
 
@@ -41,8 +39,6 @@ public class ApplicantDetailActivity extends AppCompatActivity {
     private int userId;
     private int recruiterId;
     private int applicantId;
-    private int rateSuccess = 0;
-    private int rateFail = 0;
 
     private ApiDashboardService apiService;
 
@@ -70,13 +66,9 @@ public class ApplicantDetailActivity extends AppCompatActivity {
                         applicant -> {
                             if (applicant != null) {
                                 Intent intent = new Intent(ApplicantDetailActivity.this, MessageActivity.class);
-                                intent.putExtra("applicantIdContact", applicantId);
                                 intent.putExtra("applicantNameContact",applicant.getApplicant_Name());
                                 intent.putExtra("userIdContact",applicant.getiD_User());
                                 intent.putExtra("userIdRecruiter",userId);
-                                Log.e("ApplicantDetail","ID: "+ applicantId);
-                                Log.e("ApplicantDetail","Name: "+ applicant.getApplicant_Name());
-                                Log.e("ApplicantDetail","user_id: "+ applicant.getiD_User());
                                 startActivity(intent);
                             } else {
                                 Toast.makeText(this, "Recruiter not found", Toast.LENGTH_SHORT).show();
@@ -112,44 +104,6 @@ public class ApplicantDetailActivity extends AppCompatActivity {
         applicantId = getIntent().getIntExtra("applicant_id", 0);
         userId = getIntent().getIntExtra("userId", 0);
         fetchCvForApplicant(applicantId, recruiterId);
-    }
-
-    private void finishWithSuccessResult() {
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra("rateSuccess", rateSuccess);
-        setResult(RESULT_OK, resultIntent);
-        finish();
-    }
-
-    private void finishWithFailResult() {
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra("rateFail", rateFail);
-        setResult(RESULT_OK, resultIntent);
-        finish();
-    }
-
-    private void updateAcceptanceStatus(int recruiterId, int applicantId, boolean isAccepted) {
-        apiService.updateAcceptanceStatus(recruiterId, applicantId, isAccepted)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<Response<Void>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) { }
-
-                    @Override
-                    public void onSuccess(Response<Void> response) {
-                        if (isAccepted) {
-                            rateSuccess++;
-                        } else {
-                            rateFail++;
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-                });
     }
 
     private void fetchCvForApplicant(int applicantId, int recruiterId) {

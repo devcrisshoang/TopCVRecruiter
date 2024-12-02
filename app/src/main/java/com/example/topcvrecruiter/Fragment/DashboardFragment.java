@@ -20,8 +20,10 @@ import com.example.topcvrecruiter.API.ApiDashboardService;
 import com.example.topcvrecruiter.Adapter.DashboardApplicantAdapter;
 import com.example.topcvrecruiter.Adapter.PaginationScrollListener;
 import com.example.topcvrecruiter.Model.Job;
+import com.example.topcvrecruiter.NumberAcceptedApplicantActivity;
 import com.example.topcvrecruiter.NumberApplicantActivity;
 import com.example.topcvrecruiter.NumberJobOfRecruiterActivity;
+import com.example.topcvrecruiter.NumberRejectedApplicantActivity;
 import com.example.topcvrecruiter.R;
 import com.example.topcvrecruiter.Model.ApplicantJob;
 import java.io.Serializable;
@@ -120,9 +122,10 @@ public class DashboardFragment extends Fragment {
     }
 
     private void setClick() {
-
         jobCountCardView.setOnClickListener(view1 -> fetchListJobs(id_Recruiter));
+
         acceptedCardView.setOnClickListener(view1 -> fetchListAccepted(id_Recruiter));
+
         rejectedCardView.setOnClickListener(view1 -> fetchListRejected(id_Recruiter));
     }
 
@@ -221,11 +224,11 @@ public class DashboardFragment extends Fragment {
                             try {
                                 latch.await();
                                 Intent intent = new Intent(getContext(), NumberJobOfRecruiterActivity.class);
-
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable("jobsList", new ArrayList<>(jobs));
                                 bundle.putSerializable("applicantCounts", (Serializable) applicantCounts);
                                 bundle.putInt("id_Recruiter", id_Recruiter);
+                                bundle.putInt("id_User", id_User);
                                 intent.putExtras(bundle);
                                 startActivity(intent);
                             } catch (InterruptedException e) {
@@ -258,10 +261,11 @@ public class DashboardFragment extends Fragment {
 
                     @Override
                     public void onNext(List<ApplicantJob> applicants) {
-                        Intent intent = new Intent(getContext(), NumberApplicantActivity.class);
+                        Intent intent = new Intent(getContext(), NumberAcceptedApplicantActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("applicantList", new ArrayList<>(applicants));
                         bundle.putInt("id_Recruiter", id_Recruiter);
+                        bundle.putInt("id_User", id_User);
                         intent.putExtras(bundle);
                         startActivity(intent);
                     }
@@ -289,10 +293,11 @@ public class DashboardFragment extends Fragment {
 
                     @Override
                     public void onNext(List<ApplicantJob> applicants) {
-                        Intent intent = new Intent(getContext(), NumberApplicantActivity.class);
+                        Intent intent = new Intent(getContext(), NumberRejectedApplicantActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("applicantList", new ArrayList<>(applicants));
                         bundle.putInt("id_Recruiter", id_Recruiter);
+                        bundle.putInt("id_User", id_User);
                         intent.putExtras(bundle);
                         startActivity(intent);
                     }
@@ -399,7 +404,6 @@ public class DashboardFragment extends Fragment {
     }
 
     private List<ApplicantJob> getList() {
-        //Toast.makeText(getContext(), "Load data page: " + currentPage, Toast.LENGTH_SHORT).show();
         List<ApplicantJob> list = new ArrayList<>();
 
         int start = (currentPage - 1) * totalItemInPage;

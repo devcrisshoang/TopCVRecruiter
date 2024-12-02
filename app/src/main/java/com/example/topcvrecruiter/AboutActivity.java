@@ -8,7 +8,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class AboutActicity extends AppCompatActivity {
+public class AboutActivity extends AppCompatActivity {
 
     private ImageButton about_back_button;
 
