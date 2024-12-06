@@ -8,14 +8,11 @@
     android:background="#FAFAFA">
 
     <LinearLayout
-        android:id="@+id/linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/edit_text_rounded_corner_green"
         android:orientation="horizontal"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
+        android:layout_marginBottom="10dp">
         <ImageButton
             android:id="@+id/post_edit_back_button"
             android:layout_width="40dp"
@@ -24,49 +21,31 @@
             android:background="@drawable/icon_rounded_corner"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:src="@drawable/back_ic" />
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Edit article here"
+            android:textColor="@color/green_color"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitCenter"
+            android:visibility="invisible"
+            android:background="@drawable/icon_rounded_corner"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/back_ic" />
     </LinearLayout>
-    <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="344dp"
-        android:layout_height="129dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/rounded_corner">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/avatar"
-                android:layout_width="120dp"
-                android:layout_height="90dp"
-                android:background="@drawable/rounded_image"
-                android:scaleType="fitCenter"
-                android:src="@drawable/account_ic"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/change_avatar"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_margin="4dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="48dp"
-                android:background="@drawable/circle_background_dark_blue"
-                android:padding="5dp"
-                android:src="@drawable/camera_ic"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/avatar"
-                app:tint="@android:color/black" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </FrameLayout>
     <EditText
         android:id="@+id/article_name_edit"
         android:layout_width="match_parent"
@@ -87,6 +66,7 @@
         android:background="@drawable/edit_text_rounded_corner"
         android:layout_marginBottom="24dp"
         android:textSize="16sp"
+        android:layout_weight="1"
         android:minLines="6"
         android:gravity="start|top" />
 

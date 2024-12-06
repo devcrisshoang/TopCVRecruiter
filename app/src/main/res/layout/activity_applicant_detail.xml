@@ -11,7 +11,8 @@
     <LinearLayout
         android:id="@+id/header_title"
         android:layout_width="match_parent"
-        android:layout_height="50sp">
+        android:background="@drawable/edit_text_rounded_corner_green"
+        android:layout_height="wrap_content">
         <ImageButton
             android:id="@+id/back_button"
             android:layout_width="40dp"
@@ -20,6 +21,7 @@
             android:background="@drawable/icon_rounded_corner"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:src="@drawable/back_ic" />
         <Space
             android:layout_width="match_parent"
@@ -63,7 +65,7 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/fpt_ic" />
+                android:src="@drawable/account_ic" />
 
             <LinearLayout
                 android:layout_width="match_parent"
