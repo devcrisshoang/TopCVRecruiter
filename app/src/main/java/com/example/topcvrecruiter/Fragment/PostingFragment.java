@@ -18,8 +18,8 @@ import com.example.topcvrecruiter.API.ApiJobService;
 import com.example.topcvrecruiter.API.ApiPostingService;
 import com.example.topcvrecruiter.AllArticleActivity;
 import com.example.topcvrecruiter.AllJobActivity;
-import com.example.topcvrecruiter.ArticleActivity;
-import com.example.topcvrecruiter.JobActivity;
+import com.example.topcvrecruiter.PostingArticleActivity;
+import com.example.topcvrecruiter.PostingJobActivity;
 import com.example.topcvrecruiter.R;
 import com.example.topcvrecruiter.Adapter.ArticleAdapter;
 import com.example.topcvrecruiter.Adapter.JobAdapter;
@@ -36,6 +36,7 @@ import retrofit2.Response;
 public class PostingFragment extends Fragment {
 
     private int id_Recruiter;
+    private int user_id;
 
     private Button post_button;
     private Button articleButton;
@@ -85,11 +86,7 @@ public class PostingFragment extends Fragment {
 
         if (getArguments() != null) {
             id_Recruiter = getArguments().getInt("id_Recruiter", 0);
-        }
-        if (id_Recruiter == 0) {
-            Log.e("ArticleActivity", "Recruiter ID not received or is invalid!");
-        } else {
-            Log.d("ArticleActivity", "Recruiter ID: " + id_Recruiter);
+            user_id = getArguments().getInt("user_id", 0);
         }
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext())); // Đặt LayoutManager cho RecyclerView
@@ -124,12 +121,14 @@ public class PostingFragment extends Fragment {
 
             builder.setItems(options, (dialog, which) -> {
                 if (which == 0) {
-                    Intent intent = new Intent(getContext(), ArticleActivity.class);
+                    Intent intent = new Intent(getContext(), PostingArticleActivity.class);
                     intent.putExtra("id_Recruiter", id_Recruiter);
+                    intent.putExtra("user_id",user_id);
                     startActivity(intent);
                 } else if (which == 1) {
-                    Intent intent = new Intent(getContext(), JobActivity.class);
+                    Intent intent = new Intent(getContext(), PostingJobActivity.class);
                     intent.putExtra("id_Recruiter", id_Recruiter);
+                    intent.putExtra("user_id",user_id);
                     startActivity(intent);
                 }
             });

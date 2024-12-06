@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TopCV Recruiter</string>
+    <string name="app_name">Recruiter App</string>
     <string name="facebook_app_id">1055763876209954</string>
     <string name="fb_login_protocol_scheme">fb1234</string>
     <string name="facebook_client_token">56789</string>

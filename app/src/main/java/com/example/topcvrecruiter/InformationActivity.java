@@ -28,7 +28,6 @@ public class InformationActivity extends AppCompatActivity {
     private ImageButton back_button;
 
     private int id_User;
-    private int id_Recruiter;
 
     private String username;
 
@@ -61,8 +60,6 @@ public class InformationActivity extends AppCompatActivity {
 
         username = getIntent().getStringExtra("username");
         id_User = getIntent().getIntExtra("user_id", -1);
-        id_Recruiter = getIntent().getIntExtra("id_Recruiter", -1);
-        //Log.e("InformationActivity","id_Recruiter" + id_Recruiter);
         if (username != null) {
             nameEditText.setText(username);
         }
@@ -89,7 +86,6 @@ public class InformationActivity extends AppCompatActivity {
             return;
         }
 
-        // Kiểm tra các trường dữ liệu
         StringBuilder errors = new StringBuilder();
 
         if (name == null || name.trim().isEmpty()) {
@@ -119,7 +115,7 @@ public class InformationActivity extends AppCompatActivity {
         recruiter.setEmailAddress(email);
         recruiter.setFrontImage("");
         recruiter.setBackImage("");
-        recruiter.setIs_Registered(false);
+        recruiter.setIs_Registered(true);
         recruiter.setIs_Confirm(false);
         recruiter.setIdUser(id_User);
         recruiter.setIdCompany(0);

@@ -1,10 +1,8 @@
 package com.example.topcvrecruiter.API;
 
 import com.example.topcvrecruiter.Model.Notification;
-
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
 import io.reactivex.rxjava3.core.Observable;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -28,14 +26,13 @@ public interface ApiNotificationService {
             .build();
 
     ApiNotificationService ApiNotificationService = new Retrofit.Builder()
-            .baseUrl("https://10.0.2.2:7200/")  // Thay địa chỉ bằng IP của máy bạn hoặc server thật
+            .baseUrl("https://10.0.2.2:7200/")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .build()
             .create(ApiNotificationService.class);
 
-    // API lấy danh sách notifications
     @GET("api/Notification/User/{id}")
     Observable<List<Notification>> getNotificationByUserId(@Path("id") int id);
 

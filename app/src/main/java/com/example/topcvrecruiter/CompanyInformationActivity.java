@@ -1,24 +1,19 @@
 package com.example.topcvrecruiter;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import com.example.topcvrecruiter.API.ApiCompanyService;
 import com.example.topcvrecruiter.Model.Company;
-import com.github.dhaval2404.imagepicker.ImagePicker;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -32,14 +27,10 @@ public class CompanyInformationActivity extends AppCompatActivity {
     private EditText editTextHotline;
     private EditText editTextField;
 
-    private ImageButton image;
     private ImageButton back_button;
 
     private Button Submit;
 
-    private ActivityResultLauncher<Intent> ImagePickerLauncher;
-
-    private Uri ImageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,41 +53,9 @@ public class CompanyInformationActivity extends AppCompatActivity {
         Submit.setOnClickListener(view -> {
             CreateCompany(recruiter_id);
         });
-        image.setOnClickListener(view -> {
-            selectImage();
-        });
-        initImagePicker();
         back_button.setOnClickListener(view -> {
             finish();
         });
-    }
-
-    private void selectImage(){
-        ImagePicker.with(this)
-                .crop()
-                .compress(1024)
-                .maxResultSize(1080, 1080)
-                .createIntent(intent -> {
-                    ImagePickerLauncher.launch(intent);
-                    return null;
-                });
-    }
-
-    private void initImagePicker() {
-        ImagePickerLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                        // Nhận URI của ảnh đã chọn
-                        ImageUri = result.getData().getData();
-
-                        // Cập nhật hình ảnh cho ImageView background
-                        image.setImageURI(ImageUri);
-                    } else {
-                        Toast.makeText(this, "Chưa chọn hình ảnh", Toast.LENGTH_SHORT).show();
-                    }
-                }
-        );
     }
 
     private void setWidget(){
@@ -104,7 +63,6 @@ public class CompanyInformationActivity extends AppCompatActivity {
         editTextAddress = findViewById(R.id.editTextAddress);
         editTextHotline = findViewById(R.id.editTextHotline);
         editTextField = findViewById(R.id.editTextField);
-        image = findViewById(R.id.image);
         Submit = findViewById(R.id.Submit);
 
         recruiter_id = getIntent().getIntExtra("id_Recruiter",0);
@@ -124,7 +82,6 @@ public class CompanyInformationActivity extends AppCompatActivity {
         String address = editTextAddress.getText().toString().trim();
         String hotline = editTextHotline.getText().toString().trim();
         String field = editTextField.getText().toString().trim();
-        String image = (ImageUri != null) ? ImageUri.toString().trim() : "";
 
         // Danh sách lỗi
         StringBuilder errors = new StringBuilder();
@@ -143,9 +100,6 @@ public class CompanyInformationActivity extends AppCompatActivity {
         if (field.isEmpty()) {
             errors.append("- Lĩnh vực hoạt động không được để trống\n");
         }
-        if (image.isEmpty()) {
-            errors.append("- Hình ảnh không được để trống\n");
-        }
 
         // Nếu có lỗi, hiển thị Toast và dừng thực hiện
         if (errors.length() > 0) {
@@ -159,7 +113,7 @@ public class CompanyInformationActivity extends AppCompatActivity {
         company.setAddress(address);
         company.setHotline(hotline);
         company.setField(field);
-        company.setImage(image);
+        company.setImage("");
         company.setGreen_Badge(false);
 
         // Gọi API để tạo công ty

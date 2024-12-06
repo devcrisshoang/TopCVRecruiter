@@ -1,28 +1,52 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <!-- Nút quay về -->
-    <ImageButton
-        android:id="@+id/all_job_back_button"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:background="@drawable/icon_rounded_corner"
-        android:scaleType="fitCenter"
-        android:src="@drawable/back_ic" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edit_text_rounded_corner_green"
+        android:orientation="horizontal">
+        <ImageButton
+            android:id="@+id/all_job_back_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitCenter"
+            android:background="@drawable/icon_rounded_corner"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/back_ic" />
 
-    <!-- RecyclerView chiếm phần còn lại -->
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Article List"
+            android:textColor="@color/green_color"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitCenter"
+            android:visibility="invisible"
+            android:background="@drawable/icon_rounded_corner"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/back_ic" />
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcvJob"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/all_job_back_button" /> <!-- Đảm bảo RecyclerView không che nút -->
+        android:layout_height="match_parent" />
 
-</RelativeLayout>
+</LinearLayout>

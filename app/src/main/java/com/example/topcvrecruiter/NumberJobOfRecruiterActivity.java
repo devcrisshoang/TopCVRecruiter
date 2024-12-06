@@ -24,7 +24,8 @@ public class NumberJobOfRecruiterActivity extends AppCompatActivity {
 
     private List<Job> jobsList;
 
-    int id_Recruiter;
+    private int id_Recruiter;
+    private int id_User;
 
     private ImageButton backButton;
 
@@ -33,6 +34,7 @@ public class NumberJobOfRecruiterActivity extends AppCompatActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_job_of_recruiter);
 
         setWidget();
 
@@ -45,8 +47,6 @@ public class NumberJobOfRecruiterActivity extends AppCompatActivity {
     }
 
     private void setWidget(){
-        setContentView(R.layout.activity_job_of_recruiter);
-
         backButton = findViewById(R.id.back_button);
 
         if (getIntent() != null && getIntent().hasExtra("jobsList")) {
@@ -57,6 +57,7 @@ public class NumberJobOfRecruiterActivity extends AppCompatActivity {
 
         Map<Integer, Integer> applicantCounts = (Map<Integer, Integer>) getIntent().getSerializableExtra("applicantCounts");
         id_Recruiter = getIntent().getIntExtra("id_Recruiter", 0);
+        id_User = getIntent().getIntExtra("id_User", 0);
 
         recyclerView = findViewById(R.id.number_job_of_recruiter_Recycler_View);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -70,7 +71,7 @@ public class NumberJobOfRecruiterActivity extends AppCompatActivity {
                 }
         );
 
-        jobAdapter = new DasboardJobAdapter(applicantDetailLauncher, jobsList, applicantCounts, id_Recruiter);
+        jobAdapter = new DasboardJobAdapter(applicantDetailLauncher, jobsList, applicantCounts, id_Recruiter,id_User);
         recyclerView.setAdapter(jobAdapter);
     }
 }

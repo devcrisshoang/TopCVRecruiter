@@ -21,7 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
-import com.example.topcvrecruiter.AboutActicity;
+import com.example.topcvrecruiter.AboutActivity;
 import com.example.topcvrecruiter.ChangePasswordActivity;
 import com.example.topcvrecruiter.LoginActivity;
 import com.example.topcvrecruiter.PrivatePolicyActivity;
@@ -112,7 +112,7 @@ public class AccountFragment extends Fragment {
     }
 
     private void initListeners() {
-        about_application_button.setOnClickListener(view -> startActivity(new Intent(getContext(), AboutActicity.class)));
+        about_application_button.setOnClickListener(view -> startActivity(new Intent(getContext(), AboutActivity.class)));
         privacy_policy_button.setOnClickListener(view -> startActivity(new Intent(getContext(), PrivatePolicyActivity.class)));
         term_of_services_button.setOnClickListener(view -> startActivity(new Intent(getContext(), TermOfServiceActivity.class)));
 
@@ -232,12 +232,11 @@ public class AccountFragment extends Fragment {
                                 currentBackgroundUrl = user.getImageBackground();
                                 setUserImages(currentAvatarUrl, currentBackgroundUrl);
                             } else {
-                                Toast.makeText(getContext(), "User not found", Toast.LENGTH_SHORT).show();
+                                Log.e("AccountFragment", "User not found");
                             }
                         },
                         throwable -> {
                             Log.e("AccountFragment", "Error fetching user: " + throwable.getMessage());
-                            Toast.makeText(getContext(), "Failed to load user", Toast.LENGTH_SHORT).show();
                         }
                 );
     }
@@ -265,12 +264,10 @@ public class AccountFragment extends Fragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         () -> {
-                            Log.d("AccountFragment", "User updated successfully");
                             Toast.makeText(getContext(), "User info updated successfully", Toast.LENGTH_SHORT).show();
                         },
                         throwable -> {
                             Log.e("AccountFragment", "Error updating user: " + throwable.getMessage());
-                            Toast.makeText(getContext(), "Failed to update user", Toast.LENGTH_SHORT).show();
                         }
                 );
     }
@@ -343,12 +340,11 @@ public class AccountFragment extends Fragment {
                                 email_address.setText(recruiter.getEmailAddress());
                                 getCompanyByRecruiterId(id_Recruiter);
                             } else {
-                                Toast.makeText(getContext(), "Recruiter not found", Toast.LENGTH_SHORT).show();
+                                Log.e("AccountFragment", "Recruiter not found");
                             }
                         },
                         throwable -> {
                             Log.e("AccountFragment", "Error fetching recruiter: " + throwable.getMessage());
-                            Toast.makeText(getContext(), "Failed to load recruiter", Toast.LENGTH_SHORT).show();
                         }
                 );
     }
@@ -372,7 +368,6 @@ public class AccountFragment extends Fragment {
                         },
                         throwable -> {
                             Log.e("AccountFragment", "Error fetching company: " + throwable.getMessage());
-                            Toast.makeText(getContext(), "Lỗi khi tải thông tin công ty", Toast.LENGTH_SHORT).show();
                             ac_company_name.setText("None");
                             ac_field.setText("None");
                             companyId = -1;

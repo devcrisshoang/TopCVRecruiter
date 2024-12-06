@@ -27,16 +27,6 @@
             android:layout_weight="1">
 
         </Space>
-        <ImageButton
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:id="@+id/resume_message"
-            android:scaleType="fitCenter"
-            android:background="@drawable/icon_rounded_corner"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp"
-            android:src="@drawable/messenger_bubble_large_blue"
-            />
     </LinearLayout>
 
     <!-- Main content with weight -->

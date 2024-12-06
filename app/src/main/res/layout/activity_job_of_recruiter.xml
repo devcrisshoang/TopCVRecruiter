@@ -3,13 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tollools="http://schemas.android.com/tools"
+    android:background="@color/white"
     tollools:context=".NumberJobOfRecruiterActivity">
-
 
     <LinearLayout
         android:id="@+id/header_title"
         android:layout_width="match_parent"
-        android:layout_height="50sp">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
         <ImageButton
             android:id="@+id/back_button"
             android:layout_width="40dp"
@@ -20,7 +21,29 @@
             android:layout_marginTop="5dp"
             android:src="@drawable/back_ic" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your job list"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_gravity="center"
+            android:textColor="@color/black"
+            />
+
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitCenter"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/white"
+            android:src="@drawable/white_ic" />
+
     </LinearLayout>
+
     <LinearLayout
         android:layout_below="@+id/header_title"
         android:layout_width="match_parent"
@@ -29,16 +52,6 @@
         android:id="@+id/layout_number_job"
         android:gravity="center"
         android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Job List"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:layout_marginBottom="8dp"
-            android:textColor="@color/black"
-            />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/number_job_of_recruiter_Recycler_View"

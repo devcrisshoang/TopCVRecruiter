@@ -10,31 +10,40 @@
     android:background="@color/white"
     tools:context=".InformationActivity">
 
-    <!-- Header Section -->
     <LinearLayout
-        android:id="@+id/linearLayoutHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/edit_text_rounded_corner_green"
         android:orientation="horizontal">
-
         <ImageButton
             android:id="@+id/back_button"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/back_ic"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:scaleType="fitCenter"
-            android:background="@color/white">
-
-        </ImageButton>
+            android:background="@drawable/icon_rounded_corner"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:src="@drawable/back_ic" />
 
         <TextView
-            android:id="@+id/textViewTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
             android:text="Enter your company information"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:layout_gravity="center" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitCenter"
+            android:background="@drawable/icon_rounded_corner"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:src="@color/mint_green" />
     </LinearLayout>
 
     <LinearLayout

@@ -13,6 +13,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.topcvrecruiter.API.ApiPostingService;
 import com.example.topcvrecruiter.Model.Article;
+import com.example.topcvrecruiter.Utils.DateTimeUtils;
 import com.example.topcvrecruiter.Utils.NotificationUtils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -38,8 +39,6 @@ public class ArticleDetailActivity extends AppCompatActivity {
 
     private Button deleteButton;
 
-    private ImageView articleImage;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,13 +51,11 @@ public class ArticleDetailActivity extends AppCompatActivity {
     }
 
     private void editButton(){
-        String imagePath = articleImage.getTag() != null ? articleImage.getTag().toString() : "";
         Intent intent = new Intent(ArticleDetailActivity.this, EditArticleActivity.class);
         intent.putExtra("article_id", articleId);
         intent.putExtra("id_Recruiter", id_Recruiter);
         intent.putExtra("article_name", articleName.getText().toString());
         intent.putExtra("content", content.getText().toString());
-        intent.putExtra("image_path", imagePath);
         startActivity(intent);
     }
 
@@ -78,7 +75,6 @@ public class ArticleDetailActivity extends AppCompatActivity {
         backButton = findViewById(R.id.back_button);
         deleteButton = findViewById(R.id.delete_button);
         editButton = findViewById(R.id.edit_button);
-        articleImage = findViewById(R.id.image);
 
         articleId = getIntent().getIntExtra("article_id", -1);
         id_Recruiter = getIntent().getIntExtra("id_Recruiter", -1);
@@ -104,48 +100,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
                     public void onSuccess(Article article) {
                         articleName.setText(article.getArticle_Name());
                         content.setText(article.getContent());
-
-                        String imagePath = article.getImage();
-                        if (imagePath != null && !imagePath.isEmpty()) {
-                            Glide.with(ArticleDetailActivity.this)
-                                    .load(Uri.parse(imagePath))
-                                    .into(articleImage);
-                            articleImage.setTag(imagePath);
-                        }else {
-                            Glide.with(ArticleDetailActivity.this)
-                                    .load(R.drawable.fpt_ic)
-                                    .into(articleImage);
-                        }
-
-                        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault());
-                        SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-                        try {
-                            Date createDate = inputFormat.parse(article.getCreate_Time());
-                            long createTimeInMillis = createDate.getTime();
-                            long currentTimeInMillis = System.currentTimeMillis();
-
-                            long timeDifference = currentTimeInMillis - createTimeInMillis;
-                            long minutesDifference = timeDifference / (60 * 1000);
-                            long hoursDifference = timeDifference / (60 * 60 * 1000);
-
-                            if (minutesDifference < 60) {
-                                createTime.setText(minutesDifference + " minutes ago");
-                            } else if (hoursDifference < 24) {
-                                createTime.setText(hoursDifference + " hours ago");
-                            } else if (hoursDifference < 24 * 2) {
-                                createTime.setText("Yesterday");
-                            } else if (hoursDifference < 24 * 7) {
-                                SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.getDefault());
-                                String dayOfWeek = dayFormat.format(createDate);
-                                createTime.setText(dayOfWeek);
-                            } else {
-                                String formattedDate = outputFormat.format(createDate);
-                                createTime.setText(formattedDate);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            createTime.setText("Create Time: " + article.getCreate_Time());
-                        }
+                        createTime.setText(DateTimeUtils.formatTimeAgo(article.getCreate_Time()));
                     }
 
                     @Override

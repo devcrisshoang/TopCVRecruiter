@@ -2,10 +2,12 @@ package com.example.topcvrecruiter.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
@@ -30,13 +32,15 @@ public class DasboardJobAdapter extends RecyclerView.Adapter<DasboardJobAdapter.
 
     private final Map<Integer, Integer> applicantCounts;
 
-    int id_Recruiter;
+    private int id_Recruiter;
+    private int id_User;
 
-    public DasboardJobAdapter(ActivityResultLauncher<Intent> applicantDetailLauncher, List<Job> listJob, Map<Integer, Integer> applicantCounts, int id_Recruiter) {
+    public DasboardJobAdapter(ActivityResultLauncher<Intent> applicantDetailLauncher, List<Job> listJob, Map<Integer, Integer> applicantCounts, int id_Recruiter, int id_User) {
         this.applicantDetailLauncher = applicantDetailLauncher;
         this.listJob = listJob;
         this.applicantCounts = applicantCounts;
         this.id_Recruiter = id_Recruiter;
+        this.id_User = id_User;
     }
     @SuppressLint("NotifyDataSetChanged")
     public void setListJob(List<Job> listJob) {
@@ -59,6 +63,7 @@ public class DasboardJobAdapter extends RecyclerView.Adapter<DasboardJobAdapter.
         holder.jobNameTextView.setText(job.getJob_Name());
         holder.createTimeTextView.setText(job.getCreate_Time());
         holder.companyNameTextView.setText(job.getCompany_Name());
+        holder.applicant_avatar.setImageResource(R.drawable.job_ic);
 
         int applicantCount = applicantCounts.getOrDefault(job.getId(), 0);
         holder.numberJobTextView.setText(String.valueOf(applicantCount));
@@ -82,6 +87,8 @@ public class DasboardJobAdapter extends RecyclerView.Adapter<DasboardJobAdapter.
                             Intent intent = new Intent(holder.itemView.getContext(), NumberApplicantActivity.class);
                             intent.putExtra("applicantList", new ArrayList<>(applicantList));
                             intent.putExtra("id_Recruiter", id_Recruiter);
+                            intent.putExtra("id_User", id_User);
+                            intent.putExtra("jobName",job.getJob_Name());
                             applicantDetailLauncher.launch(intent);
                         }
 
@@ -106,6 +113,7 @@ public class DasboardJobAdapter extends RecyclerView.Adapter<DasboardJobAdapter.
 
     public static class DashboardViewHolder extends RecyclerView.ViewHolder{
 
+        private ImageView applicant_avatar;
         private final TextView jobNameTextView;
         private final TextView createTimeTextView;
         private final TextView companyNameTextView;
@@ -116,6 +124,7 @@ public class DasboardJobAdapter extends RecyclerView.Adapter<DasboardJobAdapter.
             createTimeTextView = itemView.findViewById(R.id.ActionDetailsOfEmailRecruiterTextView);
             companyNameTextView = itemView.findViewById(R.id.ActionDetailsOfRecruiterTextView);
             numberJobTextView = itemView.findViewById(R.id.TimeOfNotification);
+            applicant_avatar = itemView.findViewById(R.id.applicant_avatar);
         }
     }
 }

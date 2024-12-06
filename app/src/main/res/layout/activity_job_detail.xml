@@ -74,7 +74,7 @@
 
                         android:padding="10dp"
                         android:textAlignment="center"
-                        android:src="@drawable/google_ic" />
+                        android:src="@drawable/workplace_ic" />
 
                     <TextView
                         android:id="@+id/job_name"

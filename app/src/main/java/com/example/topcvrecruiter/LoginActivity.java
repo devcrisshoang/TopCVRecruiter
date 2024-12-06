@@ -9,12 +9,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
 import com.example.topcvrecruiter.API.ApiRecruiterService;
 import com.example.topcvrecruiter.API.ApiUserService;
 import com.example.topcvrecruiter.Model.User;
@@ -35,6 +37,7 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -71,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
         setClick();
     }
 
-    private void setClick(){
+    private void setClick() {
 
         loginButton.setOnClickListener(view -> loginUser());
 
@@ -82,14 +85,14 @@ public class LoginActivity extends AppCompatActivity {
         Register_Button.setOnClickListener(view -> registerButton());
     }
 
-    private void registerButton(){
+    private void registerButton() {
         Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
         intent.putExtra("isSignUpButtonClicked", true);
         startActivity(intent);
         finish();
     }
 
-    private void setWidget(){
+    private void setWidget() {
         usernameInput = findViewById(R.id.email_input);
         passwordInput = findViewById(R.id.password_input);
         loginButton = findViewById(R.id.login_button);
@@ -132,30 +135,28 @@ public class LoginActivity extends AppCompatActivity {
                             }
 
                             int userId = user.getId();
+                            Log.e("LoginActivity", "User ID: "+user.getId());
 
-                            if(user.isRecruiter()){
+                            if (user.isRecruiter()) {
                                 ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(userId)
                                         .subscribeOn(Schedulers.io())
                                         .observeOn(AndroidSchedulers.mainThread())
                                         .subscribe(response -> {
+                                            Log.e("LoginActivity", "Confirm: "+response.isIs_Confirm());
+                                            Log.e("LoginActivity", "Register: "+response.isIs_Registered());
                                             if (response.isIs_Confirm()) {
                                                 navigateToMainActivity(userId, response.getRecruiterName(), response.getPhoneNumber());
-                                            }
-                                            else if (!response.isIs_Confirm() && response.isIs_Registered()){
+                                            } else if (response.isIs_Registered()) {
                                                 navigateToWaitingConfirmActivity(userId, response.getRecruiterName(), response.getPhoneNumber());
-                                            }
-                                            else if(!response.isIs_Registered()){
-                                                navigateToInformationActivity(userId);
                                             } else {
                                                 navigateToInformationActivity(userId);
                                             }
                                         }, throwable -> {
-                                            Log.e("API Error", "Error fetching applicant: " + throwable.getMessage());
+                                            Log.e("LoginActivity", "Error fetching applicant: " + throwable.getMessage());
                                             navigateToInformationActivity(userId);
                                         });
                                 return;
-                            }
-                            else {
+                            } else {
                                 Toast.makeText(LoginActivity.this, "This account is not exist", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -168,7 +169,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @SuppressLint("CheckResult")
-    private void navigateToWaitingConfirmActivity(int id_User, String recruiterName, String phoneNumber){
+    private void navigateToWaitingConfirmActivity(int id_User, String recruiterName, String phoneNumber) {
         ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(id_User)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -181,39 +182,22 @@ public class LoginActivity extends AppCompatActivity {
                                 intent.putExtra("recruiterName", recruiterName);
                                 intent.putExtra("phoneNumber", phoneNumber);
                                 intent.putExtra("id_Recruiter", id_Recruiter);
-                                Log.e("LoginActivity","ID: "+ id_Recruiter);
+                                Log.e("LoginActivity", "ID: " + id_Recruiter);
                                 startActivity(intent);
                             } else {
-                                Log.e("AccountFragment", "Recruiter not found");
+                                Log.e("LoginActivity", "Recruiter not found");
                             }
                         },
-                        throwable -> Log.e("AccountFragment", "Error fetching recruiter: " + throwable.getMessage())
+                        throwable -> Log.e("LoginActivity", "Error fetching recruiter: " + throwable.getMessage())
                 );
         finish();
     }
 
     @SuppressLint("CheckResult")
     private void navigateToInformationActivity(int id_User) {
-        ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(id_User)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        recruiter -> {
-                            if (recruiter != null) {
-                                id_Recruiter = recruiter.getId();
-                                Intent intent = new Intent(LoginActivity.this, InformationActivity.class);
-                                intent.putExtra("user_id", id_User);
-                                intent.putExtra("id_Recruiter", id_Recruiter);
-                                startActivity(intent);
-                            } else {
-                                Toast.makeText(this, "Recruiter not found", Toast.LENGTH_SHORT).show();
-                            }
-                        },
-                        throwable -> {
-                            Log.e("AccountFragment", "Error fetching recruiter: " + throwable.getMessage());
-                            Toast.makeText(this, "Failed to load recruiter", Toast.LENGTH_SHORT).show();
-                        }
-                );
+        Intent intent = new Intent(LoginActivity.this, InformationActivity.class);
+        intent.putExtra("user_id", id_User);
+        startActivity(intent);
     }
 
     @SuppressLint("CheckResult")
@@ -230,7 +214,7 @@ public class LoginActivity extends AppCompatActivity {
                                 intent.putExtra("recruiterName", recruiterName);
                                 intent.putExtra("phoneNumber", phoneNumber);
                                 intent.putExtra("id_Recruiter", id_Recruiter);
-                                Log.e("LoginActivity","ID: "+ id_Recruiter);
+                                Log.e("LoginActivity", "ID: " + id_Recruiter);
                                 startActivity(intent);
                             } else {
                                 Toast.makeText(this, "Recruiter not found", Toast.LENGTH_SHORT).show();

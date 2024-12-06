@@ -1,35 +1,37 @@
 package com.example.topcvrecruiter;
 
 import android.Manifest;
-import android.content.Intent;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Toast;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.example.topcvrecruiter.API.ApiNotificationService;
 import com.example.topcvrecruiter.API.ApiPostingService;
 import com.example.topcvrecruiter.Model.Article;
+import com.example.topcvrecruiter.Model.Notification;
+import com.example.topcvrecruiter.Utils.DateTimeUtils;
 import com.example.topcvrecruiter.Utils.NotificationUtils;
-import com.github.dhaval2404.imagepicker.ImagePicker;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ArticleActivity extends AppCompatActivity {
+public class PostingArticleActivity extends AppCompatActivity {
 
     private ImageButton back_button;
 
@@ -38,14 +40,8 @@ public class ArticleActivity extends AppCompatActivity {
 
     private Button addButton;
 
-    private ImageView avatar;
-    private ImageView change_avatar;
-
-    private ActivityResultLauncher<Intent> imagePickerLauncherAvatar;
-
-    private Uri uri;
-
     private int id_Recruiter;
+    private int user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,46 +58,35 @@ public class ArticleActivity extends AppCompatActivity {
         setClick();
     }
 
-    private void changeAvatarButton(){
-        ImagePicker.with(this)
-                .crop()
-                .compress(1024)
-                .maxResultSize(1080, 1080)
-                .createIntent(intent -> {
-                    imagePickerLauncherAvatar.launch(intent);
-                    return null;
-                });
-    }
-
     private void addButton(){
         String title = editTextTitle.getText().toString();
         String content = editTextContent.getText().toString();
-        String image = (uri != null) ? uri.toString() : "";
+
 
         if (!title.isEmpty() && !content.isEmpty()) {
-            postArticle(title, content, image);
+            postArticle(title, content, "");
 
         } else {
-            Toast.makeText(ArticleActivity.this, "Insert Information", Toast.LENGTH_SHORT).show();
+            Toast.makeText(PostingArticleActivity.this, "Insert Information", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void setClick(){
-        change_avatar.setOnClickListener(view -> changeAvatarButton());
 
         addButton.setOnClickListener(v -> addButton());
     }
 
     private void setWidget(){
         id_Recruiter = getIntent().getIntExtra("id_Recruiter",0);
+        user_id = getIntent().getIntExtra("user_id",0);
+
+        Log.e("PostingArticleActivity","user_id:" + user_id);
 
         back_button = findViewById(R.id.back_button);
         back_button.setOnClickListener(view -> finish());
 
         editTextTitle = findViewById(R.id.editTextTitle);
         editTextContent = findViewById(R.id.editTextContent);
-        avatar = findViewById(R.id.avatar);
-        change_avatar = findViewById(R.id.change_avatar);
 
         addButton = findViewById(R.id.add_new_article_button);
 
@@ -111,47 +96,47 @@ public class ArticleActivity extends AppCompatActivity {
             }
         }
 
-        imagePickerLauncherAvatar = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        uri = result.getData().getData();
-                        avatar.setImageURI(uri);
-                    } else {
-                        Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
-                    }
-                }
-        );
-
     }
 
+    @SuppressLint("CheckResult")
     private void postArticle(String title, String content, String image) {
 
         if (image.isEmpty()) {
             image = "";
         }
 
-        LocalDateTime currentTime = LocalDateTime.now();
+        String time = DateTimeUtils.getCurrentTime();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        String contentNotification = "You just created an article!";
+        Notification notification = new Notification(
+                0,
+                contentNotification,
+                time,
+                user_id
+        );
+        ApiNotificationService.ApiNotificationService.createNotification(notification)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        response -> Toast.makeText(this, "Notification created successfully!", Toast.LENGTH_SHORT).show(),
+                        throwable -> Toast.makeText(this, "An error occurred: " + throwable.getMessage(), Toast.LENGTH_SHORT).show()
+                );
 
-        String formattedDateTime = currentTime.format(formatter);
-
-        Article article = new Article(title, content, formattedDateTime, image, id_Recruiter );
+        Article article = new Article(title, content, time, "", id_Recruiter );
         ApiPostingService.apiService.postArticle(article).enqueue(new Callback<Article>() {
             @Override
             public void onResponse(Call<Article> call, Response<Article> response) {
                 if (response.isSuccessful()) {
-                    NotificationUtils.showNotification(ArticleActivity.this, "You just posted an article !");
-                    Toast.makeText(ArticleActivity.this, "Post Article Successfully!", Toast.LENGTH_SHORT).show();
+                    NotificationUtils.showNotification(PostingArticleActivity.this, "You just posted an article!");
+                    Toast.makeText(PostingArticleActivity.this, "Post Article Successfully!", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    Toast.makeText(ArticleActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PostingArticleActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
             public void onFailure(Call<Article> call, Throwable t) {
-                Toast.makeText(ArticleActivity.this, "Error!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PostingArticleActivity.this, "Error!", Toast.LENGTH_SHORT).show();
             }
         });
     }

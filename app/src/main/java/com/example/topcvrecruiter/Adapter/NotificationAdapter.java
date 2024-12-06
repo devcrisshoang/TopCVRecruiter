@@ -11,14 +11,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.topcvrecruiter.R;
 import com.example.topcvrecruiter.Model.Notification;
 import com.example.topcvrecruiter.Utils.DateTimeUtils;
-
 import java.util.List;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.NotificationViewHolder> {
 
     private final List<Notification> notificationList;
-
-    private final Context context;
+    private Context context;
 
     public NotificationAdapter(List<Notification> notificationList, Context context) {
         this.notificationList = notificationList;

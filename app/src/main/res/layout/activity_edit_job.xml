@@ -18,30 +18,32 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <!-- LinearLayout for buttons (back and edit) -->
+            <!-- ScrollView with form content -->
             <LinearLayout
                 android:id="@+id/linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintTop_toTopOf="parent"
+                android:background="@drawable/edit_text_rounded_corner_green"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <ImageButton
                     android:id="@+id/job_edit_back_button"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:scaleType="fitCenter"
-                    android:background="@drawable/icon_rounded_corner"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/icon_rounded_corner"
+                    android:scaleType="fitCenter"
                     android:src="@drawable/back_ic" />
 
 
             </LinearLayout>
 
-            <!-- ScrollView with form content -->
             <ScrollView
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -56,50 +58,7 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <!-- Avatar with FrameLayout -->
-                    <FrameLayout
-                        android:id="@+id/frameLayout"
-                        android:layout_width="344dp"
-                        android:layout_height="129dp"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="30dp"
-                        android:background="@drawable/rounded_corner">
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <ImageView
-                                android:id="@+id/avatar"
-                                android:layout_width="120dp"
-                                android:layout_height="90dp"
-                                android:background="@drawable/rounded_image"
-                                android:scaleType="fitCenter"
-                                android:src="@drawable/account_ic"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                            <ImageView
-                                android:id="@+id/change_avatar"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_margin="4dp"
-                                android:layout_marginEnd="8dp"
-                                android:layout_marginBottom="48dp"
-                                android:background="@drawable/circle_background_dark_blue"
-                                android:padding="5dp"
-                                android:src="@drawable/camera_ic"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="@id/avatar"
-                                app:tint="@android:color/black" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-                    </FrameLayout>
-
-
-
-                        <TextView
+                    <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Job Name:"
