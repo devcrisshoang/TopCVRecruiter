@@ -1,6 +1,7 @@
 package com.example.topcvrecruiter;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -17,10 +18,16 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import com.example.topcvrecruiter.API.ApiJobService;
+import com.example.topcvrecruiter.API.ApiNotificationService;
 import com.example.topcvrecruiter.Model.Job;
 import com.example.topcvrecruiter.Model.JobDetails;
+import com.example.topcvrecruiter.Model.Notification;
+import com.example.topcvrecruiter.Utils.DateTimeUtils;
 import com.example.topcvrecruiter.Utils.NotificationUtils;
 import java.time.LocalDateTime;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -32,6 +39,7 @@ public class JobDetailsActivity extends AppCompatActivity {
     private ImageButton back_button;
 
     private int id_Recruiter = 3;
+    private int user_id;
     private int salary;
 
     private EditText benefit;
@@ -75,6 +83,8 @@ public class JobDetailsActivity extends AppCompatActivity {
     private void setWidget(){
 
         id_Recruiter = getIntent().getIntExtra("id_Recruiter",0);
+        user_id = getIntent().getIntExtra("user_id",0);
+
         post_button = findViewById(R.id.post_button);
         back_button = findViewById(R.id.back_button);
         jobDescription = findViewById(R.id.et_description);
@@ -100,10 +110,28 @@ public class JobDetailsActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("CheckResult")
     private void postJobAndDetailsToApi(String image, String jobName, String companyName, String experience, String address, int salary) {
-        LocalDateTime currentTime = LocalDateTime.now();
+        String time = DateTimeUtils.getCurrentTime();
 
-        Job job = new Job(image, jobName, companyName, experience, address, salary, currentTime.toString(), id_Recruiter);
+        String contentNotification = "You just created an job!";
+        Notification notification = new Notification(
+                0,
+                contentNotification,
+                time,
+                user_id
+        );
+        NotificationUtils.showNotification(this, "You just posted an job!");
+
+        ApiNotificationService.ApiNotificationService.createNotification(notification)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        response -> Toast.makeText(this, "Notification created successfully!", Toast.LENGTH_SHORT).show(),
+                        throwable -> Toast.makeText(this, "An error occurred: " + throwable.getMessage(), Toast.LENGTH_SHORT).show()
+                );
+
+        Job job = new Job(image, jobName, companyName, experience, address, salary, time, id_Recruiter);
 
         ApiJobService.apiService.postJob(job).enqueue(new Callback<Job>() {
             @Override
@@ -128,10 +156,6 @@ public class JobDetailsActivity extends AppCompatActivity {
                             if (response.isSuccessful()) {
                                 Toast.makeText(JobDetailsActivity.this, "Job posted successfully!", Toast.LENGTH_SHORT).show();
                                 NotificationUtils.showNotification(JobDetailsActivity.this, "You just posted a job posting !");
-
-                                Intent intent = new Intent(JobDetailsActivity.this, MainActivity.class);
-                                intent.putExtra("id_Recruiter", id_Recruiter);
-                                startActivity(intent);
                                 finish();
                             } else {
                                 Toast.makeText(JobDetailsActivity.this, "Failed to post job details!", Toast.LENGTH_SHORT).show();

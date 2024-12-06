@@ -1,9 +1,11 @@
 package com.example.topcvrecruiter;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -15,11 +17,16 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.example.topcvrecruiter.API.ApiNotificationService;
 import com.example.topcvrecruiter.API.ApiPostingService;
 import com.example.topcvrecruiter.Model.Article;
+import com.example.topcvrecruiter.Model.Notification;
 import com.example.topcvrecruiter.Utils.DateTimeUtils;
 import com.example.topcvrecruiter.Utils.NotificationUtils;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,6 +41,7 @@ public class PostingArticleActivity extends AppCompatActivity {
     private Button addButton;
 
     private int id_Recruiter;
+    private int user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +78,9 @@ public class PostingArticleActivity extends AppCompatActivity {
 
     private void setWidget(){
         id_Recruiter = getIntent().getIntExtra("id_Recruiter",0);
+        user_id = getIntent().getIntExtra("user_id",0);
+
+        Log.e("PostingArticleActivity","user_id:" + user_id);
 
         back_button = findViewById(R.id.back_button);
         back_button.setOnClickListener(view -> finish());
@@ -87,6 +98,7 @@ public class PostingArticleActivity extends AppCompatActivity {
 
     }
 
+    @SuppressLint("CheckResult")
     private void postArticle(String title, String content, String image) {
 
         if (image.isEmpty()) {
@@ -95,12 +107,27 @@ public class PostingArticleActivity extends AppCompatActivity {
 
         String time = DateTimeUtils.getCurrentTime();
 
+        String contentNotification = "You just created an article!";
+        Notification notification = new Notification(
+                0,
+                contentNotification,
+                time,
+                user_id
+        );
+        ApiNotificationService.ApiNotificationService.createNotification(notification)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        response -> Toast.makeText(this, "Notification created successfully!", Toast.LENGTH_SHORT).show(),
+                        throwable -> Toast.makeText(this, "An error occurred: " + throwable.getMessage(), Toast.LENGTH_SHORT).show()
+                );
+
         Article article = new Article(title, content, time, "", id_Recruiter );
         ApiPostingService.apiService.postArticle(article).enqueue(new Callback<Article>() {
             @Override
             public void onResponse(Call<Article> call, Response<Article> response) {
                 if (response.isSuccessful()) {
-                    NotificationUtils.showNotification(PostingArticleActivity.this, "You just posted an article !");
+                    NotificationUtils.showNotification(PostingArticleActivity.this, "You just posted an article!");
                     Toast.makeText(PostingArticleActivity.this, "Post Article Successfully!", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {

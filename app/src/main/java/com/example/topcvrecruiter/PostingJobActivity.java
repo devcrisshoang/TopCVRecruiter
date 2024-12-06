@@ -26,6 +26,7 @@ public class PostingJobActivity extends AppCompatActivity {
     private EditText etSalary;
 
     private int recruiter_id;
+    private int user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,13 +88,15 @@ public class PostingJobActivity extends AppCompatActivity {
         intent.putExtra("address", address);
         intent.putExtra("salary", salary);
         intent.putExtra("id_Recruiter", recruiter_id);
+        intent.putExtra("user_id", user_id);
 
         startActivity(intent);
     }
 
     private void setWidget(){
         recruiter_id = getIntent().getIntExtra("id_Recruiter",0);
-        Log.e("JobActivity","ID: " + recruiter_id);
+        user_id = getIntent().getIntExtra("user_id",0);
+
         continue_button = findViewById(R.id.continue_button);
         back_button = findViewById(R.id.back_button);
         etName = findViewById(R.id.et_name);
