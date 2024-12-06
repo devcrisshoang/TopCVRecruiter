@@ -63,7 +63,7 @@ public class DasboardJobAdapter extends RecyclerView.Adapter<DasboardJobAdapter.
         holder.jobNameTextView.setText(job.getJob_Name());
         holder.createTimeTextView.setText(job.getCreate_Time());
         holder.companyNameTextView.setText(job.getCompany_Name());
-        holder.applicant_avatar.setImageURI(Uri.parse(job.getImage_Id()));
+        holder.applicant_avatar.setImageResource(R.drawable.job_ic);
 
         int applicantCount = applicantCounts.getOrDefault(job.getId(), 0);
         holder.numberJobTextView.setText(String.valueOf(applicantCount));

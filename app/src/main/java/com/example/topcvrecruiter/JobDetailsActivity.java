@@ -52,6 +52,7 @@ public class JobDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_job_details);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -72,7 +73,7 @@ public class JobDetailsActivity extends AppCompatActivity {
     }
 
     private void setWidget(){
-        setContentView(R.layout.activity_job_details);
+
         id_Recruiter = getIntent().getIntExtra("id_Recruiter",0);
         post_button = findViewById(R.id.post_button);
         back_button = findViewById(R.id.back_button);

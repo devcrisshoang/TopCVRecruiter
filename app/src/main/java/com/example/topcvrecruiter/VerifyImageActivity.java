@@ -60,8 +60,6 @@ public class VerifyImageActivity extends AppCompatActivity {
         });
         setWidget();
 
-        getRecruiterId(user_id);
-
         setClick();
 
         initImagePicker();
@@ -161,27 +159,12 @@ public class VerifyImageActivity extends AppCompatActivity {
         back_button = findViewById(R.id.back_button);
 
         user_id = getIntent().getIntExtra("user_id",0);
+        recruiter_id = getIntent().getIntExtra("id_Recruiter",0);
+        Log.d("VerifyImageActivity", "User ID: " + user_id);
+        Log.d("VerifyImageActivity", "User ID: " + recruiter_id);
         name = getIntent().getStringExtra("name");
         phone = getIntent().getStringExtra("phone");
         email = getIntent().getStringExtra("email");
-    }
-
-    @SuppressLint("CheckResult")
-    private void getRecruiterId(int userId){
-            ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(userId)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(recruiter -> {
-                        if (recruiter != null){
-                            recruiter_id = recruiter.getId();
-                            Log.e("RecruiterID", "Get successfully Recruiter ID: " + recruiter.getId());
-                        }
-                        else {
-                            Log.e("VerifyImageActivity", "Failed Null: " + recruiter_id);
-                        }
-
-
-                    }, throwable -> Log.e("API Error", "Failed to fetch Recruiter: " + throwable.getMessage()));
     }
 
     private void initImagePicker() {

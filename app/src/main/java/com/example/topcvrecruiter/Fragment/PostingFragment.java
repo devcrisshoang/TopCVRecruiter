@@ -18,8 +18,8 @@ import com.example.topcvrecruiter.API.ApiJobService;
 import com.example.topcvrecruiter.API.ApiPostingService;
 import com.example.topcvrecruiter.AllArticleActivity;
 import com.example.topcvrecruiter.AllJobActivity;
-import com.example.topcvrecruiter.ArticleActivity;
-import com.example.topcvrecruiter.JobActivity;
+import com.example.topcvrecruiter.PostingArticleActivity;
+import com.example.topcvrecruiter.PostingJobActivity;
 import com.example.topcvrecruiter.R;
 import com.example.topcvrecruiter.Adapter.ArticleAdapter;
 import com.example.topcvrecruiter.Adapter.JobAdapter;
@@ -124,11 +124,11 @@ public class PostingFragment extends Fragment {
 
             builder.setItems(options, (dialog, which) -> {
                 if (which == 0) {
-                    Intent intent = new Intent(getContext(), ArticleActivity.class);
+                    Intent intent = new Intent(getContext(), PostingArticleActivity.class);
                     intent.putExtra("id_Recruiter", id_Recruiter);
                     startActivity(intent);
                 } else if (which == 1) {
-                    Intent intent = new Intent(getContext(), JobActivity.class);
+                    Intent intent = new Intent(getContext(), PostingJobActivity.class);
                     intent.putExtra("id_Recruiter", id_Recruiter);
                     startActivity(intent);
                 }

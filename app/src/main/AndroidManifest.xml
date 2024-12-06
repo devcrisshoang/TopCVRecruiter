@@ -85,10 +85,10 @@
             android:name=".JobDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".JobActivity"
+            android:name=".PostingJobActivity"
             android:exported="false" />
         <activity
-            android:name=".ArticleActivity"
+            android:name=".PostingArticleActivity"
             android:exported="false" />
         <activity
             android:name=".MessageActivity"

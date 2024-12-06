@@ -36,7 +36,7 @@ public interface ApiRecruiterService {
             .build()
             .create(ApiRecruiterService.class);
 
-    @GET("api/Recruiter/{id}")
+    @GET("api/Recruiter/user/{id}")
     Observable <Recruiter> getRecruiterByUserId(@Path("id") int id);
 
     @POST("api/Recruiter")
