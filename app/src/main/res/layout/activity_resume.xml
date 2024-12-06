@@ -111,10 +111,22 @@
                 android:layout_marginBottom="8dp"
                 android:orientation="vertical">
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Introduction:"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+                <TextView
                     android:id="@+id/introduction"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Introduction"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Experience:"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
                 <TextView
@@ -125,10 +137,22 @@
                     android:textColor="@color/black"
                     android:textSize="16sp" />
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Email:"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+                <TextView
                     android:id="@+id/email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Email"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phone Number:"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
                 <TextView
@@ -138,7 +162,12 @@
                     android:text="Phone Number"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
-
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Education:"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
                 <TextView
                     android:id="@+id/education"
                     android:layout_width="wrap_content"
@@ -146,7 +175,12 @@
                     android:text="Education"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
-
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Skills:"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
                 <TextView
                     android:id="@+id/skill"
                     android:layout_width="wrap_content"
@@ -154,7 +188,13 @@
                     android:text="Skills"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
-
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Certification:"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
                 <TextView
                     android:id="@+id/certification"
                     android:layout_width="wrap_content"

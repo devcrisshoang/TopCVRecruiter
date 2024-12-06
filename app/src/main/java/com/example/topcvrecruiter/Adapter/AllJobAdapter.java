@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.topcvrecruiter.JobDetailActivity;
 import com.example.topcvrecruiter.R;
 import com.example.topcvrecruiter.Model.Job;
+import com.example.topcvrecruiter.Utils.DateTimeUtils;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -42,7 +44,6 @@ public class AllJobAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_job, parent, false);
             return new JobViewHolder(view);
         } else {
-            // "footer loading" item
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_loading, parent, false);
             return new LoadingViewHolder(view);
         }
@@ -55,45 +56,14 @@ public class AllJobAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             JobViewHolder jobViewHolder = (JobViewHolder) holder;
             jobViewHolder.name.setText(job.getJob_Name());
             jobViewHolder.address.setText(job.getWorking_Address());
-
+            String time = DateTimeUtils.formatTimeAgo(job.getApplication_Date()); // Error
+            jobViewHolder.createTime.setText(time);
             holder.itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(context, JobDetailActivity.class);
                 intent.putExtra("jobId", job.getId());
                 context.startActivity(intent);
             });
-
-            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault());
-            SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-
-            try {
-                Date createDate = inputFormat.parse(job.getCreate_Time());
-                long createTimeInMillis = createDate.getTime();
-                long currentTimeInMillis = System.currentTimeMillis();
-
-                long timeDifference = currentTimeInMillis - createTimeInMillis;
-                long minutesDifference = timeDifference / (60 * 1000);
-                long hoursDifference = timeDifference / (60 * 60 * 1000);
-
-                if (minutesDifference < 60) {
-                    ((JobViewHolder) holder).createTime.setText(minutesDifference + " minutes ago");
-                } else if (hoursDifference < 24) {
-                    ((JobViewHolder) holder).createTime.setText(hoursDifference + " hours ago");
-                } else if (hoursDifference < 24 * 2) {
-                    ((JobViewHolder) holder).createTime.setText("Yesterday");
-                } else if (hoursDifference < 24 * 7) {
-                    SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.getDefault());
-                    String dayOfWeek = dayFormat.format(createDate);
-                    ((JobViewHolder) holder).createTime.setText(dayOfWeek);
-                } else {
-                    String formattedDate = outputFormat.format(createDate);
-                    ((JobViewHolder) holder).createTime.setText(formattedDate);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                ((JobViewHolder) holder).createTime.setText("Create Time: " + job.getCreate_Time());
-            }
         }
-
     }
 
     @Override

@@ -50,15 +50,14 @@ public class AllArticleActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(articleAdapter);
 
-        loadArticles();  // Gọi API để tải dữ liệu lần đầu tiên
+        loadArticles();
 
-        // Lắng nghe sự kiện cuộn để tải thêm dữ liệu khi người dùng kéo xuống
         recyclerView.addOnScrollListener(new PaginationScrollListener((LinearLayoutManager) recyclerView.getLayoutManager()) {
             @Override
             public void loadMoreItem() {
                 if (!isLoading && !isLastPage) {
                     isLoading = true;
-                    articleAdapter.addFooterLoading();  // Hiển thị footer loading
+                    articleAdapter.addFooterLoading();
                     loadNextPage();
                 }
             }
@@ -76,7 +75,7 @@ public class AllArticleActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Gọi phương thức quay lại
+
                 onBackPressed();
             }
         });
