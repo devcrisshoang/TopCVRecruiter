@@ -152,6 +152,7 @@ public class ResumeActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
+
         finish();
     }
 
