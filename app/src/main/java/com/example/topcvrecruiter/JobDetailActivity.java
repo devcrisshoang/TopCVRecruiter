@@ -238,18 +238,7 @@ public class JobDetailActivity extends AppCompatActivity {
         experience.setText(job.getWorking_Experience_Require());
         String time = DateTimeUtils.getRemainingDaysMessage(job.getApplication_Date());
         applyDate.setText(time);
-
-        String imagePath = job.getImage_Id();
-        if (imagePath != null && !imagePath.isEmpty()) {
-            Glide.with(JobDetailActivity.this)
-                    .load(Uri.parse(imagePath))
-                    .into(companyLogo);
-            companyLogo.setTag(imagePath);
-        }else {
-            Glide.with(JobDetailActivity.this)
-                    .load(R.drawable.google_ic)
-                    .into(companyLogo);
-        }
+        companyLogo.setImageResource(R.drawable.workplace_ic);
     }
 
     private void displayJobDetails(JobDetails jobDetails) {

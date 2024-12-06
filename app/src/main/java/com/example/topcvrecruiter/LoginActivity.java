@@ -153,6 +153,7 @@ public class LoginActivity extends AppCompatActivity {
                                             }
                                         }, throwable -> {
                                             Log.e("LoginActivity", "Error fetching applicant: " + throwable.getMessage());
+                                            navigateToInformationActivity(userId);
                                         });
                                 return;
                             } else {

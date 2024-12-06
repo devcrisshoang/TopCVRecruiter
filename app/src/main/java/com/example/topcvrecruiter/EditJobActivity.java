@@ -46,15 +46,6 @@ public class EditJobActivity extends AppCompatActivity {
     private int jobId;
     private int jobDetailsId;
 
-    private ImageView avatar;
-    private ImageView change_avatar;
-
-    private ActivityResultLauncher<Intent> imagePickerLauncherAvatar;
-
-    private Uri uri;
-
-    private String currentImagePath;
-
     private int id_Recruiter;
 
     @Override
@@ -74,18 +65,6 @@ public class EditJobActivity extends AppCompatActivity {
 
         backButton.setOnClickListener(v -> finish());
 
-        change_avatar.setOnClickListener(view -> changAvatarButton());
-    }
-
-    private void changAvatarButton(){
-        ImagePicker.with(this)
-                .crop()
-                .compress(1024)
-                .maxResultSize(1080, 1080)
-                .createIntent(intent -> {
-                    imagePickerLauncherAvatar.launch(intent);
-                    return null;
-                });
     }
 
     private void setWidget(){
@@ -104,8 +83,6 @@ public class EditJobActivity extends AppCompatActivity {
         workingTime = findViewById(R.id.working_time);
         numberOfPeople = findViewById(R.id.et_numberpeople);
         saveButton = findViewById(R.id.save_button);
-        avatar = findViewById(R.id.avatar);
-        change_avatar = findViewById(R.id.change_avatar);
         backButton = findViewById(R.id.job_edit_back_button);
 
         jobId = getIntent().getIntExtra("jobId", -1);
@@ -125,25 +102,6 @@ public class EditJobActivity extends AppCompatActivity {
         benefit.setText(getIntent().getStringExtra("benefit"));
         workingTime.setText(getIntent().getStringExtra("workingTime"));
         numberOfPeople.setText(getIntent().getStringExtra("numberOfPeople"));
-        currentImagePath = getIntent().getStringExtra("imagePath");
-
-        imagePickerLauncherAvatar = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                        uri = result.getData().getData();
-                        avatar.setImageURI(uri);
-                    } else {
-                        Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
-                    }
-                }
-        );
-
-        if (currentImagePath != null && !currentImagePath.isEmpty()) {
-            Glide.with(this)
-                    .load(Uri.parse(currentImagePath))
-                    .into(avatar);
-        }
 
     }
 
@@ -172,9 +130,8 @@ public class EditJobActivity extends AppCompatActivity {
         String time = workingTime.getText().toString();
         String numberPeople = numberOfPeople.getText().toString();
 
-        String image = (uri != null) ? uri.toString() : currentImagePath;
 
-        Job updatedJob = new Job(image, name, company, experience, location, salary, date, id_Recruiter);
+        Job updatedJob = new Job("", name, company, experience, location, salary, date, id_Recruiter);
         JobDetails updatedJobDetails = new JobDetails(description, skill, benefitText, gender, time, method, position, numberPeople, jobId);
 
         ApiJobService.apiService.updateJob(jobId, updatedJob).enqueue(new Callback<Job>() {
