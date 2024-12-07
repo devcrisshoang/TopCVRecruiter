@@ -2,22 +2,17 @@ package com.example.topcvrecruiter;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.topcvrecruiter.API.ApiPostingService;
 import com.example.topcvrecruiter.Adapter.AllArticleAdapter;
 import com.example.topcvrecruiter.Utils.PaginationScrollListener;
 import com.example.topcvrecruiter.Model.Article;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,24 +20,28 @@ import retrofit2.Response;
 public class AllArticleActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
+
     private AllArticleAdapter articleAdapter;
-    private List<Article> articleList; // Dữ liệu tải từ API
-    private List<Article> displayList; // Dữ liệu sẽ hiển thị trong RecyclerView
+
+    private List<Article> articleList;
+    private List<Article> displayList;
+
+    private int id_Recruiter;
     private int currentPage = 0;
-    private int pageSize = 10; // Số bài viết mỗi trang
+    private final int pageSize = 10;
+
     private boolean isLoading = false;
     private boolean isLastPage = false;
+
     private ImageButton backButton;
-    private int id_Recruiter;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_article);
+        setWidget();
 
-        id_Recruiter = getIntent().getIntExtra("id_Recruiter",0);
-
-        recyclerView = findViewById(R.id.rcvArticle);
-        backButton = findViewById(R.id.article_all_back_button);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         articleList = new ArrayList<>();
         displayList = new ArrayList<>();
@@ -50,15 +49,14 @@ public class AllArticleActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(articleAdapter);
 
-        loadArticles();  // Gọi API để tải dữ liệu lần đầu tiên
+        loadArticles();
 
-        // Lắng nghe sự kiện cuộn để tải thêm dữ liệu khi người dùng kéo xuống
         recyclerView.addOnScrollListener(new PaginationScrollListener((LinearLayoutManager) recyclerView.getLayoutManager()) {
             @Override
             public void loadMoreItem() {
                 if (!isLoading && !isLastPage) {
                     isLoading = true;
-                    articleAdapter.addFooterLoading();  // Hiển thị footer loading
+                    articleAdapter.addFooterLoading();
                     loadNextPage();
                 }
             }
@@ -73,30 +71,28 @@ public class AllArticleActivity extends AppCompatActivity {
                 return isLastPage;
             }
         });
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Gọi phương thức quay lại
-                onBackPressed();
-            }
-        });
+        backButton.setOnClickListener(v -> finish());
+    }
+
+    private void setWidget() {
+        id_Recruiter = getIntent().getIntExtra("id_Recruiter", 0);
+        recyclerView = findViewById(R.id.rcvArticle);
+        backButton = findViewById(R.id.article_all_back_button);
     }
 
     private void loadArticles() {
 
         ApiPostingService apiService = ApiPostingService.retrofit.create(ApiPostingService.class);
 
-        Call<List<Article>> call = apiService.getArticlesByRecruiter(id_Recruiter);  // Lấy toàn bộ dữ liệu từ API (không phân trang)
+        Call<List<Article>> call = apiService.getArticlesByRecruiter(id_Recruiter);
         call.enqueue(new Callback<List<Article>>() {
             @Override
             public void onResponse(Call<List<Article>> call, Response<List<Article>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    articleList = response.body();  // Lưu lại dữ liệu từ API
+                    articleList = response.body();
 
-                    // Lấy các bài viết để hiển thị cho trang đầu tiên
                     loadPage(currentPage);
 
-                    // Kiểm tra xem có phải là trang cuối cùng không
                     if (articleList.size() <= pageSize) {
                         isLastPage = true;
                     }

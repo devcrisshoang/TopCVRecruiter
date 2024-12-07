@@ -29,7 +29,7 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:background="@color/grey" />
+                    android:background="@color/mint_green" />
 
                 <FrameLayout
                     android:id="@+id/frameLayout"
@@ -80,6 +80,7 @@
                             android:layout_marginTop="20dp"
                             android:text="Hoang Criss"
                             android:textStyle="bold"
+                            android:textColor="@color/green_color"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.506"
                             app:layout_constraintStart_toEndOf="@+id/avatar"

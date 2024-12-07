@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.topcvrecruiter.ArticleDetailActivity;
 import com.example.topcvrecruiter.R;
 import com.example.topcvrecruiter.Model.Article;
+import com.example.topcvrecruiter.Utils.DateTimeUtils;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -58,6 +60,8 @@ public class AllArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             ArticleViewHolder articleViewHolder = (ArticleViewHolder) holder;
             articleViewHolder.title.setText(article.getArticle_Name());
             articleViewHolder.content.setText(article.getContent());
+            String time = DateTimeUtils.formatTimeAgo(article.getCreate_Time());
+            articleViewHolder.createTime.setText(time);
 
             holder.itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(context, ArticleDetailActivity.class);
@@ -65,40 +69,7 @@ public class AllArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 Log.d("ArticleAdapter", "Article ID: " + article.getId());
                 context.startActivity(intent);
             });
-
-            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault());
-            SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-
-            try {
-                Date createDate = inputFormat.parse(article.getCreate_Time());
-                assert createDate != null;
-                long createTimeInMillis = createDate.getTime();
-                long currentTimeInMillis = System.currentTimeMillis();
-
-                long timeDifference = currentTimeInMillis - createTimeInMillis;
-                long minutesDifference = timeDifference / (60 * 1000);
-                long hoursDifference = timeDifference / (60 * 60 * 1000);
-
-                if (minutesDifference < 60) {
-                    ((ArticleViewHolder) holder).createTime.setText(minutesDifference + " minutes ago");
-                } else if (hoursDifference < 24) {
-                    ((ArticleViewHolder) holder).createTime.setText(hoursDifference + " hours ago");
-                } else if (hoursDifference < 24 * 2) {
-                    ((ArticleViewHolder) holder).createTime.setText("Yesterday");
-                } else if (hoursDifference < 24 * 7) {
-                    SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.getDefault());
-                    String dayOfWeek = dayFormat.format(createDate);
-                    ((ArticleViewHolder) holder).createTime.setText(dayOfWeek);
-                } else {
-                    String formattedDate = outputFormat.format(createDate);
-                    ((ArticleViewHolder) holder).createTime.setText(formattedDate);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                ((ArticleViewHolder) holder).createTime.setText("Create Time: " + article.getCreate_Time());
-            }
         }
-
     }
 
     @Override
@@ -122,8 +93,9 @@ public class AllArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public static class ArticleViewHolder extends RecyclerView.ViewHolder {
-        TextView title, content;
-        TextView createTime;
+        private final TextView content;
+        private final TextView title;
+        private final TextView createTime;
 
         public ArticleViewHolder(View itemView) {
             super(itemView);
