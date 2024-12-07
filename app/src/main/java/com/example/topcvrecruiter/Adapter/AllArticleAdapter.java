@@ -93,8 +93,9 @@ public class AllArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public static class ArticleViewHolder extends RecyclerView.ViewHolder {
-        TextView title, content;
-        TextView createTime;
+        private final TextView content;
+        private final TextView title;
+        private final TextView createTime;
 
         public ArticleViewHolder(View itemView) {
             super(itemView);
