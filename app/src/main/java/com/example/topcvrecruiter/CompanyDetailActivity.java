@@ -8,17 +8,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
 import com.example.topcvrecruiter.API.ApiCompanyDetailService;
 import com.example.topcvrecruiter.API.ApiCompanyService;
 import com.example.topcvrecruiter.API.ApiRecruiterService;
 import com.example.topcvrecruiter.Model.CompanyInformationDetails;
 import com.example.topcvrecruiter.Model.Recruiter;
+
 import java.time.LocalDateTime;
+
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -54,18 +58,18 @@ public class CompanyDetailActivity extends AppCompatActivity {
 
     }
 
-    private void setClick(){
+    private void setClick() {
 
         back_button.setOnClickListener(view -> finish());
 
         finish.setOnClickListener(view -> createCompanyDetail(company_id));
     }
 
-    private void setWidget(){
-        recruiter_id = getIntent().getIntExtra("id_Recruiter",0);
+    private void setWidget() {
+        recruiter_id = getIntent().getIntExtra("id_Recruiter", 0);
         Log.e("CompanyDetailActivity", "Id Recruiter: " + recruiter_id);
 
-        user_id = getIntent().getIntExtra("user_id",0);
+        user_id = getIntent().getIntExtra("user_id", 0);
         editTextWebsite = findViewById(R.id.editTextWebsite);
         editTextTaxID = findViewById(R.id.editTextTaxID);
         back_button = findViewById(R.id.back_button);
@@ -77,7 +81,7 @@ public class CompanyDetailActivity extends AppCompatActivity {
     }
 
     @SuppressLint("CheckResult")
-    private void getCompanyId(int id){
+    private void getCompanyId(int id) {
         ApiCompanyService.ApiCompanyService.getCompanyByRecruiterId(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -85,7 +89,7 @@ public class CompanyDetailActivity extends AppCompatActivity {
                     company_id = response.getId();
                 }, throwable -> {
                     Log.e("API Error", "Error fetching applicant: " + throwable.getMessage());
-                    Toast.makeText(this, "Không tìm thấy Applicant, chuyển đến trang Information.", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "Không tìm thấy Applicant, chuyển đến trang Information.", Toast.LENGTH_SHORT).show();
                 });
     }
 
@@ -141,21 +145,49 @@ public class CompanyDetailActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())  // Quan sát kết quả trên luồng chính
                 .subscribe(
                         response -> {
-                            // Xử lý khi thành công
-                            Toast.makeText(this, "CompanyInformation đã được tạo thành công!", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(this, MainActivity.class);
-                            intent.putExtra("id_Recruiter", recruiter_id);
-                            intent.putExtra("user_id", user_id);
-                            startActivity(intent);
+                            ApiRecruiterService.ApiRecruiterService.getRecruiterByUserId(user_id)
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(recruiter -> {
+                                        Log.e("LoginActivity", "Confirm: " + recruiter.isIs_Confirm());
+                                        Log.e("LoginActivity", "Register: " + recruiter.isIs_Registered());
+                                        if (recruiter.isIs_Confirm()) {
+                                            navigateToMainActivity(user_id, recruiter.getRecruiterName(), recruiter.getPhoneNumber());
+                                        } else {
+                                            navigateToWaitingConfirmActivity(user_id, recruiter.getRecruiterName(), recruiter.getPhoneNumber());
+                                        }
+                                    }, throwable -> Log.e("LoginActivity", "Error fetching applicant: " + throwable.getMessage()));
                             finish();
                         },
-                        throwable -> {
-                            // Xử lý khi có lỗi
-                            Toast.makeText(this, "Có lỗi xảy ra: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
+                        throwable -> Toast.makeText(this, "Có lỗi xảy ra: " + throwable.getMessage(), Toast.LENGTH_SHORT).show()
                 );
+
+    }
+
+    @SuppressLint("CheckResult")
+    private void navigateToMainActivity(int id_User, String recruiterName, String phoneNumber) {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("user_id", id_User);
+        intent.putExtra("recruiterName", recruiterName);
+        intent.putExtra("phoneNumber", phoneNumber);
+        intent.putExtra("id_Recruiter", recruiter_id);
+        Log.e("LoginActivity", "ID: " + recruiter_id);
+        startActivity(intent);
         finish();
     }
+
+    @SuppressLint("CheckResult")
+    private void navigateToWaitingConfirmActivity(int id_User, String recruiterName, String phoneNumber) {
+        Intent intent = new Intent(this, WaitingConfirmActivity.class);
+        intent.putExtra("user_id", id_User);
+        intent.putExtra("recruiterName", recruiterName);
+        intent.putExtra("phoneNumber", phoneNumber);
+        intent.putExtra("id_Recruiter", recruiter_id);
+        Log.e("LoginActivity", "ID: " + recruiter_id);
+        startActivity(intent);
+        finish();
+    }
+
 
     @SuppressLint("CheckResult")
     private void getRecruiterById(int recruiterId) {

@@ -123,7 +123,7 @@ public class CompanyInformationActivity extends AppCompatActivity {
                 .subscribe(
                         response -> {
                             // Xử lý khi thành công
-                            Toast.makeText(this, "CompanyInformation đã được tạo thành công!", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(this, "CompanyInformation đã được tạo thành công!", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(this, CompanyDetailActivity.class);
                             intent.putExtra("id_Recruiter", recruiter_id);
                             intent.putExtra("user_id", user_id);
