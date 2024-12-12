@@ -223,7 +223,7 @@ public class ResumeActivity extends AppCompatActivity {
                     @Override
                     public void onNext(CV cv) {
                         if (cv != null) {
-                            cv_logo.setImageURI(Uri.parse(cv.getImage()));
+                            cv_logo.setImageResource(R.drawable.account_ic);
                             Log.e("ResumeActivity","cv_logo: "+cv.getImage());
                             job_applying.setText(cv.getJob_Applying());
                             name.setText(cv.getApplicant_Name());
